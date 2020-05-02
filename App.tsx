@@ -1,18 +1,13 @@
 
 
 import React from 'react'
-import { Text, StyleSheet } from 'react-native'
+import { Text } from 'react-native'
+import globalStyles from './styles/'
 
 const App = () => {
   return (
-    <Text style={styles.text}>Step 3</Text>
+    <Text style={globalStyles.Text}>Step 3</Text>
   )
 }
-
-const styles = StyleSheet.create({
-  text: {
-    fontFamily: 'OpenSans-Bold',
-  }
-})
 
 export default App
