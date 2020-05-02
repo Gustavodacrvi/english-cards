@@ -1,13 +1,18 @@
 
 
 import React from 'react'
-
-import { Text } from 'react-native'
+import { Text, StyleSheet } from 'react-native'
 
 const App = () => {
   return (
-    <Text>Step 4</Text>
+    <Text style={styles.text}>Step 3</Text>
   )
 }
+
+const styles = StyleSheet.create({
+  text: {
+    fontFamily: 'OpenSans-Bold',
+  }
+})
 
 export default App
