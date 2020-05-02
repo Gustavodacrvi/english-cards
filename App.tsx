@@ -36,7 +36,7 @@ export default class SvgExample extends React.Component {
       <View
         style={[
           StyleSheet.absoluteFill,
-          { alignItems: 'center', justifyContent: 'center' },
+          { alignItems: 'center', justifyContent: 'center', backgroundColor: '#525A79' },
         ]}
       >
         <Svg height="50%" width="50%" viewBox="0 0 100 100">
