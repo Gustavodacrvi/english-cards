@@ -2,9 +2,9 @@
 
 import iconRenderer from "./iconRenderer"
 
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Animated } from 'react-native'
-import {IconInterface} from './../../interfaces'
+import { IconInterface } from './../../interfaces'
 
 import ColorAnimation from './../../animations/colors'
 
@@ -15,9 +15,10 @@ function Icon({color, primaryColor, secondaryColor, width = 32, icon}: IconInter
   return <AnimatedIconRenderer
     width={width}
     icon={icon}
+    
 
-    primaryColor={ColorAnimation(color || primaryColor || '#fff', [primaryColor, color])}
-    secondaryColor={ColorAnimation(color || secondaryColor || '#FFD166', [secondaryColor, color])}
+    primaryColor={ColorAnimation(color || primaryColor || '#fff')}
+    secondaryColor={ColorAnimation(color || secondaryColor || '#FFD166')}
   />
 
 }
