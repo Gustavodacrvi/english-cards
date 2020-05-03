@@ -1,5 +1,10 @@
 <template>
     <form-vue >
+      <transition
+        name="input-t"
+      >
+        <input-vue v-if='login' type="text" placeholder="Username:"/>
+      </transition>
       <input-vue type="email" placeholder="E-mail"/>
       <input-vue type="password" placeholder="Password"/>
       <button-vue text="Entrar" :color="{'back': '#FFF', 'text': '#525A79'}" />
@@ -14,6 +19,7 @@ import InputVue from './Input.vue'
 import ButtonVue from '../Button.vue'
 import MessagePopupVue from '../MessagePopup.vue'
 export default {
+    props: ['login'],
     data(){
         return {
             counter: 0,
@@ -52,6 +58,23 @@ span {
 span:hover {
     color: var(--yellow);
     cursor: pointer;
+}
+
+.input-t-enter, .input-t-leave-to {
+  height: 0 !important;
+  border: 0 solid transparent !important;
+  opacity: 0 !important;
+  color: transparent !important;
+  transition-duration: .2s !important;
+  margin-top: 0 !important;
+}
+
+.input-t-leave, .input-t-enter-to {
+  height: 45px !important;
+  margin-top: 11px !important;
+  opacity: 1 !important;
+  border: 3px solid var(--white) !important;
+  transition-duration: .2s;
 }
 
 </style>

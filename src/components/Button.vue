@@ -1,6 +1,6 @@
 <template>
     <div class="form-control">
-      <button @click.prevent="method" :style="{'width': width+'px', 'background': color.back, 'color':color.text}" class="btn">{{text}}</button>
+      <button :style="{'background': color.back, 'color':color.text}" class="btn">{{text}}</button>
     </div>
 </template>
 
@@ -11,17 +11,10 @@ export default {
             type: String,
             required: true
         },
-        width: {
-            type: Number,
-            default: 286
-        },
         color: {
             type: Object,
             required: true
         },
-        method: {
-            type: Function
-        }
     }
 }
 </script>
@@ -32,8 +25,10 @@ export default {
     font-size: 18px;
     font-weight: bold;
     text-align: center;
+    margin-top: 11px;
+    width: 100%;
+    box-sizing: border-box;
     border-radius: 8px;
-    margin: 5px;
     outline: none;
     border: 3px solid var(--white);
     cursor: pointer;

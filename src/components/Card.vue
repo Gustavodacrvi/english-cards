@@ -1,10 +1,12 @@
 <template>
   <div class="card">
+    <div class="wrapper">
       <div v-if="content" class="content">
           <h1>{{title}}</h1>
           <span>{{content}}</span>
       </div>
-      <button-vue :width="268" text="Voltar" :method="method" :color="{'back': '#FFD166', 'text': '#FFFFFF'}" />
+        <button-vue text="Voltar" :color="{'back': '#FFD166', 'text': '#FFFFFF'}" @click.native='method' />
+    </div>
   </div>
 </template>
 
@@ -30,6 +32,16 @@ export default {
 </script>
 
 <style scoped>
+.card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wrapper {
+  width: 276px;
+}
+
 span, h1 {
     color: var(--white);
 }
@@ -57,7 +69,6 @@ span {
 .content {
     display: flex;
     align-items: center;
-    max-width: 235px;
     text-align: left;
     margin: 5px;
     flex-direction: column;

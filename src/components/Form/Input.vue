@@ -1,7 +1,7 @@
 <template>
-    <div class="form-control">
-        <input :type="type" class="inp" :placeholder="placeholder" />
-    </div>
+  <div class="form-control">
+      <input :type="type" class="inp" :placeholder="placeholder" />
+  </div>
 </template>
 
 <script>
@@ -20,15 +20,22 @@ export default {
 </script>
 
 <style scoped>
+
 .form-control {
-    margin: 5px;
+  border: 3px solid var(--white);
+    height: 45px;
+    border-radius: 6px;
+    margin-top: 11px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
 }
+
 .inp {
     background: var(--primary);
-    border: 3px solid var(--white);
-    border-radius: 6px;
-    width: 264px;
-    height: 45px;
+    border: none;
+    width: 100%;
+    box-sizing: border-box;
     padding-left: 19px;
     color: var(--white);
     text-align: left;
@@ -39,7 +46,8 @@ export default {
     text-align: left;
     font-family: 'Open Sans';
     font-weight: bold;
-    font-size: 18px;
+    font-size: 16px;
     opacity: 0.56;
 }
+
 </style>

@@ -20,11 +20,11 @@ module.exports = {
     ],
     'rules': {
         'indent': [
-            'error',
+            'warning',
             4
         ],
         'linebreak-style': [
-            'error',
+            'warning',
             'unix'
         ],
         'quotes': [
