@@ -3,7 +3,8 @@
       <input-vue type="email" placeholder="E-mail"/>
       <input-vue type="password" placeholder="Password"/>
       <button-vue text="Entrar" :color="{'back': '#FFF', 'text': '#525A79'}" />
-      <span @click="goToForgotPage">Esqueceu a senha?</span>          
+      <span @click="openForgotPasswordPopup">Esqueceu a senha?</span>
+      <message-popup-vue :color="color" :message="message" />          
     </form-vue>
 </template>
 
@@ -11,15 +12,29 @@
 import FormVue from './Form.vue'
 import InputVue from './Input.vue'
 import ButtonVue from '../Button.vue'
+import MessagePopupVue from '../MessagePopup.vue'
 export default {
+    data(){
+        return {
+            counter: 0,
+            popup: false,
+            color: '#F00',
+            message: 'Você não pode enviar várias confirmações'
+        }
+    },
     components: {
         FormVue,
         InputVue,
-        ButtonVue
+        ButtonVue,
+        MessagePopupVue
     },
     methods: {
-        goToForgotPage() {
-            this.$router.push('/forgot')
+        openForgotPasswordPopup() {
+            this.popup = true
+            if (this.counter < 1){
+                this.color = '#88E976'
+                this.message = 'Um e-mail de confirmação foi mandado para e-mail dado.'
+            }
         }
     }
 }
@@ -30,6 +45,7 @@ span {
     color: var(--white);
     font-size: 13px;
     font-weight: bold;
+    margin: 5px;
     margin-left: 130px;
     transition: color .15s, cursor .15s;
 }

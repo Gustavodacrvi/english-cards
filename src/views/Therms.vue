@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import CardVue from '../components/Card/Card.vue'
+import CardVue from '../components/Card.vue'
 
 export default {
     components: {
