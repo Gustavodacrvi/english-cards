@@ -15,7 +15,7 @@ import LoginVue from './Login.vue'
 export default {
     data() {
         return {
-            login: true
+            login: false
         }
     },
     methods: {

@@ -7,12 +7,10 @@
       <div class="termos">
           <div class="wrapper">
             <span>
-                Ao criar a conta você concorda com os <div><span class="yellow" @click="goToThermsPage">termos de uso</span> e a <span class="yellow" @click="openPrivacyPolicyCard">política de privacidade</span></div>
+                Ao criar a conta você concorda com os <div><span class="yellow" @click="goToThermsPage">termos de uso</span> e a <span class="yellow" @click="goToPrivacyPolicyPage">política de privacidade</span></div>
             </span>
           </div>
       </div>
-      <card-vue title="Política de Privacidade" content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris a metus eget risus tempus gravida. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam interdum nisi non massa commodo viverra. Etiam egestas orci congue dui vulputate placerat. Proin semper blandit ipsum, lacinia semper est efficitur vitae." :method="closePrivacyPolicyCard"/>
-      <card-vue title="Termos de uso" content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris a metus eget risus tempus gravida. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam interdum nisi non massa commodo viverra. Etiam egestas orci congue dui vulputate placerat. Proin semper blandit ipsum, lacinia semper est efficitur vitae." :method="closeThermsCard"/>
   </form-vue>
 </template>
 
@@ -20,26 +18,18 @@
 import FormVue from './Form.vue'
 import InputVue from './Input.vue'
 import ButtonVue from '../Button.vue'
-import CardVue from '../Card/Card.vue'
 export default {
-    data() {
-        return {
-            therms: false,
-            privacy: false
-        }
-    },
     components: {
         FormVue,
         InputVue,
         ButtonVue,
-        CardVue
     },
     methods: {
         goToThermsPage() {
-            this.therms = true
+            this.$router.push('/therms')
         },
-        openPrivacyPolicyCard() {
-            this.privacy = true
+        goToPrivacyPolicyPage() {
+            this.$router.push('/privacy')
         },
     }
 }
