@@ -4,25 +4,14 @@ import iconRenderer from "./iconRenderer"
 
 import React, { useState, useEffect } from 'react'
 import { Animated } from 'react-native'
+import {Icon} from './../../interfaces'
 
 const AnimatedIconRenderer = Animated.createAnimatedComponent(iconRenderer)
-
-interface IconProps {
-  width?: number;
-  color?: string;
-  primaryColor?: string;
-  secondaryColor?: string;
-  icon:
-    'home' | 'alert' | 'book' | 'words' | 'cards' | 'loading' |
-    'notification-trash' | 'notification' | 'plus' | 'saved' | 'search' |
-    'sort-by-name' | 'sort' | 'trash' | 'user' | 'wifi'
-  ;
-}
 
 const DEFAULT_PRIMARY_COLOR = '#fff'
 const DEFAULT_SECONDARY_COLOR = '#FFD166'
 
-function Icon({color, primaryColor, secondaryColor, width = 32, icon}: IconProps) {
+function Icon({color, primaryColor, secondaryColor, width = 32, icon}: Icon) {
   const [runSecondaryAnimation, setRunSecondaryAnimation] = useState(false)
   const [runPrimaryAnimation, setRunPrimaryAnimation] = useState(false)
 

@@ -1,26 +1,53 @@
 
 
 import React from 'react'
-import { View, StyleSheet, Text } from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  TouchableNativeFeedback,
+  View,
+} from 'react-native'
+
+import globalStyles from "./../../styles"
+import { primary } from './../../styles/colors'
+
+import { Icon } from './../../interfaces'
 
 interface ButtonProps {
   name: string;
+  type?: 'button';
+  icon?: Icon;
 }
 
-export default class Button extends React.Component<ButtonProps> {
-  render() {
-    return (
-      <View style={s.Button}>
-        <Text>
-          {this.props.name}
-        </Text>
+function Button({
+  name,
+}: ButtonProps) {
+  return (
+    <TouchableNativeFeedback
+      useForeground={true}
+    >
+      <View style={[
+        s.Button,
+/*         {
+          backgroundColor: color,
+        }, */
+      ]}>
+        <Text style={s.Text}> {name} </Text>
       </View>
-    )
-  }
+    </TouchableNativeFeedback>
+  )
 }
 
 const s = StyleSheet.create({
   Button: {
-
+    padding: 10,
+    borderRadius: 8,
+    display: 'flex',
+    alignItems: 'center',
+  },
+  Text: {
+    fontSize: 18,
   },
 })
+
+export default Button
