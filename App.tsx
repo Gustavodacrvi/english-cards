@@ -1,12 +1,20 @@
 
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { Text, View } from 'react-native'
 
-import { Text } from 'react-native'
+import globalStyles from './styles/'
 
-const App = () => {
+import Icon from "./components/Icon"
+
+function App() {
   return (
-    <Text>Step 4</Text>
+    <View style={{backgroundColor: '#525A79', height: '100%'}}>
+      <Text style={globalStyles.Text}>Step 3</Text>
+
+      <Icon icon="home"/>
+
+    </View>
   )
 }
 
