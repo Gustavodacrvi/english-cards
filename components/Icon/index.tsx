@@ -12,7 +12,11 @@ interface IconProps {
   color?: string;
   primaryColor?: string;
   secondaryColor?: string;
-  icon: 'home';
+  icon:
+    'home' | 'alert' | 'book' | 'words' | 'cards' | 'loading' |
+    'notification-trash' | 'notification' | 'plus' | 'saved' | 'search' |
+    'sort-by-name' | 'sort' | 'trash' | 'user' | 'wif'
+  ;
 }
 
 const DEFAULT_PRIMARY_COLOR = '#fff'
@@ -105,14 +109,14 @@ export default class Icon extends React.Component<IconProps> {
       icon={icon}
 
       primaryColor={this.primaryColorAnimationValue.interpolate(
-      {
-        inputRange: [0, 1],
-        outputRange: [this.state.oldSecondaryColor, this.state.newSecondaryColor]
-      })}
-      secondaryColor={this.primaryColorAnimationValue.interpolate(
         {
           inputRange: [0, 1],
           outputRange: [this.state.oldPrimaryColor, this.state.newPrimaryColor]
+        })}
+      secondaryColor={this.primaryColorAnimationValue.interpolate(
+        {
+          inputRange: [0, 1],
+          outputRange: [this.state.oldSecondaryColor, this.state.newSecondaryColor]
         })}
     />
   }
