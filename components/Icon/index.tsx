@@ -2,7 +2,7 @@
 
 import iconRenderer from "./iconRenderer"
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Animated } from 'react-native'
 
 const AnimatedIconRenderer = Animated.createAnimatedComponent(iconRenderer)
@@ -15,109 +15,99 @@ interface IconProps {
   icon:
     'home' | 'alert' | 'book' | 'words' | 'cards' | 'loading' |
     'notification-trash' | 'notification' | 'plus' | 'saved' | 'search' |
-    'sort-by-name' | 'sort' | 'trash' | 'user' | 'wif'
+    'sort-by-name' | 'sort' | 'trash' | 'user' | 'wifi'
   ;
 }
 
 const DEFAULT_PRIMARY_COLOR = '#fff'
 const DEFAULT_SECONDARY_COLOR = '#FFD166'
 
-export default class Icon extends React.Component<IconProps> {
-  state = {
-    oldPrimaryColor: DEFAULT_PRIMARY_COLOR,
-    newPrimaryColor: DEFAULT_PRIMARY_COLOR,
+function Icon({color, primaryColor, secondaryColor, width = 32, icon}: IconProps) {
+  const [runSecondaryAnimation, setRunSecondaryAnimation] = useState(false)
+  const [runPrimaryAnimation, setRunPrimaryAnimation] = useState(false)
+
+  const [{
+    newSecondaryColor,
+    oldSecondaryColor,
+  }, setSecondaryColor] = useState({
     newSecondaryColor: DEFAULT_SECONDARY_COLOR,
     oldSecondaryColor: DEFAULT_SECONDARY_COLOR,
-  }
-  
-  primaryColorAnimationValue: Animated.Value
-  secondaryColorAnimationValue: Animated.Value
+  })
+  const [{
+    oldPrimaryColor,
+    newPrimaryColor,
+  }, setPrimaryColor] = useState({
+    oldPrimaryColor: DEFAULT_PRIMARY_COLOR,
+    newPrimaryColor: DEFAULT_PRIMARY_COLOR,
+  })
+  const [primaryColorAnimationValue] = useState(new Animated.Value(0))
+  const [secondaryColorAnimationValue] = useState(new Animated.Value(0))
 
-  constructor(props) {
-    super(props)
-
-    this.primaryColorAnimationValue = new Animated.Value(0)
-    this.secondaryColorAnimationValue = new Animated.Value(0)
-
-    const {color, primaryColor, secondaryColor} = this.props
-
-    this.state.newPrimaryColor = color || primaryColor || DEFAULT_PRIMARY_COLOR
-    this.state.oldPrimaryColor = color || primaryColor || DEFAULT_PRIMARY_COLOR
-
-    this.state.oldSecondaryColor = color || secondaryColor || DEFAULT_SECONDARY_COLOR
-    this.state.oldSecondaryColor = color || secondaryColor || DEFAULT_SECONDARY_COLOR
-  }
-
-  componentDidUpdate() {
-    const {primaryColor, secondaryColor, color} = this.props
-
-    const newPrimary = color || primaryColor
-    const newSecondary = color || secondaryColor
-
-    if (newPrimary && newPrimary !== this.state.newPrimaryColor) {
-      this.setPrimaryColor(newPrimary)
-    }
-
-    if (newSecondary && newSecondary !== this.state.newSecondaryColor) {
-      this.setPrimaryColor(newSecondary)
-    }
-  }
-
-  setPrimaryColor(newColor: string) {
-    this.setState({
-      oldPrimaryColor: this.state.newPrimaryColor,
-      newPrimaryColor: newColor,
-    }, () => {
-      this.primaryColorAnimationValue.setValue(0);
+  useEffect(() => {
+    if (runPrimaryAnimation) {
+      setRunPrimaryAnimation(false)
+      primaryColorAnimationValue.setValue(0);
 
       Animated.timing(
-        this.primaryColorAnimationValue,
+        primaryColorAnimationValue,
         {
           toValue: 1,
           useNativeDriver: false,
           duration: 1000,
         }
       ).start()
-    })
-  }
-  setSecondaryColor(newColor: string) {
-    this.setState({
-      oldSecondaryColor: this.state.newSecondaryColor,
-      newSecondaryColor: newColor,
-    }, () => {
-      this.secondaryColorAnimationValue.setValue(0);
+    }
+  }, [runPrimaryAnimation])
+
+  useEffect(() => {
+    if (runSecondaryAnimation) {
+      setRunSecondaryAnimation(false)
+      secondaryColorAnimationValue.setValue(0);
 
       Animated.timing(
-        this.secondaryColorAnimationValue,
+        secondaryColorAnimationValue,
         {
           toValue: 1,
           useNativeDriver: false,
           duration: 1000,
         }
       ).start()
+    }
+  }, [runSecondaryAnimation])
+
+  useEffect(() => {
+    setPrimaryColor({
+      oldPrimaryColor: newPrimaryColor,
+      newPrimaryColor: color || primaryColor || DEFAULT_PRIMARY_COLOR,
     })
-  }
+    setRunPrimaryAnimation(true)
+  }, [primaryColor, color])
   
-  render() {
-    const {
-      width = 32,
-      icon,
-    } = this.props
+  useEffect(() => {
+    setSecondaryColor({
+      oldSecondaryColor: newSecondaryColor,
+      newSecondaryColor: color || secondaryColor || DEFAULT_SECONDARY_COLOR,
+    })
+    setRunSecondaryAnimation(true)
+  }, [secondaryColor, color])
 
-    return <AnimatedIconRenderer
-      width={width}
-      icon={icon}
+  return <AnimatedIconRenderer
+    width={width}
+    icon={icon}
 
-      primaryColor={this.primaryColorAnimationValue.interpolate(
-        {
-          inputRange: [0, 1],
-          outputRange: [this.state.oldPrimaryColor, this.state.newPrimaryColor]
-        })}
-      secondaryColor={this.primaryColorAnimationValue.interpolate(
-        {
-          inputRange: [0, 1],
-          outputRange: [this.state.oldSecondaryColor, this.state.newSecondaryColor]
-        })}
-    />
-  }
+    primaryColor={primaryColorAnimationValue.interpolate(
+      {
+        inputRange: [0, 1],
+        outputRange: [oldPrimaryColor, newPrimaryColor]
+      })}
+    secondaryColor={secondaryColorAnimationValue.interpolate(
+      {
+        inputRange: [0, 1],
+        outputRange: [oldSecondaryColor, newSecondaryColor]
+      })}
+  />
+
 }
+
+export default Icon
+
