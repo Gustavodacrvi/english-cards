@@ -1,31 +1,31 @@
 
 
-import Svg, {
-  Rect,
-} from 'react-native-svg';
-
+import iconRenderer from "./iconRenderer"
 
 import React from 'react'
-import { Animated, View } from 'react-native'
+import { Animated } from 'react-native'
 
-const AnimatedRect = Animated.createAnimatedComponent(Rect)
+const AnimatedIconRenderer = Animated.createAnimatedComponent(iconRenderer)
 
 interface IconProps {
   width?: number;
-  color?: string | undefined;
+  color?: string;
   primaryColor?: string;
   secondaryColor?: string;
+  icon: 'home';
 }
+
+const DEFAULT_PRIMARY_COLOR = '#fff'
+const DEFAULT_SECONDARY_COLOR = '#FFD166'
 
 export default class Icon extends React.Component<IconProps> {
   state = {
-    oldPrimaryColor: '#ffffff',
-    newPrimaryColor: '#ffffff',
-    newSecondaryColor: '#FFD166',
-    oldSecondaryColor: '#FFD166',
+    oldPrimaryColor: DEFAULT_PRIMARY_COLOR,
+    newPrimaryColor: DEFAULT_PRIMARY_COLOR,
+    newSecondaryColor: DEFAULT_SECONDARY_COLOR,
+    oldSecondaryColor: DEFAULT_SECONDARY_COLOR,
   }
   
-  secondaryColor: string = '#FFD166'
   primaryColorAnimationValue: Animated.Value
   secondaryColorAnimationValue: Animated.Value
 
@@ -37,19 +37,25 @@ export default class Icon extends React.Component<IconProps> {
 
     const {color, primaryColor, secondaryColor} = this.props
 
-    this.state.newPrimaryColor = color || primaryColor || '#fff'
-    this.state.oldPrimaryColor = color || primaryColor || '#fff'
+    this.state.newPrimaryColor = color || primaryColor || DEFAULT_PRIMARY_COLOR
+    this.state.oldPrimaryColor = color || primaryColor || DEFAULT_PRIMARY_COLOR
 
-    this.state.oldSecondaryColor = color || secondaryColor || '#FFD166'
-    this.state.oldSecondaryColor = color || secondaryColor || '#FFD166'
-
+    this.state.oldSecondaryColor = color || secondaryColor || DEFAULT_SECONDARY_COLOR
+    this.state.oldSecondaryColor = color || secondaryColor || DEFAULT_SECONDARY_COLOR
   }
 
   componentDidUpdate() {
-    const {primaryColor} = this.props
+    const {primaryColor, secondaryColor, color} = this.props
 
-    if (primaryColor && primaryColor !== this.state.newPrimaryColor) {
-      this.setPrimaryColor(primaryColor)
+    const newPrimary = color || primaryColor
+    const newSecondary = color || secondaryColor
+
+    if (newPrimary && newPrimary !== this.state.newPrimaryColor) {
+      this.setPrimaryColor(newPrimary)
+    }
+
+    if (newSecondary && newSecondary !== this.state.newSecondaryColor) {
+      this.setPrimaryColor(newSecondary)
     }
   }
 
@@ -60,13 +66,12 @@ export default class Icon extends React.Component<IconProps> {
     }, () => {
       this.primaryColorAnimationValue.setValue(0);
 
-    
       Animated.timing(
         this.primaryColorAnimationValue,
         {
           toValue: 1,
           useNativeDriver: false,
-          duration: 150,
+          duration: 1000,
         }
       ).start()
     })
@@ -78,13 +83,12 @@ export default class Icon extends React.Component<IconProps> {
     }, () => {
       this.secondaryColorAnimationValue.setValue(0);
 
-    
       Animated.timing(
         this.secondaryColorAnimationValue,
         {
           toValue: 1,
           useNativeDriver: false,
-          duration: 150,
+          duration: 1000,
         }
       ).start()
     })
@@ -93,32 +97,23 @@ export default class Icon extends React.Component<IconProps> {
   render() {
     const {
       width = 32,
+      icon,
     } = this.props
 
+    return <AnimatedIconRenderer
+      width={width}
+      icon={icon}
 
-    return (
-      <View>
-        <Svg height={width} width={width} viewBox="0 0 100 100">
-          <AnimatedRect
-            x="15"
-            y="15"
-            width="70"
-            height="70"
-            strokeWidth="2"
-
-            stroke={this.primaryColorAnimationValue.interpolate(
-              {
-                inputRange: [0, 1],
-                outputRange: [this.state.oldSecondaryColor, this.state.newSecondaryColor]
-              })}
-            fill={this.primaryColorAnimationValue.interpolate(
-              {
-                inputRange: [0, 1],
-                outputRange: [this.state.oldPrimaryColor, this.state.newPrimaryColor]
-              })}
-          />
-        </Svg>
-      </View>
-    );
+      primaryColor={this.primaryColorAnimationValue.interpolate(
+      {
+        inputRange: [0, 1],
+        outputRange: [this.state.oldSecondaryColor, this.state.newSecondaryColor]
+      })}
+      secondaryColor={this.primaryColorAnimationValue.interpolate(
+        {
+          inputRange: [0, 1],
+          outputRange: [this.state.oldPrimaryColor, this.state.newPrimaryColor]
+        })}
+    />
   }
 }
