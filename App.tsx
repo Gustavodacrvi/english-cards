@@ -1,64 +1,51 @@
-import Svg, {
-  Circle,
-  Ellipse,
-  G,
-  Text,
-  TSpan,
-  TextPath,
-  Path,
-  Polygon,
-  Polyline,
-  Line,
-  Rect,
-  Use,
-  Image,
-  Symbol,
-  Defs,
-  LinearGradient,
-  RadialGradient,
-  Stop,
-  ClipPath,
-  Pattern,
-  Mask,
-} from 'react-native-svg';
 
-/* Use this if you are using Expo
-import * as Svg from 'react-native-svg';
-const { Circle, Rect } = Svg;
-*/
 
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import React from 'react'
+import { Text, View } from 'react-native'
 
-export default class SvgExample extends React.Component {
+import globalStyles from './styles/'
+
+import Icon from "./components/Icon"
+
+export default class App extends React.Component {
+  state = {
+    color: 'yellow'
+  }
+
+  componentDidMount() {
+
+    setTimeout(() => {
+      this.setState({
+        color: 'blue',
+      })
+
+      setTimeout(() => {
+        this.setState({
+          color: 'green',
+        })
+
+        setTimeout(() => {
+          this.setState({
+            color: 'purple',
+          })
+        }, 2500)
+        
+      }, 2500)
+      
+    }, 2500)
+    
+  }
+  
   render() {
+    console.log(this.state.color)
     return (
-      <View
-        style={[
-          StyleSheet.absoluteFill,
-          { alignItems: 'center', justifyContent: 'center', backgroundColor: '#525A79' },
-        ]}
-      >
-        <Svg height="50%" width="50%" viewBox="0 0 100 100">
-          <Circle
-            cx="50"
-            cy="50"
-            r="45"
-            stroke="blue"
-            strokeWidth="2.5"
-            fill="green"
-          />
-          <Rect
-            x="15"
-            y="15"
-            width="70"
-            height="70"
-            stroke="red"
-            strokeWidth="2"
-            fill="yellow"
-          />
-        </Svg>
+      <View style={{backgroundColor: '#525A79', height: '100%'}}>
+        <Text style={globalStyles.Text}>Step 3</Text>
+        <Icon
+          width={200}
+          primaryColor={this.state.color}
+        />
       </View>
-    );
+    )
   }
 }
