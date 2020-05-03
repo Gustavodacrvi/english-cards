@@ -1,6 +1,6 @@
 
 
-export interface Icon {
+export interface IconInterface {
   width?: number;
   color?: string;
   primaryColor?: string;

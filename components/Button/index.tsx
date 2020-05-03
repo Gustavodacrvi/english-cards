@@ -11,12 +11,12 @@ import {
 import globalStyles from "./../../styles"
 import { primary } from './../../styles/colors'
 
-import { Icon } from './../../interfaces'
+import { IconInterface } from './../../interfaces'
 
 interface ButtonProps {
   name: string;
   type?: 'button';
-  icon?: Icon;
+  icon?: IconInterface;
 }
 
 function Button({
