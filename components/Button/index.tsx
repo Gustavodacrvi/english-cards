@@ -2,52 +2,55 @@
 
 import React from 'react'
 import {
-  StyleSheet,
-  Text,
-  TouchableNativeFeedback,
-  View,
+  Animated,
 } from 'react-native'
 
-import globalStyles from "./../../styles"
-import { primary } from './../../styles/colors'
+import { primary, backgroundColor, red } from './../../styles/colors'
 
 import { IconInterface } from './../../interfaces'
 
+import ButtonRenderer from './buttonRenderer'
+
+import ColorAnimation from '../../animations/colors'
+
+const AnimatedButtonRenderer = Animated.createAnimatedComponent(ButtonRenderer)
+
 interface ButtonProps {
   name: string;
-  type?: 'button';
+  type?: 'default' | 'white' | 'slides' | 'cancel';
+  blocked?: boolean;
   icon?: IconInterface;
 }
 
 function Button({
   name,
+  type = 'default',
+  blocked,
 }: ButtonProps) {
-  return (
-    <TouchableNativeFeedback
-      useForeground={true}
-    >
-      <View style={[
-        s.Button,
-/*         {
-          backgroundColor: color,
-        }, */
-      ]}>
-        <Text style={s.Text}> {name} </Text>
-      </View>
-    </TouchableNativeFeedback>
-  )
-}
+  const key = blocked ? 'blocked' : type
+  
+  return <AnimatedButtonRenderer
+    name={name}
 
-const s = StyleSheet.create({
-  Button: {
-    padding: 10,
-    borderRadius: 8,
-    display: 'flex',
-    alignItems: 'center',
-  },
-  Text: {
-    fontSize: 18,
-  },
-})
+    color={ColorAnimation({
+      default: '#fff',
+      white: backgroundColor,
+      slides: '#fff',
+      cancel: '#fff',
+    }[key])}
+    borderColor={ColorAnimation({
+      default: primary,
+      white: '#fff',
+      slides: '#fff',
+      cancel: red,
+    }[key])}
+    backgroundColor={ColorAnimation({
+      default: primary,
+      white: '#fff',
+      slides: backgroundColor,
+      cancel: red,
+    }[key])}
+  />
+}
 
 export default Button
