@@ -4,21 +4,27 @@ import React, { createContext, Component } from 'react'
 export const ToastContext = createContext(undefined as Props)
 
 interface Toast {
-  name: string;
+  msg: string;
+  duration: number;
+  type: 'error' | 'success',
 }
 
 interface pushToast {
-  (toast: Toast) : void;
+  (toast: Toast | null) : void;
 }
 
 interface Props {
   pushToast: pushToast;
-  toasts: Toast[];
+  toast: Toast | null;
 }
 
 class ToastContextProvider extends Component {
   state = {
-    toasts: [],
+    toast: {
+      msg: 'Preencha todos os campos.',
+      type: 'success',
+      duration: 300,
+    } as Toast,
   }
   
   render() {
@@ -30,8 +36,7 @@ class ToastContextProvider extends Component {
   }
 
   pushToast: pushToast = (toast) => {
-    
-    console.log('I AM PUSHING A TOAST') 
+    this.setState({toast})
   }
 }
 

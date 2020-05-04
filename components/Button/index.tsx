@@ -31,8 +31,6 @@ function Button({
 }: ButtonProps) {
   const key = blocked ? 'blocked' : type
 
-  const {pushToast} = useContext(ToastContext)
-
   const iconWidth = 22
 
   return <AnimatedButtonRenderer
