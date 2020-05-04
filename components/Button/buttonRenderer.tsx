@@ -8,52 +8,81 @@ import {
   Animated,
 } from 'react-native'
 
-import React from 'react'
+import { IconInterface } from './../../interfaces'
+
+import React, { useEffect, forwardRef, useState } from 'react'
+import Icon from './../Icon'
+
+import EnterLeaveAnimation from './../../animations/dimensionsEnterLeave'
+
 const AnimatedTouchableNative = Animated.createAnimatedComponent(TouchableNativeFeedback)
 
-export default class ButtonRenderer extends React.Component<{
+interface Props {
   backgroundColor: string;
-  borderColor: string;
-  color: string;
   name: string;
-}> {
-  render() {
-    const {
-      backgroundColor,
-      name,
-      color,
-      borderColor,
-    } = this.props
-    
-    return (
-      <AnimatedTouchableNative
-      useForeground={true}
-    >
-      <View style={[
-        s.Button,
-        {
-          backgroundColor,
-          borderRadius: 8,
-          borderWidth: 3,
-          borderColor,
-        },
-      ]}>
-        <Text style={[s.Text, {color}]}> {name} </Text>
-      </View>
-    </AnimatedTouchableNative>
-    )
-  }
+  icon?: IconInterface;
+  borderColor: string;
+  textColor: string;
+  iconWidth: number;
 }
 
+const ButtonRenderer = forwardRef(({
+  backgroundColor,
+  borderColor,
+  name,
+  icon,
+  textColor,
+  iconWidth,
+}: Props, ref: any) => {
+
+  return (
+    <AnimatedTouchableNative
+      ref={ref}
+      useForeground={true}
+    >
+      <View>
+        <View
+          style={[s.Wrapper,{
+            backgroundColor,
+            borderRadius: 8,
+            borderWidth: 3,
+            borderColor,
+          }]}
+        >
+          <View style={s.Button}>
+            <Text style={[s.Text, {
+              color: textColor,
+            }]}> {name} </Text>
+            {EnterLeaveAnimation({
+              off: {
+                width: 0,
+                opacity: 0,
+              },
+              on: {
+                width: iconWidth,
+                opacity: 1,
+              },
+            }, icon ? <Icon {...icon}/> : null)}
+          </View>
+        </View>
+      </View>
+    </AnimatedTouchableNative>
+  )
+})
+
 const s = StyleSheet.create({
+  Wrapper: {
+    alignItems: 'center',
+  },
   Button: {
     padding: 8,
     borderRadius: 8,
-    display: 'flex',
     alignItems: 'center',
+    flexDirection: 'row',
   },
   Text: {
     fontSize: 18,
   },
 })
 
+export default ButtonRenderer

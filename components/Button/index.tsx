@@ -1,6 +1,6 @@
 
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Animated,
 } from 'react-native'
@@ -26,13 +26,19 @@ function Button({
   name,
   type = 'default',
   blocked,
+  icon,
 }: ButtonProps) {
   const key = blocked ? 'blocked' : type
-  
+
+  const iconWidth = 22
+
   return <AnimatedButtonRenderer
     name={name}
 
-    color={ColorAnimation({
+    icon={icon}
+    iconWidth={iconWidth}
+
+    textColor={ColorAnimation({
       default: '#fff',
       white: backgroundColor,
       slides: '#fff',

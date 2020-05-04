@@ -36,7 +36,7 @@ export default function(color: string, duration: number = 200) {
     })
     runOnNextRender(true)
   }, [color])
-
+  
   return animation.interpolate(
     {
       inputRange: [0, 1],
