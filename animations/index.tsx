@@ -119,7 +119,7 @@ export const enterLeaveTransition = ({
         animation,
         {
           toValue: 1,
-          useNativeDriver: events.useNativeDriver,
+          useNativeDriver: events.useNativeDriver || false,
           duration: events.duration || 200,
         }
       ).start(endCallback)

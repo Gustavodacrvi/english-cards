@@ -1,17 +1,18 @@
 
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback, useContext } from 'react'
 import {
   Animated,
 } from 'react-native'
 
 import { primary, backgroundColor, red } from './../../styles/colors'
 
-import { IconInterface } from './../../interfaces'
 
 import ButtonRenderer from './buttonRenderer'
 
-import {colorChangeDetection} from '../../animations/'
+import { IconInterface } from './../../interfaces'
+import { colorChangeDetection } from '../../animations/'
+import { ToastContext } from '../../contexts/toast'
 
 const AnimatedButtonRenderer = Animated.createAnimatedComponent(ButtonRenderer)
 
@@ -29,6 +30,8 @@ function Button({
   icon,
 }: ButtonProps) {
   const key = blocked ? 'blocked' : type
+
+  const {pushToast} = useContext(ToastContext)
 
   const iconWidth = 22
 

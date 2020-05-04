@@ -4,18 +4,23 @@ import React, { useState, useEffect } from 'react'
 import { Text, View } from 'react-native'
 
 import globalStyles from './styles/'
+import { backgroundColor } from './styles/colors'
 
 import Button from "./components/Button"
+import ToastContextProvider from './contexts/toast'
 
 function App() {
   return (
-    
-    <View style={{backgroundColor: '#525A79', height: '100%'}}>
-      <Text style={globalStyles.Text}>Step 3</Text>
+    <ToastContextProvider>
 
-      <Button name="Exemplo" type="cancel"/>
+      <View style={{backgroundColor, height: '100%'}}>
+        <Text style={globalStyles.Text}>Step 3</Text>
 
-    </View>
+        <Button name="Exemplo" type="cancel"/>
+
+      </View>
+
+    </ToastContextProvider>
   )
 }
 
