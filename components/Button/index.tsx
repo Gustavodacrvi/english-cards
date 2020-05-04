@@ -11,7 +11,7 @@ import { IconInterface } from './../../interfaces'
 
 import ButtonRenderer from './buttonRenderer'
 
-import ColorAnimation from '../../animations/colors'
+import {colorChangeDetection} from '../../animations/'
 
 const AnimatedButtonRenderer = Animated.createAnimatedComponent(ButtonRenderer)
 
@@ -38,19 +38,19 @@ function Button({
     icon={icon}
     iconWidth={iconWidth}
 
-    textColor={ColorAnimation({
+    textColor={colorChangeDetection({
       default: '#fff',
       white: backgroundColor,
       slides: '#fff',
       cancel: '#fff',
     }[key])}
-    borderColor={ColorAnimation({
+    borderColor={colorChangeDetection({
       default: primary,
       white: '#fff',
       slides: '#fff',
       cancel: red,
     }[key])}
-    backgroundColor={ColorAnimation({
+    backgroundColor={colorChangeDetection({
       default: primary,
       white: '#fff',
       slides: backgroundColor,

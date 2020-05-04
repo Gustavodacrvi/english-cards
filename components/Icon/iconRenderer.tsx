@@ -20,6 +20,8 @@ import trash from './Icons/trash'
 import user from './Icons/user'
 import wifi from './Icons/wifi'
 
+import { Animated, View } from 'react-native'
+
 const icons = {
   home, alert, book,
   words, cards, loading,
@@ -30,22 +32,37 @@ const icons = {
   'sort-by-name': sortByName,
 }
 
-import React from 'react'
+import React, { forwardRef } from 'react'
 
-export default class IconRenderer extends React.Component<{
+import { transformRotate } from '../../animations'
+
+interface Props {
   width: string;
   icon: string;
+  rotate: boolean;
   primaryColor: string;
   secondaryColor: string;
-}> {
-  render() {
-    const { primaryColor, icon, secondaryColor, width } = this.props
-    
-    return <SvgXml
-      xml={icons[icon](width, primaryColor, secondaryColor)}
-    
-      width={width}
-      height={width}
-    />
-  }
 }
+
+
+const IconRenderer = forwardRef(({
+  primaryColor, icon, secondaryColor, width, rotate
+}: Props, ref: any) => {
+    
+  return (
+    <Animated.View
+      style={{
+        transform: [{rotate: rotate ? transformRotate() : '0deg'}],
+      }}
+    >
+      <SvgXml
+        xml={icons[icon](width, primaryColor, secondaryColor)}
+      
+        width={width}
+        height={width}
+      />
+    </Animated.View>
+  )
+})
+
+export default IconRenderer

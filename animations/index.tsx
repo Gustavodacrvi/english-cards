@@ -1,8 +1,50 @@
 
 
-import React from 'react'
-import { useState, useEffect } from 'react'
-import { Animated, StyleSheet, ViewStyle } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { Animated, Easing } from 'react-native'
+
+export const colorChangeDetection = (color: string, duration: number = 200): Animated.AnimatedInterpolation => {
+  const [shouldRunInThisRender, runOnNextRender] = useState(false)
+  const [{
+    oldColor,
+    newColor,
+  }, setColors] = useState({
+    oldColor: color,
+    newColor: color,
+  })
+
+  const [animation] = useState(new Animated.Value(0))
+  
+  if (shouldRunInThisRender) {
+    runOnNextRender(false)
+    animation.setValue(0)
+  
+    Animated.timing(
+      animation,
+      {
+        toValue: 1,
+        useNativeDriver: false,
+        duration,
+      }
+    ).start()
+  }
+
+  useEffect(() => {
+    setColors({
+      oldColor: newColor,
+      newColor: color,
+    })
+    runOnNextRender(true)
+  }, [color])
+  
+  return animation.interpolate(
+    {
+      inputRange: [0, 1],
+      outputRange: [oldColor, newColor]
+    })
+}
+
+import { StyleSheet, ViewStyle } from 'react-native'
 
 interface Options {
 
@@ -18,11 +60,13 @@ interface Events {
 
   beforeLeave?: (...arr: any[]) => void;
   afterLeave?: (...arr: any[]) => void;
+
+  useNativeDriver?: boolean
 }
 
-export default ({
+export const enterLeaveTransition = ({
   on, off,
-}: Options, reactNode: React.ReactNode | null, events: Events = {}) => {
+}: Options, reactNode: React.ReactNode | null, events: Events = {}): React.ReactNode => {
   const render = reactNode !== null
   
   const [animatedStyle, setAnimation] = useState({})
@@ -75,7 +119,7 @@ export default ({
         animation,
         {
           toValue: 1,
-          useNativeDriver: false,
+          useNativeDriver: events.useNativeDriver,
           duration: events.duration || 200,
         }
       ).start(endCallback)
@@ -91,4 +135,27 @@ export default ({
   ) : undefined
 }
 
+export const transformRotate = (duration: number = 500, invertDirection: boolean = false): Animated.AnimatedInterpolation => {
+  
+  const [spinValue] = useState(new Animated.Value(0))
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.timing(
+        spinValue,
+        {
+         toValue: 1,
+         duration,
+         easing: Easing.linear,
+         useNativeDriver: true,
+        },
+      )
+     ).start()
+  }, )
+
+  return spinValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: invertDirection ? ['360deg', '0deg'] : ['0deg', '360deg'],
+  })
+}
 
