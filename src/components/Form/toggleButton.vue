@@ -2,19 +2,19 @@
   <div class="toggle-button">
     <div class="form-wrapper">
       <div class="button-wrapper">
-        <span class="btn" :class="{active: !login}" @click="login = false">
+        <span class="btn" :class="{active: !firstTime}" @click="firstTime = false">
           Entrar
         </span>
-        <span class="btn" :class="{active: login}" @click="login = true">
+        <span class="btn" :class="{active: firstTime}" @click="firstTime = true">
           Criar conta
         </span>
 
-        <div class="background" :class="{moveBtn: login}">
+        <div class="background" :class="{moveBtn: firstTime}">
 
         </div>
       </div>
-      <login-vue
-        :login='login'
+      <form-vue
+        :firstTime='firstTime'
       />
     </div>
   </div>
@@ -22,18 +22,18 @@
 
 <script>
 
-import LoginVue from './Login.vue'
+import FormVue from './Form.vue'
 
 export default {
   data() {
     return {
-      login: false,
+      firstTime: false,
     }
   },
   methods: {
   },
   components: {
-    LoginVue,
+    FormVue,
   },
 }
 </script>

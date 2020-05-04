@@ -23,22 +23,23 @@ export default {
 
 <style scoped>
 .message-popup {
-    margin: 5px;
-    background: var(--primary);
-    width: 269px;
-    height: 75px;
-    border-radius: 8px;
-    opacity: 1;
+  background: var(--primary);
+  transform: translateY(11px);
+  position: absolute;
+  width: 269px;
+  height: 75px;
+  border-radius: 8px;
 }
 span {
-    font-size: 14px;
-    font-weight: bold;
-    text-align: start;
-    margin: 5px auto;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: start;
 }
 .wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
 }
 </style>
