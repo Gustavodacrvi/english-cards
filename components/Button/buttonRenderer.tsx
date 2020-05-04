@@ -24,6 +24,7 @@ interface Props {
   borderColor: string;
   textColor: string;
   iconWidth: number;
+  click: () => void;
 }
 
 const ButtonRenderer = forwardRef(({
@@ -33,12 +34,15 @@ const ButtonRenderer = forwardRef(({
   icon,
   textColor,
   iconWidth,
+  click,
 }: Props, ref: any) => {
 
   return (
     <AnimatedTouchableNative
       ref={ref}
       useForeground={true}
+
+      onPress={click}
     >
       <View>
         <View

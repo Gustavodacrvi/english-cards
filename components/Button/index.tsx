@@ -21,6 +21,7 @@ interface ButtonProps {
   type?: 'default' | 'white' | 'slides' | 'cancel';
   blocked?: boolean;
   icon?: IconInterface;
+  click: () => void;
 }
 
 function Button({
@@ -31,10 +32,21 @@ function Button({
 }: ButtonProps) {
   const key = blocked ? 'blocked' : type
 
+  const {pushToast} = useContext(ToastContext)
+  
+  const push = () => {
+    pushToast({
+      msg: 'Preencha todos os campos.',
+      type: 'success',
+      duration: 2000,
+    })
+  }
+
   const iconWidth = 22
 
   return <AnimatedButtonRenderer
     name={name}
+    click={push}
 
     icon={icon}
     iconWidth={iconWidth}

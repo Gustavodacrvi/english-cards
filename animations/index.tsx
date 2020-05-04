@@ -90,41 +90,37 @@ export const enterLeaveTransition = ({
     runOnNextRender(true)
   }, [render])
 
-  let endCallback = () => {}
-
   useEffect(() => {
     if (render) {
       setNode(reactNode)
       if (events.beforeEnter) events.beforeEnter()
-      endCallback = () => {
-        if (events.afterEnter) events.afterEnter()
-      }
     } else {
       if (events.beforeLeave) events.beforeLeave()
-      endCallback = () => {
-        if (events.afterLeave) events.afterLeave()
-        setNode(null)
-        removeOnNextRender(false)
-      }
       removeOnNextRender(true)
     }
   }, [render])
 
-  useEffect(() => {
-    if (shouldRunInThisRender) {
-      runOnNextRender(false)
-      animation.setValue(0)
-    
-      Animated.timing(
-        animation,
-        {
-          toValue: 1,
-          useNativeDriver: events.useNativeDriver || false,
-          duration: events.duration || 200,
-        }
-      ).start(endCallback)
-    }
-  }, [shouldRunInThisRender])
+  if (shouldRunInThisRender) {
+    runOnNextRender(false)
+    animation.setValue(0)
+  
+    Animated.timing(
+      animation,
+      {
+        toValue: 1,
+        useNativeDriver: events.useNativeDriver || false,
+        duration: events.duration || 200,
+      }
+    ).start(() => {
+      if (render) {
+        if (events.afterEnter) events.afterEnter()
+      } else {
+        if (events.afterLeave) events.afterLeave()
+        setNode(null)
+        removeOnNextRender(false)
+      }
+    })
+  }
 
   return node ? (
     <Animated.View style={[

@@ -20,11 +20,7 @@ interface Props {
 
 class ToastContextProvider extends Component {
   state = {
-    toast: {
-      msg: 'Preencha todos os campos.',
-      type: 'success',
-      duration: 300,
-    } as Toast,
+    toast: null as Toast,
   }
   
   render() {

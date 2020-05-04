@@ -1,25 +1,36 @@
 
 
-import React, { useContext } from "react"
+import React, { useContext, useEffect } from "react"
 import { View, Text, StyleSheet } from "react-native"
 
 import { backgroundColor, primary, red } from './../../styles/colors'
 import { ToastContext } from "../../contexts/toast"
 
-function Toast() {
-  const {toast} = useContext(ToastContext)
+import { enterLeaveTransition } from './../../animations'
 
-  console.log(toast)
-  
+function Toast() {
+  const {toast, pushToast} = useContext(ToastContext)
+
+  if (toast) {
+    setTimeout(() => pushToast(null), toast.duration)
+  }
+
   return (
     <View
       style={[
         s.Wrapper,
       ]}
     >
-      <View style={[s.Toast, toast ? s[toast.type] : undefined,]}>
-        <Text style={s.Text}>{ toast.msg }</Text>
-      </View>
+      {enterLeaveTransition({
+        off: {
+          translateX: 500,
+        },
+        on: {
+          translateX: 0,
+        },
+      }, toast ? <View style={[s.Toast, toast ? s[toast.type] : undefined,]}>
+          <Text style={s.Text}>{ toast ? toast.msg : undefined }</Text>
+        </View> : null, {useNativeDriver: true})}
     </View>
   )
 }

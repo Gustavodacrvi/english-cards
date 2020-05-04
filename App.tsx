@@ -1,6 +1,6 @@
 
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Text, View } from 'react-native'
 
 import globalStyles from './styles/'
@@ -8,7 +8,7 @@ import { backgroundColor } from './styles/colors'
 
 import Button from "./components/Button"
 import Toast from "./components/Toast/"
-import ToastContextProvider from './contexts/toast'
+import ToastContextProvider, { ToastContext } from './contexts/toast'
 
 function App() {
   return (
