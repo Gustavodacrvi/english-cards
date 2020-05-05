@@ -1,47 +1,40 @@
 
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Animated, Easing } from 'react-native'
 
-export const animateProperty = (value: string, duration: number = 200, useNativeDriver: boolean = false): Animated.AnimatedInterpolation => {
-  const [shouldRunInThisRender, runOnNextRender] = useState(false)
-  const [{
-    oldProperty,
-    newProperty,
-  }, setColors] = useState({
-    oldProperty: value,
-    newProperty: value,
-  })
+export const animateProperty = (value: string | number, duration: number = 200, useNativeDriver: boolean = false): Animated.AnimatedInterpolation => {
 
+  const oldValue = useRef(value)
+  const isTransitioning = useRef(false)
+  
   const [animation] = useState(new Animated.Value(0))
-  
-  useEffect(() => {
-    setColors({
-      oldProperty: newProperty,
-      newProperty: value,
-    })
-    runOnNextRender(true)
-  }, [value])
-  
-  if (shouldRunInThisRender) {
-    runOnNextRender(false)
-    animation.setValue(0)
-  
-    Animated.timing(
-      animation,
-      {
-        toValue: 1,
-        useNativeDriver,
-        duration,
-      }
-    ).start()
-  }
 
-  return animation.interpolate(
+  const config = animation.interpolate(
     {
       inputRange: [0, 1],
-      outputRange: [oldProperty, newProperty]
+      outputRange: [oldValue.current as any, value as any],
     })
+
+  oldValue.current = value
+
+  if (isTransitioning.current) return config
+  
+  animation.setValue(0)
+
+  Animated.timing(
+    animation,
+    {
+      toValue: 1,
+      useNativeDriver,
+      duration,
+    }
+  ).start(() => {
+    isTransitioning.current = false
+  })
+
+  isTransitioning.current = true
+  return config
 }
 
 export const animateStyles = (style: ViewStyle, duration: number = 200, useNativeDriver: boolean = false): {[key: string]: Animated.AnimatedInterpolation} => {
@@ -78,68 +71,60 @@ export const animateEnterLeave = ({
 }: StyleOptions, reactNode: React.ReactNode | null, events: Events = {}): React.ReactNode => {
   const render = reactNode !== null
   
-  const [animatedStyle, setAnimation] = useState({})
-  const [willRemove, removeOnNextRender] = useState(false)
-  const [shouldRunInThisRender, runOnNextRender] = useState(render)
   const [animation] = useState(new Animated.Value(0))
-  const [node, setNode] = useState(reactNode)
+  const isTransitioning = useRef(false)
+  const node = useRef(reactNode)
   
-  useEffect(() => {
-    setAnimation({
-      ...Object.keys(off).reduce((obj, key) => {
-        return {
-          ...obj,
-          [key]: animation.interpolate({
-            inputRange: [0, 1],
-            outputRange: render ? [off[key], on[key]] : [on[key], off[key]]
-          })
-        }
-      }, {})
-    })
-    runOnNextRender(true)
-  }, [render])
+  const animatedStyle = {
+    ...Object.keys(off).reduce((obj, key) => {
+      return {
+        ...obj,
+        [key]: animation.interpolate({
+          inputRange: [0, 1],
+          outputRange: render ? [off[key], on[key]] : [on[key], off[key]]
+        })
+      }
+    }, {})
+  }
 
-  useEffect(() => {
-    if (render) {
-      setNode(reactNode)
-      if (events.beforeEnter) events.beforeEnter()
-    } else {
-      if (events.beforeLeave) events.beforeLeave()
-      removeOnNextRender(true)
-    }
-  }, [render])
+  if (render) {
+    node.current = reactNode
+    if (events.beforeEnter) events.beforeEnter()
+  } else {
+    if (events.beforeLeave) events.beforeLeave()
+  }
 
-  useEffect(() => {
-    if (shouldRunInThisRender) {
-      runOnNextRender(false)
-      animation.setValue(0)
-    
-      Animated.timing(
-        animation,
-        {
-          toValue: 1,
-          useNativeDriver: events.useNativeDriver || false,
-          duration: events.duration || 200,
-        }
-      ).start(() => {
-        if (render) {
-          if (events.afterEnter) events.afterEnter()
-        } else {
-          if (events.afterLeave) events.afterLeave()
-          setNode(null)
-          removeOnNextRender(false)
-        }
-      })
-    }
-  }, [shouldRunInThisRender])
-
-  return node ? (
+  const jsx = node.current ? (
     <Animated.View style={[
       animatedStyle,
     ]}>
-      { node }
+      { node.current }
     </Animated.View>
   ) : undefined
+
+  if (isTransitioning.current === true) return jsx
+
+  animation.setValue(0)
+
+  Animated.timing(
+    animation,
+    {
+      toValue: 1,
+      useNativeDriver: events.useNativeDriver || false,
+      duration: events.duration || 200,
+    }
+  ).start(() => {
+    isTransitioning.current = false
+    if (render) {
+      if (events.afterEnter) events.afterEnter()
+    } else {
+      if (events.afterLeave) events.afterLeave()
+      node.current = null
+    }
+  })
+
+  isTransitioning.current = true
+  return jsx
 }
 
 export const animateRotation = (duration: number = 500, invertDirection: boolean = false): Animated.AnimatedInterpolation => {
@@ -158,7 +143,7 @@ export const animateRotation = (duration: number = 500, invertDirection: boolean
         },
       )
      ).start()
-  }, )
+  })
 
   return spinValue.interpolate({
     inputRange: [0, 1],

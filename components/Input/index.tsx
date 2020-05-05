@@ -1,25 +1,47 @@
 
 
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
 import { TextInput } from 'react-native-gesture-handler'
-import { StyleSheet, ViewStyle } from 'react-native'
+import { StyleSheet, ViewStyle, StyleProp, TextStyle, Keyboard } from 'react-native'
 
 import { faded, primary } from './../../styles/colors'
 
 interface Props {
   placeholder?: string;
-  styles?: ViewStyle;
+  onFocus?: () => void;
+  style?: StyleProp<TextStyle>;
 }
 
 function Input({
   placeholder,
-  styles = {},
+  style,
+  onFocus = (() => {})
 }: Props) {
+
+  const input = useRef(null)
+
+  const blur = () => {
+    if (input.current)
+      input.current.blur()
+  }
+
+  Keyboard.addListener('keyboardDidHide', blur)
+
+  useEffect(() => {
+    Keyboard.addListener('keyboardDidHide', blur)
+    return () => Keyboard.removeListener('keyboardDidHide', blur)
+  }, [])
+  
   return (
-    <TextInput style={[s.Input, styles]}
+    <TextInput
+      ref={input}
+    
+      style={[s.Input, style]}
       placeholder={placeholder}
       placeholderTextColor={faded}
       selectionColor={primary}
+
+      onFocus={onFocus}
     />
   )
 }
