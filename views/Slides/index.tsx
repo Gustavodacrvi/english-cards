@@ -1,18 +1,26 @@
 
 
-import React from 'react'
+import React, { useState } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { backgroundColor } from '../../styles/colors'
 import SlidesNavigator from './Navigator'
 
-function Slides() {
+function Slides({navigation}) {
+
+  const [slide, setSlide] = useState(0 as 0 | 1 | 2 | 3)
+
+  console.log(navigation)
+
   return (
     <View style={s.Slides}>
       <Text>
         slides
       </Text>
 
-      <SlidesNavigator slideNumber={0}/>
+      <SlidesNavigator
+        slideNumber={slide}
+        setSlide={setSlide}
+      />
     </View>
   )
 }

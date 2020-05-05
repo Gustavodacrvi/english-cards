@@ -20,8 +20,6 @@ function Authentication() {
   
   const dismiss = () => setFocus(false)
 
-  Keyboard.addListener('keyboardDidHide', dismiss)
-
   useEffect(() => {
     Keyboard.addListener('keyboardDidHide', dismiss)
     return () => Keyboard.removeListener('keyboardDidHide', dismiss)
