@@ -2,6 +2,7 @@
 
 export interface IconInterface {
   width?: number;
+  rotate?: boolean;
   color?: string;
   primaryColor?: string;
   secondaryColor?: string;
