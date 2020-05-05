@@ -10,9 +10,11 @@ import Button from '../../components/Button'
 function SlidesNavigator({
   slideNumber,
   setSlide,
+  navigate,
 }: {
   slideNumber: 0 | 1 | 2 | 3;
   setSlide: (slide: 0 | 1 | 2 | 3) => void;
+  navigate: (route: string) => void;
 }) {
 
   const getStyles = num =>
@@ -33,7 +35,7 @@ function SlidesNavigator({
     if (newSlide < 4) {
       setSlide(newSlide as any)
     } else {
-      // go to auth
+      navigate('Authentication')
     }
   }
 

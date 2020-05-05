@@ -9,8 +9,6 @@ function Slides({navigation}) {
 
   const [slide, setSlide] = useState(0 as 0 | 1 | 2 | 3)
 
-  console.log(navigation)
-
   return (
     <View style={s.Slides}>
       <Text>
@@ -20,6 +18,7 @@ function Slides({navigation}) {
       <SlidesNavigator
         slideNumber={slide}
         setSlide={setSlide}
+        navigate={navigation.navigate}
       />
     </View>
   )
