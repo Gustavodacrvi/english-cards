@@ -15,8 +15,6 @@ import Icon from './../Icon'
 
 import {animateEnterLeave} from './../../animations/'
 
-const AnimatedTouchableNative = Animated.createAnimatedComponent(TouchableNativeFeedback)
-
 interface Props {
   backgroundColor: string;
   name: string;
@@ -38,39 +36,37 @@ const ButtonRenderer = forwardRef(({
 }: Props, ref: any) => {
 
   return (
-    <AnimatedTouchableNative
+    <TouchableNativeFeedback
       ref={ref}
       useForeground={true}
 
       onPress={click}
     >
-      <View>
-        <View
-          style={[s.Wrapper,{
-            backgroundColor,
-            borderRadius: 8,
-            borderWidth: 3,
-            borderColor,
-          }]}
-        >
-          <View style={s.Button}>
-            <Text style={[s.Text, {
-              color: textColor,
-            }]}> {name} </Text>
-            {animateEnterLeave({
-              off: {
-                width: 0,
-                opacity: 0,
-              },
-              on: {
-                width: iconWidth,
-                opacity: 1,
-              },
-            }, icon ? <Icon {...icon} color={textColor} width={iconWidth} rotate={true}/> : null, {duration: 500})}
-          </View>
+      <View
+        style={[s.Wrapper,{
+          backgroundColor,
+          borderRadius: 8,
+          borderWidth: 3,
+          borderColor,
+        }]}
+      >
+        <View style={s.Button}>
+          <Text style={[s.Text, {
+            color: textColor,
+          }]}> {name} </Text>
+          {animateEnterLeave({
+            off: {
+              width: 0,
+              opacity: 0,
+            },
+            on: {
+              width: iconWidth,
+              opacity: 1,
+            },
+          }, icon ? <Icon {...icon} color={textColor} width={iconWidth} rotate={true}/> : null, {duration: 500})}
         </View>
       </View>
-    </AnimatedTouchableNative>
+    </TouchableNativeFeedback>
   )
 })
 
@@ -79,13 +75,15 @@ const s = StyleSheet.create({
     alignItems: 'center',
   },
   Button: {
-    padding: 8,
     borderRadius: 8,
+    height: 42,
+    translateY: -.5,
     alignItems: 'center',
     flexDirection: 'row',
   },
   Text: {
     fontSize: 18,
+    fontFamily: 'OpenSans-Bold',
   },
 })
 

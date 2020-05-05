@@ -3,14 +3,20 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { View, BackHandler, Text, StyleSheet, TouchableWithoutFeedback, Keyboard, Animated } from "react-native"
 
-import { backgroundColor } from './../styles/colors'
-import Input from '../components/Input'
-import { animateProperty } from '../animations'
-import { ToastContext } from '../contexts/toast'
+import { backgroundColor } from '../../styles/colors'
+import Input from '../../components/Input'
+import { animateProperty } from '../../animations'
+import Button from '../../components/Button'
+
+import AuthHeader from './AuthHeader'
 
 function Authentication() {
 
   const [isFocused, setFocus] = useState(false)
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const [email, setEmail] = useState("")
+  const [isLogin, setLogin] = useState(true)
   
   const dismiss = () => setFocus(false)
 
@@ -34,25 +40,52 @@ function Authentication() {
         <Animated.View style={[
           s.Wrapper,
           {
-            marginTop: animateProperty(isFocused ? 90 : 190, 300)
+            transform: [
+              {
+                translateY: animateProperty(isFocused ? -128 : 0, 200, true),
+              }
+            ],
           },
         ]}>
+
+          <AuthHeader
+            isLogin={isLogin}
+            setLogin={setLogin}
+          />
 
           <Input
             style={s.marginTop}
             placeholder="Nome de usuário:"
             onFocus={() => setFocus(true)}
+            value={username}
+            onChangeText={setUsername}
             />
           <Input
             style={s.marginTop}
             placeholder="E-mail:"
             onFocus={() => setFocus(true)}
+            value={email}
+            onChangeText={setEmail}
             />
           <Input
             style={s.marginTop}
             placeholder="Senha:"
+            password={true}
             onFocus={() => setFocus(true)}
+            value={password}
+            onChangeText={setPassword}
           />
+          <View style={s.marginTop}>
+            <Button
+              name="Login"
+              type='white'
+              blocked={
+                !username.length ||
+                !email.length ||
+                !password.length
+              }
+            />
+          </View>
 
         </Animated.View>
       </View>
@@ -67,8 +100,10 @@ const s = StyleSheet.create({
     alignItems: 'center',
   },
   Wrapper: {
-    height: 30,
     width: 268,
+    marginTop: 150,
+    position: 'relative',
+    overflow: 'visible',
   },
   marginTop: {
     marginTop: 12,

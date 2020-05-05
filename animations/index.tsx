@@ -9,16 +9,22 @@ export const animateProperty = (value: string | number, duration: number = 200, 
   const isTransitioning = useRef(false)
   
   const [animation] = useState(new Animated.Value(0))
+  
+  const config = useRef(animation.interpolate(
+    {
+      inputRange: [0, 1],
+      outputRange: [oldValue.current as any, value as any],
+    }))
 
-  const config = animation.interpolate(
+  if (isTransitioning.current) return config.current
+
+  config.current = animation.interpolate(
     {
       inputRange: [0, 1],
       outputRange: [oldValue.current as any, value as any],
     })
 
   oldValue.current = value
-
-  if (isTransitioning.current) return config
   
   animation.setValue(0)
 
@@ -34,7 +40,7 @@ export const animateProperty = (value: string | number, duration: number = 200, 
   })
 
   isTransitioning.current = true
-  return config
+  return config.current
 }
 
 export const animateStyles = (style: ViewStyle, duration: number = 200, useNativeDriver: boolean = false): {[key: string]: Animated.AnimatedInterpolation} => {

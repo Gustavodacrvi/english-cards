@@ -2,20 +2,27 @@
 
 import React, { useRef, useEffect } from 'react'
 import { TextInput } from 'react-native-gesture-handler'
-import { StyleSheet, ViewStyle, StyleProp, TextStyle, Keyboard } from 'react-native'
+import { StyleSheet, StyleProp, TextStyle, Keyboard, View } from 'react-native'
 
 import { faded, primary } from './../../styles/colors'
+import Icon from '../Icon'
 
 interface Props {
   placeholder?: string;
+  value?: string;
+  password?: boolean;
   onFocus?: () => void;
+  onChangeText?: (value: string) => void;
   style?: StyleProp<TextStyle>;
 }
 
 function Input({
   placeholder,
   style,
-  onFocus = (() => {})
+  value = "",
+  password = false,
+  onFocus = (() => {}),
+  onChangeText = (() => {}),
 }: Props) {
 
   const input = useRef(null)
@@ -31,30 +38,39 @@ function Input({
     Keyboard.addListener('keyboardDidHide', blur)
     return () => Keyboard.removeListener('keyboardDidHide', blur)
   }, [])
-  
-  return (
-    <TextInput
-      ref={input}
-    
-      style={[s.Input, style]}
-      placeholder={placeholder}
-      placeholderTextColor={faded}
-      selectionColor={primary}
 
-      onFocus={onFocus}
-    />
+  return (
+    <View style={[s.Wrapper, style]}>
+      <TextInput style={s.Input}
+        ref={input}
+      
+        value={value}
+        
+        placeholder={placeholder}
+        placeholderTextColor={faded}
+        selectionColor={primary}
+        secureTextEntry={password}
+  
+        onFocus={onFocus}
+        onChangeText={onChangeText}
+      />
+    </View>
   )
 }
 
 const s = StyleSheet.create({
-  Input: {
+  Wrapper: {
     width: '100%',
-    height: 42,
+    height: 48,
     paddingLeft: 16,
-    color: '#fff',
     borderColor: 'white',
     borderWidth: 3,
     borderRadius: 8,
+  },
+  Input: {
+    color: '#fff',
+    height: '100%',
+    fontSize: 15,
   },
 })
 
