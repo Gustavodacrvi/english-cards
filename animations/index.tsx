@@ -3,17 +3,25 @@
 import React, { useState, useEffect } from 'react'
 import { Animated, Easing } from 'react-native'
 
-export const colorChangeDetection = (color: string, duration: number = 200): Animated.AnimatedInterpolation => {
+export const animateProperty = (value: string, duration: number = 200, useNativeDriver: boolean = false): Animated.AnimatedInterpolation => {
   const [shouldRunInThisRender, runOnNextRender] = useState(false)
   const [{
-    oldColor,
-    newColor,
+    oldProperty,
+    newProperty,
   }, setColors] = useState({
-    oldColor: color,
-    newColor: color,
+    oldProperty: value,
+    newProperty: value,
   })
 
   const [animation] = useState(new Animated.Value(0))
+  
+  useEffect(() => {
+    setColors({
+      oldProperty: newProperty,
+      newProperty: value,
+    })
+    runOnNextRender(true)
+  }, [value])
   
   if (shouldRunInThisRender) {
     runOnNextRender(false)
@@ -23,31 +31,31 @@ export const colorChangeDetection = (color: string, duration: number = 200): Ani
       animation,
       {
         toValue: 1,
-        useNativeDriver: false,
+        useNativeDriver,
         duration,
       }
     ).start()
   }
 
-  useEffect(() => {
-    setColors({
-      oldColor: newColor,
-      newColor: color,
-    })
-    runOnNextRender(true)
-  }, [color])
-  
   return animation.interpolate(
     {
       inputRange: [0, 1],
-      outputRange: [oldColor, newColor]
+      outputRange: [oldProperty, newProperty]
     })
 }
 
-import { StyleSheet, ViewStyle } from 'react-native'
+export const animateStyles = (style: ViewStyle, duration: number = 200, useNativeDriver: boolean = false): {[key: string]: Animated.AnimatedInterpolation} => {
+  return {
+    ...Object.keys(style).reduce((obj, key) => ({
+      ...obj,
+      [key]: animateProperty(style[key], duration, useNativeDriver),
+    }), {})
+  }
+}
 
-interface Options {
+import { ViewStyle } from 'react-native'
 
+interface StyleOptions {
   on: ViewStyle;
   off: ViewStyle;
 }
@@ -64,9 +72,10 @@ interface Events {
   useNativeDriver?: boolean
 }
 
-export const enterLeaveTransition = ({
+
+export const animateEnterLeave = ({
   on, off,
-}: Options, reactNode: React.ReactNode | null, events: Events = {}): React.ReactNode => {
+}: StyleOptions, reactNode: React.ReactNode | null, events: Events = {}): React.ReactNode => {
   const render = reactNode !== null
   
   const [animatedStyle, setAnimation] = useState({})
@@ -100,27 +109,29 @@ export const enterLeaveTransition = ({
     }
   }, [render])
 
-  if (shouldRunInThisRender) {
-    runOnNextRender(false)
-    animation.setValue(0)
-  
-    Animated.timing(
-      animation,
-      {
-        toValue: 1,
-        useNativeDriver: events.useNativeDriver || false,
-        duration: events.duration || 200,
-      }
-    ).start(() => {
-      if (render) {
-        if (events.afterEnter) events.afterEnter()
-      } else {
-        if (events.afterLeave) events.afterLeave()
-        setNode(null)
-        removeOnNextRender(false)
-      }
-    })
-  }
+  useEffect(() => {
+    if (shouldRunInThisRender) {
+      runOnNextRender(false)
+      animation.setValue(0)
+    
+      Animated.timing(
+        animation,
+        {
+          toValue: 1,
+          useNativeDriver: events.useNativeDriver || false,
+          duration: events.duration || 200,
+        }
+      ).start(() => {
+        if (render) {
+          if (events.afterEnter) events.afterEnter()
+        } else {
+          if (events.afterLeave) events.afterLeave()
+          setNode(null)
+          removeOnNextRender(false)
+        }
+      })
+    }
+  }, [shouldRunInThisRender])
 
   return node ? (
     <Animated.View style={[
@@ -131,7 +142,7 @@ export const enterLeaveTransition = ({
   ) : undefined
 }
 
-export const transformRotate = (duration: number = 500, invertDirection: boolean = false): Animated.AnimatedInterpolation => {
+export const animateRotation = (duration: number = 500, invertDirection: boolean = false): Animated.AnimatedInterpolation => {
   
   const [spinValue] = useState(new Animated.Value(0))
 

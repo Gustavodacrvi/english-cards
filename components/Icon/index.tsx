@@ -6,7 +6,7 @@ import React from 'react'
 import { Animated } from 'react-native'
 import { IconInterface } from './../../interfaces'
 
-import {colorChangeDetection} from './../../animations/'
+import {animateProperty} from './../../animations/'
 
 const AnimatedIconRenderer = Animated.createAnimatedComponent(iconRenderer)
 
@@ -17,8 +17,8 @@ function Icon({color, primaryColor, secondaryColor, width = 32, icon, rotate}: I
     icon={icon}
     rotate={rotate}
 
-    primaryColor={colorChangeDetection(color || primaryColor || '#fff')}
-    secondaryColor={colorChangeDetection(color || secondaryColor || '#FFD166')}
+    primaryColor={animateProperty(color || primaryColor || '#fff')}
+    secondaryColor={animateProperty(color || secondaryColor || '#FFD166')}
   />
 
 }

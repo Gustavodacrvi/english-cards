@@ -34,7 +34,7 @@ const icons = {
 
 import React, { forwardRef } from 'react'
 
-import { transformRotate } from '../../animations'
+import { animateRotation } from '../../animations'
 
 interface Props {
   width: string;
@@ -52,7 +52,7 @@ const IconRenderer = forwardRef(({
   return (
     <Animated.View
       style={{
-        transform: [{rotate: rotate ? transformRotate() : '0deg'}],
+        transform: [{rotate: rotate ? animateRotation() : '0deg'}],
       }}
     >
       <SvgXml

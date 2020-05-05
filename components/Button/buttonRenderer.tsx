@@ -13,7 +13,7 @@ import { IconInterface } from './../../interfaces'
 import React, { useEffect, forwardRef, useState } from 'react'
 import Icon from './../Icon'
 
-import {enterLeaveTransition} from './../../animations/'
+import {animateEnterLeave} from './../../animations/'
 
 const AnimatedTouchableNative = Animated.createAnimatedComponent(TouchableNativeFeedback)
 
@@ -57,7 +57,7 @@ const ButtonRenderer = forwardRef(({
             <Text style={[s.Text, {
               color: textColor,
             }]}> {name} </Text>
-            {enterLeaveTransition({
+            {animateEnterLeave({
               off: {
                 width: 0,
                 opacity: 0,
@@ -66,7 +66,7 @@ const ButtonRenderer = forwardRef(({
                 width: iconWidth,
                 opacity: 1,
               },
-            }, icon ? <Icon {...icon} rotate={true}/> : null)}
+            }, icon ? <Icon {...icon} color={textColor} width={iconWidth} rotate={true}/> : null, {duration: 500})}
           </View>
         </View>
       </View>
