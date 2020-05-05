@@ -4,7 +4,7 @@ import React, { useState, useContext, useEffect } from 'react'
 import { View, BackHandler, Text, StyleSheet, TouchableWithoutFeedback, Keyboard, Animated } from "react-native"
 
 import { backgroundColor } from '../../styles/colors'
-import Input from '../../components/Input'
+import InputComponent from '../../components/Input'
 import { animateProperty } from '../../animations'
 import Button from '../../components/Button'
 
@@ -27,13 +27,20 @@ function Authentication() {
     return () => Keyboard.removeListener('keyboardDidHide', dismiss)
   }, [])
 
+  useEffect(() => {
+    Keyboard.dismiss()
+
+    setUsername("")
+    setPassword("")
+    setEmail("")
+    
+  }, [isLogin])
+
   return (
     <TouchableWithoutFeedback
       onPress={() => {
-        if (isFocused) {
-          setFocus(false)
-          Keyboard.dismiss()
-        }
+        setFocus(false)
+        Keyboard.dismiss()
       }}
     >
       <View style={s.Auth}>
@@ -50,42 +57,79 @@ function Authentication() {
 
           <AuthHeader
             isLogin={isLogin}
-            setLogin={setLogin}
+            setLogin={!isFocused ? setLogin : () => {}}
           />
 
-          <Input
-            style={s.marginTop}
-            placeholder="Nome de usuário:"
-            onFocus={() => setFocus(true)}
-            value={username}
-            onChangeText={setUsername}
-            />
-          <Input
-            style={s.marginTop}
-            placeholder="E-mail:"
-            onFocus={() => setFocus(true)}
-            value={email}
-            onChangeText={setEmail}
-            />
-          <Input
-            style={s.marginTop}
-            placeholder="Senha:"
-            password={true}
-            onFocus={() => setFocus(true)}
-            value={password}
-            onChangeText={setPassword}
-          />
-          <View style={s.marginTop}>
-            <Button
-              name="Login"
-              type='white'
-              blocked={
-                !username.length ||
-                !email.length ||
-                !password.length
+          <Animated.View
+            style={
+              {
+                zIndex: -1,
+                transform: [
+                  {
+                    translateY: animateProperty(isLogin ? -59 : 0, 200, true)
+                  },
+                ],
               }
+            }
+          >
+            <InputComponent
+              style={s.marginTop}
+              placeholder="Nome de usuário:"
+              onFocus={() => setFocus(true)}
+              value={username}
+              onChangeText={setUsername}
             />
-          </View>
+          </Animated.View>
+          <Animated.View
+            style={
+              {
+                transform: [
+                  {
+                    translateY: animateProperty(isLogin ? -60 : 0, 200, true)
+                  }
+                ]
+              }
+            }
+          >
+            <InputComponent
+              style={s.marginTop}
+              placeholder="E-mail:"
+              onFocus={() => setFocus(true)}
+              value={email}
+              onChangeText={setEmail}
+              />
+            <InputComponent
+              style={s.marginTop}
+              placeholder="Senha:"
+              password={true}
+              onFocus={() => setFocus(true)}
+              value={password}
+              onChangeText={setPassword}
+            />
+            <View style={s.marginTop}>
+              <Button
+                name={isLogin ? "Entrar" : "Criar"}
+                type='white'
+                blocked={
+                  (
+                    isLogin &&
+                    (
+                      !email.length ||
+                      !password.length
+                    )
+                  ) ||
+                  (
+                    !isLogin &&
+                    (
+                      !username.length ||
+                      !email.length ||
+                      !password.length
+                    )
+                  )
+                }
+              />
+            </View>
+          </Animated.View>
 
         </Animated.View>
       </View>

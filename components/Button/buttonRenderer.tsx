@@ -34,7 +34,6 @@ const ButtonRenderer = forwardRef(({
   iconWidth,
   click,
 }: Props, ref: any) => {
-
   return (
     <TouchableNativeFeedback
       ref={ref}

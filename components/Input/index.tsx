@@ -42,10 +42,11 @@ function Input({
   return (
     <View style={[s.Wrapper, style]}>
       <TextInput style={s.Input}
+        autoFocus={false}
+      
         ref={input}
       
         value={value}
-        
         placeholder={placeholder}
         placeholderTextColor={faded}
         selectionColor={primary}
