@@ -17,7 +17,7 @@ const AnimatedButtonRenderer = Animated.createAnimatedComponent(ButtonRenderer)
 
 interface ButtonProps {
   name: string;
-  type?: 'default' | 'white' | 'slides' | 'cancel';
+  type?: 'default' | 'white' | 'slides' | 'cancel' | 'blocked';
   blocked?: boolean;
   icon?: IconInterface;
   click?: () => void;
@@ -30,7 +30,7 @@ function Button({
   icon,
   click = (() => {}),
 }: ButtonProps) {
-  const key = blocked ? 'blocked' : type
+  const key = type
 
   const iconWidth = 22
 
