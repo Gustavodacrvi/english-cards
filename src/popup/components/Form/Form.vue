@@ -64,7 +64,7 @@ export default {
             }, 1000)
         },
         goToThermsPage() {	
-            this.$router.push('/therms')	
+            window.location.href = "/therms"	
         },	
         goToPrivacyPolicyPage() {	
             this.$router.push('/privacy')	

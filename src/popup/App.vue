@@ -1,19 +1,41 @@
 <template>
-  <hello-world />
+  <div id="app">
+    {{path}}
+  </div>
 </template>
 
 <script>
-import HelloWorld from '@/components/HelloWorld.vue'
-
+// import HomeVue from './views/Home.vue'
 export default {
-  name: 'App',
-  components: { HelloWorld }
+  components: {
+    // HomeVue
+  },
+  computed: {
+    path() {
+      return window.location.pathname
+    }
+  }
 }
 </script>
 
 <style>
+:root {
+  --primary: #525a79;
+  --white: #ffffff;
+  --almost-black: #5e5e5e;
+  --yellow: #FFD166;
+}
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap");
 html {
   width: 400px;
-  height: 400px;
+  height: 450px;
+  background: var(--primary);
+}
+#app {
+  font-family: "Open Sans";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: var(--white);
 }
 </style>
