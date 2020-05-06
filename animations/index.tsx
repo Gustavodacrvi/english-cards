@@ -3,6 +3,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Animated, Easing } from 'react-native'
 
+const easing = (x: number) => x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2
+const easeIn = (x: number) => 1 - Math.cos((x * Math.PI) / 2)
+const easeOut = (x: number) => Math.sin((x * Math.PI) / 2)
+
 export const animateProperty = (value: string | number, duration: number = 200, useNativeDriver: boolean = false): Animated.AnimatedInterpolation => {
 
   const oldValue = useRef(value)
@@ -33,6 +37,7 @@ export const animateProperty = (value: string | number, duration: number = 200, 
     {
       toValue: 1,
       useNativeDriver,
+      easing,
       duration,
     }
   ).start(() => {
@@ -71,8 +76,7 @@ interface Events {
   useNativeDriver?: boolean
 }
 
-
-export const animateEnterLeave = ({
+export const animateOnOff = ({
   on, off,
 }: StyleOptions, reactNode: React.ReactNode | null, events: Events = {}): React.ReactNode => {
   const render = reactNode !== null
@@ -87,6 +91,7 @@ export const animateEnterLeave = ({
         ...obj,
         [key]: animation.interpolate({
           inputRange: [0, 1],
+          easing: !render ? easeIn : easeOut,
           outputRange: render ? [off[key], on[key]] : [on[key], off[key]]
         })
       }

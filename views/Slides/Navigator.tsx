@@ -12,8 +12,8 @@ function SlidesNavigator({
   setSlide,
   navigate,
 }: {
-  slideNumber: 0 | 1 | 2 | 3;
-  setSlide: (slide: 0 | 1 | 2 | 3) => void;
+  slideNumber: 0 | 1 | 2;
+  setSlide: (slide: 0 | 1 | 2) => void;
   navigate: (route: string) => void;
 }) {
 
@@ -32,7 +32,7 @@ function SlidesNavigator({
 
   const next = () => {
     const newSlide = slideNumber + 1
-    if (newSlide < 4) {
+    if (newSlide < 3) {
       setSlide(newSlide as any)
     } else {
       navigate('Authentication')
@@ -60,7 +60,6 @@ function SlidesNavigator({
         <Animated.View style={getStyles(0)}></Animated.View>
         <Animated.View style={getStyles(1)}></Animated.View>
         <Animated.View style={getStyles(2)}></Animated.View>
-        <Animated.View style={getStyles(3)}></Animated.View>
       </View>
 
       <View style={s.ButtonWrapper}>
