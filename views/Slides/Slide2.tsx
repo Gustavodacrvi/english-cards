@@ -17,7 +17,7 @@ function Slide2({slide}: {slide: 0 | 1 | 2}) {
   ]
   const transformed1 = [
     {
-      translateX: animateProperty(slide === 1 ? 0 : 330, 400, true),
+      translateX: animateProperty(slide === 1 ? 0 : -330, 400, true),
     }
   ]
   

@@ -5,14 +5,34 @@ import { primary } from '../../styles/colors'
 import { animateProperty } from '../../animations'
 
 import slideBuilder from './slideBuilder'
+import slide3Svg from './slide3.svg'
+import tempo from './tempo.svg'
+import { SvgXml } from 'react-native-svg'
 import { s, getTransformedData } from './utils'
 
 function Slide2({slide}: {slide: 0 | 1 | 2}) {
 
   const active = slide === 2
-  
+
   return (
     <View style={styles.Wrapper}>
+      <Animated.View
+        style={{
+          transform: [
+            {
+              translateX: animateProperty(slide === 2 ? -160 : 220, 400, true),
+            },{
+              translateY: animateProperty(slide === 2 ? 0 : -150, 400, true),
+            }
+          ]
+        }}
+      >
+        <SvgXml
+          width='700'
+          xml={slide3Svg}
+        />
+      </Animated.View>
+      
       <Animated.Text
         style={[
           styles.Hero,
@@ -31,12 +51,12 @@ function Slide2({slide}: {slide: 0 | 1 | 2}) {
       <Animated.Text
         style={[
           s.Normal,
-          styles.Text,
+          styles.Margin,
           {
             transform: [
               {
                 translateX: animateProperty(active ? 0 : 330, 400, true),
-              }
+              },
             ]
           }
         ]}
@@ -45,6 +65,27 @@ function Slide2({slide}: {slide: 0 | 1 | 2}) {
         Por isso, após memorizar as palavras, você será notificado regularmente para revisá-las, encontre, memorize, revise e aprenda!
         Você será notificado nestes intervalos de tempo:
       </Animated.Text>
+      <Animated.View
+        style={[
+            styles.Margin,
+            {
+              display: 'flex',
+              alignItems: 'center',
+            },
+            {
+              transform: [
+                {
+                  translateX: animateProperty(active ? 0 : 330, 400, true),
+                },
+              ]
+            }
+          ]}
+      >
+        <SvgXml
+            width='750'
+            xml={tempo}
+          />
+      </Animated.View>
     </View>
   )
 }
@@ -55,8 +96,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'flex-end',
   },
-  Text: {
-    marginBottom: 80,
+  Margin: {
+    marginBottom: 40,
   },
   Hero: {
     position: 'absolute',

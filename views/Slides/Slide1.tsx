@@ -15,8 +15,6 @@ function Slide1({slide}: {slide: 0 | 1 | 2}) {
   const active = slide === 0
   const transformed = getTransformedData(active ? 0 : -325)
 
-
-
   return (
     <View>
       <Animated.View
