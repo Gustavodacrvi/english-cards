@@ -1,20 +1,15 @@
 <template>
   <div id="app">
-    {{path}}
+    <router-view />
   </div>
 </template>
 
 <script>
 // import HomeVue from './views/Home.vue'
 export default {
-  components: {
+  // components: {
     // HomeVue
-  },
-  computed: {
-    path() {
-      return window.location.pathname
-    }
-  }
+  // },
 }
 </script>
 
