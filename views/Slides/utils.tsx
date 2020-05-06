@@ -6,10 +6,10 @@ import { animateProperty } from "../../animations";
 
 export const s = StyleSheet.create({
   Bottom: {
-    marginBottom: 40,
+    marginBottom: 38,
   },
   Hero: {
-    fontSize: 45,
+    fontSize: 42,
     color: primary,
     width: 170,
     fontFamily: 'OpenSans-Bold'
