@@ -17,8 +17,9 @@ const AnimatedButtonRenderer = Animated.createAnimatedComponent(ButtonRenderer)
 
 interface ButtonProps {
   name: string;
-  type?: 'default' | 'white' | 'slides' | 'cancel';
+  type?: 'default' | 'white' | 'slides' | 'cancel' | 'blocked';
   blocked?: boolean;
+  disableIconTransition?: boolean;
   icon?: IconInterface;
   click?: () => void;
 }
@@ -28,9 +29,10 @@ function Button({
   type = 'default',
   blocked,
   icon,
+  disableIconTransition = false,
   click = (() => {}),
 }: ButtonProps) {
-  const key = blocked ? 'blocked' : type
+  const key = type
 
   const iconWidth = 22
 
@@ -40,6 +42,7 @@ function Button({
 
     icon={icon}
     iconWidth={iconWidth}
+    disableIconTransition={disableIconTransition}
 
     textColor={animateProperty({
       default: '#fff',

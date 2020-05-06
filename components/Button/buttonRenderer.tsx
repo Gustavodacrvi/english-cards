@@ -13,11 +13,12 @@ import { IconInterface } from './../../interfaces'
 import React, { useEffect, forwardRef, useState } from 'react'
 import Icon from './../Icon'
 
-import {animateEnterLeave} from './../../animations/'
+import {animateOnOff} from './../../animations/'
 
 interface Props {
   backgroundColor: string;
   name: string;
+  disableIconTransition: boolean;
   icon?: IconInterface;
   borderColor: string;
   textColor: string;
@@ -33,7 +34,10 @@ const ButtonRenderer = forwardRef(({
   textColor,
   iconWidth,
   click,
+  disableIconTransition = false,
 }: Props, ref: any) => {
+  const iconNode = <Icon color={textColor} width={iconWidth} rotate={true} {...icon}/>
+  
   return (
     <TouchableNativeFeedback
       ref={ref}
@@ -53,7 +57,7 @@ const ButtonRenderer = forwardRef(({
           <Text style={[s.Text, {
             color: textColor,
           }]}> {name} </Text>
-          {animateEnterLeave({
+          {!disableIconTransition ? animateOnOff({
             off: {
               width: 0,
               opacity: 0,
@@ -62,7 +66,7 @@ const ButtonRenderer = forwardRef(({
               width: iconWidth,
               opacity: 1,
             },
-          }, icon ? <Icon {...icon} color={textColor} width={iconWidth} rotate={true}/> : null, {duration: 500})}
+          }, icon ? iconNode : null, {duration: 500}, null) : iconNode}
         </View>
       </View>
     </TouchableNativeFeedback>

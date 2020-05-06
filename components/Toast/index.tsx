@@ -6,7 +6,7 @@ import { View, Text, StyleSheet } from "react-native"
 import { backgroundColor, primary, red } from './../../styles/colors'
 import { ToastContext } from "../../contexts/toast"
 
-import { animateEnterLeave } from './../../animations'
+import { animateOnOff } from './../../animations'
 
 function Toast() {
   const {toast, pushToast} = useContext(ToastContext)
@@ -21,7 +21,7 @@ function Toast() {
         s.Wrapper,
       ]}
     >
-      {animateEnterLeave({
+      {animateOnOff({
         off: {
           translateX: 500,
         },

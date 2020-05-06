@@ -20,8 +20,6 @@ function Authentication() {
   
   const dismiss = () => setFocus(false)
 
-  Keyboard.addListener('keyboardDidHide', dismiss)
-
   useEffect(() => {
     Keyboard.addListener('keyboardDidHide', dismiss)
     return () => Keyboard.removeListener('keyboardDidHide', dismiss)
@@ -35,6 +33,23 @@ function Authentication() {
     setEmail("")
     
   }, [isLogin])
+
+  const isButtonBlocked = 
+    (
+      isLogin &&
+      (
+        !email.length ||
+        !password.length
+      )
+    ) ||
+    (
+      !isLogin &&
+      (
+        !username.length ||
+        !email.length ||
+        !password.length
+      )
+    )
 
   return (
     <TouchableWithoutFeedback
@@ -66,7 +81,7 @@ function Authentication() {
                 zIndex: -1,
                 transform: [
                   {
-                    translateY: animateProperty(isLogin ? -59 : 0, 200, true)
+                    translateY: animateProperty(isLogin ? -60 : 0, 200, true)
                   },
                 ],
               }
@@ -85,7 +100,7 @@ function Authentication() {
               {
                 transform: [
                   {
-                    translateY: animateProperty(isLogin ? -60 : 0, 200, true)
+                    translateY: animateProperty(isLogin ? -60 : 0, 200, true),
                   }
                 ]
               }
@@ -109,24 +124,8 @@ function Authentication() {
             <View style={s.marginTop}>
               <Button
                 name={isLogin ? "Entrar" : "Criar"}
-                type='white'
-                blocked={
-                  (
-                    isLogin &&
-                    (
-                      !email.length ||
-                      !password.length
-                    )
-                  ) ||
-                  (
-                    !isLogin &&
-                    (
-                      !username.length ||
-                      !email.length ||
-                      !password.length
-                    )
-                  )
-                }
+                type={isButtonBlocked ? "slides" : "white"}
+                blocked={isButtonBlocked}
               />
             </View>
           </Animated.View>

@@ -19,6 +19,7 @@ import sort from './Icons/sort'
 import trash from './Icons/trash'
 import user from './Icons/user'
 import wifi from './Icons/wifi'
+import arrow from './Icons/arrow'
 
 import { Animated, View } from 'react-native'
 
@@ -27,7 +28,7 @@ const icons = {
   words, cards, loading,
   notification, plus, saved,
   search, sort, trash,
-  user, wifi,
+  user, wifi, arrow,
   'notification-trash': notificationTrash,
   'sort-by-name': sortByName,
 }
