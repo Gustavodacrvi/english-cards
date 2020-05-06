@@ -3,7 +3,9 @@
     <div class="wrapper">
       <div v-if="content" class="content">
           <h1>{{title}}</h1>
-          <span>{{content}}</span>
+          <div class="span">
+              <span>{{content}}</span>
+          </div>
       </div>
         <button-vue text="Voltar" :color="{'back': '#FFD166', 'text': '#FFFFFF'}" @click.native='method' />
     </div>
@@ -32,11 +34,6 @@ export default {
 </script>
 
 <style scoped>
-.card {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
 .wrapper {
   width: 276px;
@@ -44,10 +41,6 @@ export default {
 
 span, h1 {
     color: var(--white);
-}
-h1{
-    font-size: 20px;
-    font-weight: bold;
 }
 span {
     font-size: 14px;
@@ -63,15 +56,27 @@ span {
     height: 100vh;
     display: flex;
     align-items: center;
-    justify-content: space-around;
     flex-direction: column;
+    overflow-y: scroll;
 }
 .content {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     text-align: left;
-    margin: 5px;
     flex-direction: column;
+    margin-bottom: 273px;
 }
-
+.content h1 {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 27px;
+}
+h1{
+    font-size: 20px;
+    font-weight: bold;
+}
+.span {
+    margin-left: 25px;
+}
 </style>

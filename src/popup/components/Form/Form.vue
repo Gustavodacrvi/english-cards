@@ -7,8 +7,8 @@
       </transition>
       <input-vue type="email" placeholder="E-mail:"/>
       <input-vue type="password" placeholder="Senha:"/>
-      <button-vue text="Entrar" v-if="!firstTime" :color="{'back': '#FFF', 'text': '#525A79'}" />
-      <button-vue text="Criar conta" v-if="firstTime" :color="{'back': '#FFF', 'text': '#525A79'}" />
+      <button-vue text="Entrar" v-if="!firstTime" :color="{'back': '#FFF', 'text': '#525A79'}" :border="true" />
+      <button-vue text="Criar conta" v-if="firstTime" :color="{'back': '#FFF', 'text': '#525A79'}" :border="true" />
       <span v-if="!firstTime" @click="openForgotPasswordPopup">Esqueceu a senha?</span>
        <div v-if="firstTime" class="termos">	
           <div class="wrapper">	

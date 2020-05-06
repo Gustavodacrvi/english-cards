@@ -1,6 +1,6 @@
 <template>
     <div class="form-control">
-      <button :style="{'background': color.back, 'color':color.text}" class="btn">{{text}}</button>
+      <button :style="{'background': color.back, 'color': color.text, 'border': border ? '3px solid ' + color : 'none'}" class="btn">{{text}}</button>
     </div>
 </template>
 
@@ -15,6 +15,10 @@ export default {
             type: Object,
             required: true
         },
+        border: {
+          type: Boolean,
+          default: false
+        }
     }
 }
 </script>

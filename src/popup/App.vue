@@ -19,6 +19,7 @@ html {
   width: 400px;
   height: 450px;
   background: var(--primary);
+  box-sizing: border-box;
 }
 #app {
   font-family: "Open Sans";
