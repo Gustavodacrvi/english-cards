@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view />
+    <transition name="fadeInOut">
+      <router-view />
+    </transition>
   </div>
 </template>
 
@@ -24,5 +26,13 @@ html {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: var(--white);
+}
+.fadeInOut-enter, .fadeInOut-leave-to {
+  opacity: 0;
+  transition-duration: 1s;
+}
+.fadeInOut-enter-to, .fadeInOut-leave {
+  opacity: 1;
+  transition-duration: 1s;
 }
 </style>
