@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Animated, Easing } from 'react-native'
 
-export const animateProperty = (value: string | number, duration: number = 200, useNativeDriver: boolean = false): Animated.AnimatedInterpolation => {
+export const animateProperty = (value: string | number, useNativeDriver: boolean = false): Animated.AnimatedInterpolation => {
 
   const oldValue = useRef(value)
   
@@ -14,7 +14,7 @@ export const animateProperty = (value: string | number, duration: number = 200, 
       inputRange: [0, 1],
       outputRange: [oldValue.current as any, value as any],
     })
-  
+
   const config = useRef(getConfig)
 
   config.current = getConfig
@@ -36,11 +36,11 @@ export const animateProperty = (value: string | number, duration: number = 200, 
   return config.current
 }
 
-export const animateStyles = (style: ViewStyle, duration: number = 200, useNativeDriver: boolean = false): {[key: string]: Animated.AnimatedInterpolation} => {
+export const animateStyles = (style: ViewStyle, useNativeDriver: boolean = false): {[key: string]: Animated.AnimatedInterpolation} => {
   return {
     ...Object.keys(style).reduce((obj, key) => ({
       ...obj,
-      [key]: animateProperty(style[key], duration, useNativeDriver),
+      [key]: animateProperty(style[key], useNativeDriver),
     }), {})
   }
 }
@@ -53,8 +53,6 @@ interface StyleOptions {
 }
 
 interface Events {
-  duration?: number;
-
   beforeEnter?: (...arr: any[]) => void;
   afterEnter?: (...arr: any[]) => void;
 
