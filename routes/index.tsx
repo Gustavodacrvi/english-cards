@@ -26,7 +26,7 @@ const Navigator = createStackNavigator({
     headerMode: 'screen',
     defaultNavigationOptions: {
       header: null,
-    }
+    },
   })
 
 

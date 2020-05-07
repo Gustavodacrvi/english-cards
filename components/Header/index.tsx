@@ -10,38 +10,6 @@ import { NavigationStackProp } from 'react-navigation-stack'
 
 function Header({navigation}: {navigation: NavigationStackProp}) {
 
-  const [name, setName] = useState("Home")
-
-  const change = () => {
-
-    setTimeout(() => {
-
-      setName('Words')
-
-      setTimeout(() => {
-
-        setName('Profile')
-
-        setTimeout(() => {
-
-          setName('Home')
-
-          change()
-          
-        }, 3500)
-        
-      }, 3500)
-      
-    }, 3500)
-    
-  }
-
-  useEffect(() => {
-    change()
-  }, [])
-
-  // navigation.state.routeName
-
   return (
     <View
       style={s.Header}
@@ -51,21 +19,21 @@ function Header({navigation}: {navigation: NavigationStackProp}) {
       >
 
         <NavOption
-          active={name === "Home"}
+          active={navigation.state.routeName === "Home"}
           displayName="Início"
-          textWidth={60}
+          textWidth={58}
           icon={{icon: 'home'}}
           />
         <NavOption
-          active={name === "Words"}
+          active={navigation.state.routeName === "Words"}
           displayName="Palavras"
-          textWidth={90}
+          textWidth={88}
           icon={{icon: 'words'}}
           />
         <NavOption
-          active={name === "Profile"}
+          active={navigation.state.routeName === "Profile"}
           displayName="Perfil"
-          textWidth={60}
+          textWidth={58}
           icon={{icon: 'user'}}
         />
         
