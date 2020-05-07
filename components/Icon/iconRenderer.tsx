@@ -66,4 +66,4 @@ const IconRenderer = forwardRef(({
   )
 })
 
-export default IconRenderer
+export default React.memo(IconRenderer)

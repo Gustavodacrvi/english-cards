@@ -52,4 +52,4 @@ const s = StyleSheet.create({
   },
 })
 
-export default Slides
+export default React.memo(Slides)

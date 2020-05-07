@@ -25,13 +25,13 @@ function Slide1({slide}: {slide: 0 | 1 | 2}) {
                 0: -325,
                 1: -335,
                 2: -345,
-              }[slide], 250, true),
+              }[slide]),
             },{
               translateY: animateProperty({
                 0: 30,
                 1: -145,
                 2: -240,
-              }[slide], 250, true),
+              }[slide]),
             }
           ]
         }}
@@ -64,4 +64,4 @@ function Slide1({slide}: {slide: 0 | 1 | 2}) {
   )
 }
 
-export default slideBuilder(Slide1)
+export default slideBuilder(React.memo(Slide1))

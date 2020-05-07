@@ -99,4 +99,4 @@ const s = StyleSheet.create({
   },
 })
 
-export default ButtonRenderer
+export default React.memo(ButtonRenderer)

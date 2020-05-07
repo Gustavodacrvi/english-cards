@@ -98,4 +98,4 @@ const s = StyleSheet.create({
   },
 })
 
-export default SlidesNavigator
+export default React.memo(SlidesNavigator)
