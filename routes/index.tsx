@@ -1,24 +1,27 @@
 
 
-import { createStackNavigator } from 'react-navigation-stack'
-import { FluidNavigator } from 'react-navigation-fluid-transitions'
+import { enableScreens } from 'react-native-screens'
+import { createStackNavigator, CardStyleInterpolators, TransitionPresets } from 'react-navigation-stack'
 import { createAppContainer } from 'react-navigation'
+
+enableScreens()
 
 import Authentication from './../views/Authentication/'
 import Slides from './../views/Slides/'
 
-export default createAppContainer(
-  createStackNavigator({
+const Navigator = createStackNavigator({
     Slides: {
       screen: Slides,
+      navigationOptions: TransitionPresets.SlideFromRightIOS,
     },
     Authentication: {
       screen: Authentication,
+      navigationOptions: TransitionPresets.SlideFromRightIOS,
     },
   }, {
     headerMode: 'none',
-    navigationOptions: {
-      headerVisible: false,
-    },
   })
-)
+
+
+export default createAppContainer(Navigator)
+  
