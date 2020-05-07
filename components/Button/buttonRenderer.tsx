@@ -13,7 +13,8 @@ import { IconInterface } from './../../interfaces'
 import React, { useEffect, forwardRef, useState } from 'react'
 import Icon from './../Icon'
 
-import {animateOnOff} from './../../animations/'
+import {animateOnOff, animateProperty} from './../../animations/'
+import { primary } from '../../styles/colors'
 
 interface Props {
   backgroundColor: string;
@@ -37,20 +38,32 @@ const ButtonRenderer = forwardRef(({
   disableIconTransition = false,
 }: Props, ref: any) => {
   const iconNode = <Icon color={textColor} width={iconWidth} rotate={true} {...icon}/>
-  
+  const [isTouching, setTouch] = useState(false)
+
   return (
     <TouchableNativeFeedback
       ref={ref}
       useForeground={true}
 
+      background={TouchableNativeFeedback.Ripple(primary, false)}
       onPress={click}
+      delayPressIn={0}
+      delayPressOut={0}
+      onPressIn={() => setTouch(true)}
+      onPressOut={() => setTouch(false)}
     >
-      <View
+      <Animated.View
         style={[s.Wrapper,{
           backgroundColor,
           borderRadius: 8,
           borderWidth: 3,
           borderColor,
+        }, {
+          transform: [
+            {
+              scale: animateProperty(isTouching ? .95 : 1, true)
+            }
+          ]
         }]}
       >
         <View style={s.Button}>
@@ -66,9 +79,9 @@ const ButtonRenderer = forwardRef(({
               width: iconWidth,
               opacity: 1,
             },
-          }, icon ? iconNode : null, {duration: 500}, null) : iconNode}
+          }, icon ? iconNode : null) : iconNode}
         </View>
-      </View>
+      </Animated.View>
     </TouchableNativeFeedback>
   )
 })
@@ -90,4 +103,4 @@ const s = StyleSheet.create({
   },
 })
 
-export default ButtonRenderer
+export default React.memo(ButtonRenderer)

@@ -1,8 +1,8 @@
 
 
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 
-import { View, StyleSheet, Animated, Keyboard, BackHandler } from 'react-native'
+import { View, StyleSheet, Animated, BackHandler } from 'react-native'
 import { backgroundColor, primary } from '../../styles/colors'
 import { animateStyles } from '../../animations'
 import Button from '../../components/Button'
@@ -38,20 +38,6 @@ function SlidesNavigator({
       navigate('Authentication')
     }
   }
-
-  const back = () => {
-    const newSlide = slideNumber - 1
-    if (newSlide > -1) {
-      setSlide(newSlide as any)
-      return true
-    }
-  }
-  
-  useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', back)
-    return () => BackHandler.removeEventListener('hardwareBackPress', back)
-  })
-
 
   return (
     <View style={s.Wrapper}>
@@ -112,4 +98,4 @@ const s = StyleSheet.create({
   },
 })
 
-export default SlidesNavigator
+export default React.memo(SlidesNavigator)

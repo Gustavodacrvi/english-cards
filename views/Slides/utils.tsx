@@ -31,7 +31,7 @@ export const s = StyleSheet.create({
 export const getTransformedData = (translateX: number) => ({
   transform: [
     {
-      translateX: animateProperty(translateX, 400, true),
+      translateX: animateProperty(translateX, true),
     }
   ]
 })

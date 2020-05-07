@@ -22,7 +22,7 @@ function AuthHeader({
         {
           transform: [
             {
-              translateX: animateProperty(!isLogin ? 130 : 0, 200, true),
+              translateX: animateProperty(!isLogin ? 130 : 0, 200),
             },
           ],
         },
@@ -116,4 +116,4 @@ const s = StyleSheet.create({
   },
 })
 
-export default AuthHeader
+export default React.memo(AuthHeader)

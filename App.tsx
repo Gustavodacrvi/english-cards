@@ -11,7 +11,9 @@ function App() {
   return (
     <ToastContextProvider>
 
-      <Navigator style={{backgroundColor, height: '100%'}}/>
+      <Navigator
+        style={{backgroundColor, height: '100%'}}
+      />
 
       <Toast/>
 

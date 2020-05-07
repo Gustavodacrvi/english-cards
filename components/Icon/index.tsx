@@ -23,5 +23,5 @@ function Icon({color, primaryColor, secondaryColor, width = 32, icon, rotate}: I
 
 }
 
-export default Icon
+export default React.memo(Icon)
 

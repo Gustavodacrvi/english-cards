@@ -1,6 +1,6 @@
 
 
-import React, { useState, useEffect, useCallback, useContext } from 'react'
+import React from 'react'
 import {
   Animated,
 } from 'react-native'
@@ -68,4 +68,4 @@ function Button({
   />
 }
 
-export default Button
+export default React.memo(Button)

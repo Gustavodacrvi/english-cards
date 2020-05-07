@@ -1,58 +1,50 @@
 
 
 import React, { useState, useEffect, useRef } from 'react'
-import { Animated, Easing } from 'react-native'
+import { Animated, Easing, TextStyle } from 'react-native'
 
-const easing = (x: number) => x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2
-const easeIn = (x: number) => 1 - Math.cos((x * Math.PI) / 2)
-const easeOut = (x: number) => Math.sin((x * Math.PI) / 2)
+const defaultSpringProperties = {
+  bounciness: 12,
+  speed: 25,
+}
 
-export const animateProperty = (value: string | number, duration: number = 200, useNativeDriver: boolean = false): Animated.AnimatedInterpolation => {
+export const animateProperty = (value: string | number, useNativeDriver: boolean = false, springProperties?: Animated.SpringAnimationConfig): Animated.AnimatedInterpolation => {
 
   const oldValue = useRef(value)
-  const isTransitioning = useRef(false)
   
-  const [animation] = useState(new Animated.Value(0))
+  const animation = new Animated.Value(0)
   
-  const config = useRef(animation.interpolate(
-    {
-      inputRange: [0, 1],
-      outputRange: [oldValue.current as any, value as any],
-    }))
-
-  if (isTransitioning.current) return config.current
-
-  config.current = animation.interpolate(
+  const getConfig = animation.interpolate(
     {
       inputRange: [0, 1],
       outputRange: [oldValue.current as any, value as any],
     })
 
-  oldValue.current = value
+  const config = useRef(getConfig)
+
+  config.current = getConfig
   
+  oldValue.current = value
+
   animation.setValue(0)
 
-  Animated.timing(
+  Animated.spring(
     animation,
     {
       toValue: 1,
       useNativeDriver,
-      easing,
-      duration,
+      ...(springProperties || defaultSpringProperties),
     }
-  ).start(() => {
-    isTransitioning.current = false
-  })
+  ).start()
 
-  isTransitioning.current = true
   return config.current
 }
 
-export const animateStyles = (style: ViewStyle, duration: number = 200, useNativeDriver: boolean = false): {[key: string]: Animated.AnimatedInterpolation} => {
+export const animateStyles = (style: ViewStyle | TextStyle, useNativeDriver: boolean = false, springProperties?: Animated.SpringAnimationConfig): {[key: string]: Animated.AnimatedInterpolation} => {
   return {
     ...Object.keys(style).reduce((obj, key) => ({
       ...obj,
-      [key]: animateProperty(style[key], duration, useNativeDriver),
+      [key]: animateProperty(style[key], useNativeDriver, springProperties),
     }), {})
   }
 }
@@ -60,13 +52,11 @@ export const animateStyles = (style: ViewStyle, duration: number = 200, useNativ
 import { ViewStyle } from 'react-native'
 
 interface StyleOptions {
-  on: ViewStyle;
-  off: ViewStyle;
+  on: ViewStyle | TextStyle;
+  off: ViewStyle | TextStyle;
 }
 
 interface Events {
-  duration?: number;
-
   beforeEnter?: (...arr: any[]) => void;
   afterEnter?: (...arr: any[]) => void;
 
@@ -78,11 +68,10 @@ interface Events {
 
 export const animateOnOff = ({
   on, off,
-}: StyleOptions, reactNode: React.ReactNode | null, events: Events = {}): React.ReactNode => {
+}: StyleOptions, reactNode: React.ReactNode | null, events: Events = {}, springProperties?: Animated.SpringAnimationConfig): React.ReactNode => {
   const render = reactNode !== null
   
   const [animation] = useState(new Animated.Value(0))
-  const isTransitioning = useRef(false)
   const node = useRef(reactNode)
   
   const animatedStyle = {
@@ -91,7 +80,6 @@ export const animateOnOff = ({
         ...obj,
         [key]: animation.interpolate({
           inputRange: [0, 1],
-          easing: !render ? easeIn : easeOut,
           outputRange: render ? [off[key], on[key]] : [on[key], off[key]]
         })
       }
@@ -113,19 +101,16 @@ export const animateOnOff = ({
     </Animated.View>
   ) : undefined
 
-  if (isTransitioning.current === true) return jsx
-
   animation.setValue(0)
 
-  Animated.timing(
+  Animated.spring(
     animation,
     {
       toValue: 1,
       useNativeDriver: events.useNativeDriver || false,
-      duration: events.duration || 200,
+      ...(springProperties || defaultSpringProperties),
     }
   ).start(() => {
-    isTransitioning.current = false
     if (render) {
       if (events.afterEnter) events.afterEnter()
     } else {
@@ -134,7 +119,6 @@ export const animateOnOff = ({
     }
   })
 
-  isTransitioning.current = true
   return jsx
 }
 

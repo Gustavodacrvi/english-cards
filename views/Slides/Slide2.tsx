@@ -1,23 +1,23 @@
 
 import React from 'react'
-import { View, StyleSheet, Text, Animated } from "react-native"
+import { View, Animated } from "react-native"
 import { primary } from '../../styles/colors'
 import { animateProperty } from '../../animations'
 
 import slideBuilder from './slideBuilder'
-import { s, getTransformedData } from './utils'
+import { s } from './utils'
 
 function Slide2({slide}: {slide: 0 | 1 | 2}) {
 
   const transformed2 = [
     {
-      translateX: animateProperty(slide < 1 ? 330 : 0, 400, true),
-      translateY: animateProperty(slide > 1 ? 480 : 0, 400, true),
+      translateX: animateProperty(slide < 1 ? 330 : 0),
+      translateY: animateProperty(slide > 1 ? 480 : 0),
     }
   ]
   const transformed1 = [
     {
-      translateX: animateProperty(slide === 1 ? 0 : -330, 400, true),
+      translateX: animateProperty(slide === 1 ? 0 : -330),
     }
   ]
   
@@ -68,4 +68,4 @@ function Slide2({slide}: {slide: 0 | 1 | 2}) {
   )
 }
 
-export default slideBuilder(Slide2)
+export default slideBuilder(React.memo(Slide2))

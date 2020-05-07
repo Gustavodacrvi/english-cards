@@ -1,7 +1,7 @@
 
 
-import React, { useState, useContext, useEffect } from 'react'
-import { View, BackHandler, Text, StyleSheet, TouchableWithoutFeedback, Keyboard, Animated } from "react-native"
+import React, { useState, useEffect } from 'react'
+import { View, StyleSheet, TouchableWithoutFeedback, Keyboard, Animated } from "react-native"
 
 import { backgroundColor } from '../../styles/colors'
 import InputComponent from '../../components/Input'
@@ -64,7 +64,7 @@ function Authentication() {
           {
             transform: [
               {
-                translateY: animateProperty(isFocused ? -128 : 0, 200, true),
+                translateY: animateProperty(isFocused ? -128 : 0, 200),
               }
             ],
           },
@@ -81,7 +81,7 @@ function Authentication() {
                 zIndex: -1,
                 transform: [
                   {
-                    translateY: animateProperty(isLogin ? -60 : 0, 200, true)
+                    translateY: animateProperty(isLogin ? -60 : 0, 200)
                   },
                 ],
               }
@@ -100,7 +100,7 @@ function Authentication() {
               {
                 transform: [
                   {
-                    translateY: animateProperty(isLogin ? -60 : 0, 200, true),
+                    translateY: animateProperty(isLogin ? -60 : 0, 200),
                   }
                 ]
               }
@@ -153,4 +153,4 @@ const s = StyleSheet.create({
   },
 })
 
-export default Authentication
+export default React.memo(Authentication)

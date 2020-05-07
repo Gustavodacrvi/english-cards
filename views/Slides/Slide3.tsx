@@ -20,9 +20,9 @@ function Slide2({slide}: {slide: 0 | 1 | 2}) {
         style={{
           transform: [
             {
-              translateX: animateProperty(slide === 2 ? -160 : 220, 400, true),
+              translateX: animateProperty(slide === 2 ? -160 : 220),
             },{
-              translateY: animateProperty(slide === 2 ? 0 : -150, 400, true),
+              translateY: animateProperty(slide === 2 ? 0 : -150),
             }
           ]
         }}
@@ -40,7 +40,7 @@ function Slide2({slide}: {slide: 0 | 1 | 2}) {
           {
             transform: [
               {
-                translateY: animateProperty(active ? 0 : -75, 400, true),
+                translateY: animateProperty(active ? 0 : -75),
               }
             ]
           }
@@ -55,7 +55,7 @@ function Slide2({slide}: {slide: 0 | 1 | 2}) {
           {
             transform: [
               {
-                translateX: animateProperty(active ? 0 : 330, 400, true),
+                translateX: animateProperty(active ? 0 : 330),
               },
             ]
           }
@@ -106,4 +106,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default slideBuilder(Slide2)
+export default slideBuilder(React.memo(Slide2))
