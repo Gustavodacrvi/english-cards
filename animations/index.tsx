@@ -1,9 +1,14 @@
 
 
 import React, { useState, useEffect, useRef } from 'react'
-import { Animated, Easing } from 'react-native'
+import { Animated, Easing, TextStyle } from 'react-native'
 
-export const animateProperty = (value: string | number, useNativeDriver: boolean = false): Animated.AnimatedInterpolation => {
+const defaultSpringProperties = {
+  bounciness: 12,
+  speed: 25,
+}
+
+export const animateProperty = (value: string | number, useNativeDriver: boolean = false, springProperties?: Animated.SpringAnimationConfig): Animated.AnimatedInterpolation => {
 
   const oldValue = useRef(value)
   
@@ -20,7 +25,7 @@ export const animateProperty = (value: string | number, useNativeDriver: boolean
   config.current = getConfig
   
   oldValue.current = value
-  
+
   animation.setValue(0)
 
   Animated.spring(
@@ -28,19 +33,18 @@ export const animateProperty = (value: string | number, useNativeDriver: boolean
     {
       toValue: 1,
       useNativeDriver,
-      bounciness: 8,
-      speed: 12,
+      ...(springProperties || defaultSpringProperties),
     }
   ).start()
 
   return config.current
 }
 
-export const animateStyles = (style: ViewStyle, useNativeDriver: boolean = false): {[key: string]: Animated.AnimatedInterpolation} => {
+export const animateStyles = (style: ViewStyle | TextStyle, useNativeDriver: boolean = false, springProperties?: Animated.SpringAnimationConfig): {[key: string]: Animated.AnimatedInterpolation} => {
   return {
     ...Object.keys(style).reduce((obj, key) => ({
       ...obj,
-      [key]: animateProperty(style[key], useNativeDriver),
+      [key]: animateProperty(style[key], useNativeDriver, springProperties),
     }), {})
   }
 }
@@ -48,8 +52,8 @@ export const animateStyles = (style: ViewStyle, useNativeDriver: boolean = false
 import { ViewStyle } from 'react-native'
 
 interface StyleOptions {
-  on: ViewStyle;
-  off: ViewStyle;
+  on: ViewStyle | TextStyle;
+  off: ViewStyle | TextStyle;
 }
 
 interface Events {
@@ -64,7 +68,7 @@ interface Events {
 
 export const animateOnOff = ({
   on, off,
-}: StyleOptions, reactNode: React.ReactNode | null, events: Events = {}): React.ReactNode => {
+}: StyleOptions, reactNode: React.ReactNode | null, events: Events = {}, springProperties?: Animated.SpringAnimationConfig): React.ReactNode => {
   const render = reactNode !== null
   
   const [animation] = useState(new Animated.Value(0))
@@ -104,8 +108,7 @@ export const animateOnOff = ({
     {
       toValue: 1,
       useNativeDriver: events.useNativeDriver || false,
-      bounciness: 8,
-      speed: 12,
+      ...(springProperties || defaultSpringProperties),
     }
   ).start(() => {
     if (render) {

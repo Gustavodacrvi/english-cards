@@ -8,6 +8,7 @@ enableScreens()
 
 import Authentication from './../views/Authentication/'
 import Slides from './../views/Slides/'
+import Header from '../components/Header'
 
 const Navigator = createStackNavigator({
     Slides: {
@@ -16,10 +17,16 @@ const Navigator = createStackNavigator({
     },
     Authentication: {
       screen: Authentication,
-      navigationOptions: TransitionPresets.SlideFromRightIOS,
+      navigationOptions: {
+        ...TransitionPresets.SlideFromRightIOS
+      },
     },
   }, {
-    headerMode: 'none',
+    initialRouteName: 'Authentication',
+    headerMode: 'screen',
+    defaultNavigationOptions: {
+      header: null,
+    }
   })
 
 

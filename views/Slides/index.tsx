@@ -11,7 +11,7 @@ import Slide3 from './Slide3'
 
 function Slides({navigation}) {
 
-  const [slide, setSlide] = useState(2 as 0 | 1 | 2)
+  const [slide, setSlide] = useState(0 as 0 | 1 | 2)
 
   const back = () => {
     if (!navigation.isFocused())

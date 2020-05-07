@@ -14,6 +14,7 @@ import React, { useEffect, forwardRef, useState } from 'react'
 import Icon from './../Icon'
 
 import {animateOnOff, animateProperty} from './../../animations/'
+import { primary } from '../../styles/colors'
 
 interface Props {
   backgroundColor: string;
@@ -38,13 +39,16 @@ const ButtonRenderer = forwardRef(({
 }: Props, ref: any) => {
   const iconNode = <Icon color={textColor} width={iconWidth} rotate={true} {...icon}/>
   const [isTouching, setTouch] = useState(false)
-  
+
   return (
     <TouchableNativeFeedback
       ref={ref}
       useForeground={true}
 
+      background={TouchableNativeFeedback.Ripple(primary, false)}
       onPress={click}
+      delayPressIn={0}
+      delayPressOut={0}
       onPressIn={() => setTouch(true)}
       onPressOut={() => setTouch(false)}
     >
