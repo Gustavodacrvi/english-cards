@@ -5,7 +5,6 @@ import { TextInput } from 'react-native-gesture-handler'
 import { StyleSheet, StyleProp, TextStyle, Keyboard, View } from 'react-native'
 
 import { faded, primary } from './../../styles/colors'
-import Icon from '../Icon'
 
 interface Props {
   placeholder?: string;

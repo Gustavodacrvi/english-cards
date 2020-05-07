@@ -1,7 +1,7 @@
 
 
-import React, { useState, useContext, useEffect } from 'react'
-import { View, BackHandler, Text, StyleSheet, TouchableWithoutFeedback, Keyboard, Animated } from "react-native"
+import React, { useState, useEffect } from 'react'
+import { View, StyleSheet, TouchableWithoutFeedback, Keyboard, Animated } from "react-native"
 
 import { backgroundColor } from '../../styles/colors'
 import InputComponent from '../../components/Input'
