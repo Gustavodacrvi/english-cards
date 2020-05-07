@@ -3,48 +3,36 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Animated, Easing } from 'react-native'
 
-const easing = (x: number) => x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2
-const easeIn = (x: number) => 1 - Math.cos((x * Math.PI) / 2)
-const easeOut = (x: number) => Math.sin((x * Math.PI) / 2)
-
 export const animateProperty = (value: string | number, duration: number = 200, useNativeDriver: boolean = false): Animated.AnimatedInterpolation => {
 
   const oldValue = useRef(value)
-  const isTransitioning = useRef(false)
   
-  const [animation] = useState(new Animated.Value(0))
+  const animation = new Animated.Value(0)
   
-  const config = useRef(animation.interpolate(
-    {
-      inputRange: [0, 1],
-      outputRange: [oldValue.current as any, value as any],
-    }))
-
-  if (isTransitioning.current) return config.current
-
-  config.current = animation.interpolate(
+  const getConfig = animation.interpolate(
     {
       inputRange: [0, 1],
       outputRange: [oldValue.current as any, value as any],
     })
+  
+  const config = useRef(getConfig)
 
+  config.current = getConfig
+  
   oldValue.current = value
   
   animation.setValue(0)
 
-  Animated.timing(
+  Animated.spring(
     animation,
     {
       toValue: 1,
       useNativeDriver,
-      easing,
-      duration,
+      bounciness: 8,
+      speed: 12,
     }
-  ).start(() => {
-    isTransitioning.current = false
-  })
+  ).start()
 
-  isTransitioning.current = true
   return config.current
 }
 
@@ -82,7 +70,6 @@ export const animateOnOff = ({
   const render = reactNode !== null
   
   const [animation] = useState(new Animated.Value(0))
-  const isTransitioning = useRef(false)
   const node = useRef(reactNode)
   
   const animatedStyle = {
@@ -91,7 +78,6 @@ export const animateOnOff = ({
         ...obj,
         [key]: animation.interpolate({
           inputRange: [0, 1],
-          easing: !render ? easeIn : easeOut,
           outputRange: render ? [off[key], on[key]] : [on[key], off[key]]
         })
       }
@@ -113,19 +99,17 @@ export const animateOnOff = ({
     </Animated.View>
   ) : undefined
 
-  if (isTransitioning.current === true) return jsx
-
   animation.setValue(0)
 
-  Animated.timing(
+  Animated.spring(
     animation,
     {
       toValue: 1,
       useNativeDriver: events.useNativeDriver || false,
-      duration: events.duration || 200,
+      bounciness: 8,
+      speed: 12,
     }
   ).start(() => {
-    isTransitioning.current = false
     if (render) {
       if (events.afterEnter) events.afterEnter()
     } else {
@@ -134,7 +118,6 @@ export const animateOnOff = ({
     }
   })
 
-  isTransitioning.current = true
   return jsx
 }
 
