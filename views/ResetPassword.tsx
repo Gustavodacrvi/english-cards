@@ -21,7 +21,6 @@ function ResetPassword() {
   const disable = !email.length
   
   const click = async () => {
-    console.log(disable)
     if (disable)
       return error('Preencha os campos!')
 
@@ -55,7 +54,7 @@ function ResetPassword() {
             marginTop: 12,
           }}>
             <Button
-              name="Mandar e-mail"
+              name="Resetar senha"
               type={disable ? "slides" : "white"}
               click={click}
               icon={isLoading ? {
