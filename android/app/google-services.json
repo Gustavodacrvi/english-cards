@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "864055444449",
+    "firebase_url": "https://english-cards-1c691.firebaseio.com",
+    "project_id": "english-cards-1c691",
+    "storage_bucket": "english-cards-1c691.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:864055444449:android:45fb8584bfc65c5228c8a0",
+        "android_client_info": {
+          "package_name": "flash.translator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "864055444449-icd30ug23fcua40q1svgdk5g2b2jucut.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfKWj4vN_w7G6v67FshAUQp-n_ToSuioA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "864055444449-icd30ug23fcua40q1svgdk5g2b2jucut.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

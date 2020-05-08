@@ -3,7 +3,7 @@
 import React from 'react'
 
 import { View, StyleSheet, Text, Animated } from 'react-native'
-import { backgroundColor } from '../../styles/colors'
+import { backgroundColor, primary } from '../../styles/colors'
 import { TouchableNativeFeedback } from 'react-native-gesture-handler'
 import { animateProperty } from '../../animations'
 
@@ -22,46 +22,62 @@ function AuthHeader({
         {
           transform: [
             {
-              translateX: animateProperty(!isLogin ? 130 : 0, 200),
+              translateX: animateProperty(!isLogin ? 130 : 0),
             },
           ],
         },
       ]}></Animated.View>
      <View style={s.ActualContent}>
-      <TouchableNativeFeedback
-        useForeground={true}
-        style={s.Touchable}
+       <View
+        style={{
+          borderRadius: 8,
+          overflow: 'hidden',
+        }}
+       >
+        <TouchableNativeFeedback
+          useForeground={true}
+          style={s.Touchable}
+          background={TouchableNativeFeedback.Ripple(backgroundColor, false)}
 
-        onPress={() => setLogin(true)}
+          onPress={() => setLogin(true)}
+        >
+          <View style={s.View}>
+            <Animated.Text
+              style={[s.Text,
+                {
+                  color: animateProperty(isLogin ? '#fff' : backgroundColor)
+                },
+              ]}
+            >
+              Entrar
+            </Animated.Text>
+       </View>
+      </TouchableNativeFeedback>
+      </View>
+      <View
+        style={{
+          borderRadius: 8,
+          overflow: 'hidden',
+        }}
       >
-        <View style={s.View}>
-          <Animated.Text
-            style={[s.Text,
+        <TouchableNativeFeedback
+          useForeground={true}
+          style={s.Touchable}
+          background={TouchableNativeFeedback.Ripple(backgroundColor, false)}
+
+          onPress={() => setLogin(false)}
+        >
+          <View style={s.View}>
+            <Animated.Text style={[s.Text,
               {
-                color: animateProperty(isLogin ? '#fff' : backgroundColor)
+                color: animateProperty(!isLogin ? '#fff' : backgroundColor)
               },
-            ]}
-          >
-            Entrar
-          </Animated.Text>
-        </View>
-      </TouchableNativeFeedback>
-      <TouchableNativeFeedback
-        useForeground={true}
-        style={s.Touchable}
-
-        onPress={() => setLogin(false)}
-      >
-        <View style={s.View}>
-          <Animated.Text style={[s.Text,
-            {
-              color: animateProperty(!isLogin ? '#fff' : backgroundColor)
-            },
-          ]}>
-            Criar conta
-          </Animated.Text>
-        </View>
-      </TouchableNativeFeedback>
+            ]}>
+              Criar conta
+            </Animated.Text>
+          </View>
+        </TouchableNativeFeedback>
+      </View>
      </View>
    </View> 
   )
@@ -89,6 +105,7 @@ const s = StyleSheet.create({
     height: 42,
     width: '100%',
     borderRadius: 8,
+    overflow: 'hidden',
     zIndex: 5,
     display: 'flex',
     justifyContent: 'space-around',
