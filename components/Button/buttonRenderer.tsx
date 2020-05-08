@@ -79,7 +79,10 @@ const ButtonRenderer = forwardRef(({
               width: iconWidth,
               opacity: 1,
             },
-          }, icon ? iconNode : null) : iconNode}
+          }, icon ? iconNode : null, {}, {
+            bounciness: 0,
+            speed: 12,
+          } as any) : iconNode}
         </View>
       </Animated.View>
     </TouchableNativeFeedback>

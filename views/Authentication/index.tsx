@@ -1,7 +1,7 @@
 
 
-import React, { useState, useEffect } from 'react'
-import { View, StyleSheet, TouchableWithoutFeedback, Keyboard, Animated } from "react-native"
+import React, { useState, useEffect, useContext } from 'react'
+import { View, StyleSheet, TouchableWithoutFeedback, Keyboard, Animated, Text } from "react-native"
 
 import { backgroundColor } from '../../styles/colors'
 import InputComponent from '../../components/Input'
@@ -10,13 +10,24 @@ import Button from '../../components/Button'
 
 import AuthHeader from './AuthHeader'
 
+import { AuthContext } from '../../contexts/auth'
+import { ToastContext } from '../../contexts/toast'
+
 function Authentication() {
 
   const [isFocused, setFocus] = useState(false)
+  const [isLoading, setLoading] = useState(false)
+
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [email, setEmail] = useState("")
   const [isLogin, setLogin] = useState(true)
+
+  const {data, user, signIn, signUp, signOut} = useContext(AuthContext)
+  const {pushToast} = useContext(ToastContext)
+
+  console.log('data', data)
+  console.log('user', user)
   
   const dismiss = () => setFocus(false)
 
@@ -34,7 +45,7 @@ function Authentication() {
     
   }, [isLogin])
 
-  const isButtonBlocked = 
+  const emptyFields = 
     (
       isLogin &&
       (
@@ -51,6 +62,48 @@ function Authentication() {
       )
     )
 
+  const error = msg => pushToast({
+    msg,
+    duration: 4500,
+    type: 'error',
+  })
+  const success = msg => pushToast({
+    msg,
+    duration: 4500,
+    type: 'success',
+  })
+
+  const click = async () => {
+    if (emptyFields) {
+      error('Preencha os campos')
+      return;
+    }
+
+    Keyboard.dismiss()
+    setLoading(true)
+
+    if (isLogin) {
+      try {
+        await signIn(email, password)
+        success("Você entrou na sua conta com sucesso.")
+        setLoading(false)
+      } catch (err) {
+        error(err)
+        setLoading(false)
+      }
+    } else {
+      try {
+        await signUp(email, password, username)
+        success("Você criou uma conta com sucesso!")
+        setLoading(false)
+        setLogin(true)
+      } catch (err) {
+        error(err)
+        setLoading(false)
+      }
+    }
+  }
+
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -64,7 +117,7 @@ function Authentication() {
           {
             transform: [
               {
-                translateY: animateProperty(isFocused ? -128 : 0, 200),
+                translateY: animateProperty(isFocused ? -128 : 0),
               }
             ],
           },
@@ -81,7 +134,7 @@ function Authentication() {
                 zIndex: -1,
                 transform: [
                   {
-                    translateY: animateProperty(isLogin ? -60 : 0, 200)
+                    translateY: animateProperty(isLogin ? -60 : 0)
                   },
                 ],
               }
@@ -100,7 +153,7 @@ function Authentication() {
               {
                 transform: [
                   {
-                    translateY: animateProperty(isLogin ? -60 : 0, 200),
+                    translateY: animateProperty(isLogin ? -60 : 0),
                   }
                 ]
               }
@@ -124,8 +177,12 @@ function Authentication() {
             <View style={s.marginTop}>
               <Button
                 name={isLogin ? "Entrar" : "Criar"}
-                type={isButtonBlocked ? "slides" : "white"}
-                blocked={isButtonBlocked}
+                type={emptyFields ? "slides" : "white"}
+                click={click}
+                icon={isLoading ? {
+                  icon: 'loading'
+                } : null}
+                blocked={isLoading}
               />
             </View>
           </Animated.View>

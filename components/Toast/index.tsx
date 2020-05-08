@@ -45,6 +45,8 @@ const s = StyleSheet.create({
   Toast: {
     backgroundColor,
     padding: 19,
+    marginLeft: 19,
+    marginRight: 19,
     borderRadius: 8,
     borderWidth: 3,
   },
