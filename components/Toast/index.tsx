@@ -3,7 +3,7 @@
 import React, { useContext, useEffect } from "react"
 import { View, Text, StyleSheet } from "react-native"
 
-import { backgroundColor, primary, red } from './../../styles/colors'
+import { backgroundColor, primary, red, green } from './../../styles/colors'
 import { ToastContext } from "../../contexts/toast"
 
 import { animateOnOff } from './../../animations'
@@ -58,7 +58,7 @@ const s = StyleSheet.create({
     borderColor: red,
   },
   success: {
-    borderColor: primary,
+    borderColor: green,
   },
 })
 

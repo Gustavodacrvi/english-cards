@@ -15,7 +15,7 @@ interface Props {
   signIn: (email: string, password: string) => void;
   signUp: (email: string, password: string, username: string) => void;
   signOut: () => void;
-  sendResetEmail: () => void;
+  sendResetEmail: (email: string) => void;
 }
 
 let debounceTimeout = null
@@ -71,16 +71,20 @@ class AuthContextProvider extends Component {
   async signOut() {
     await auth().signOut()
   }
-  async sendResetEmail() {
-    if (debounceTimeout)
-      return;
-
-    console.log('run')
-    // auth().sendPasswordResetEmail()
-    debounceTimeout = setTimeout(() => {
-      clearTimeout(debounceTimeout)
-      debounceTimeout = null
-    }, 5000)
+  async sendResetEmail(email: string) {
+    try {
+      if (debounceTimeout)
+        return;
+  
+      console.log('run')
+      await auth().sendPasswordResetEmail(email)
+      debounceTimeout = setTimeout(() => {
+        clearTimeout(debounceTimeout)
+        debounceTimeout = null
+      }, 5000)
+    } catch (err) {
+      throw "Houve algum erro ao tentar mandar uma confirmação de e-mail."
+    }
   }
 
   render() {

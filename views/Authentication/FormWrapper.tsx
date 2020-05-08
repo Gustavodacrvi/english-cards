@@ -13,9 +13,9 @@ interface Props {
 
 function FormWrapper({ children, margin = -128 }: Props) {
 
-  const [isFocused, setFocus] = useState(false)
+  const [isFormUp, moveFormUp] = useState(false)
 
-  const dismiss = () => setFocus(false)
+  const dismiss = () => moveFormUp(false)
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidHide', dismiss)
@@ -25,7 +25,7 @@ function FormWrapper({ children, margin = -128 }: Props) {
   return (
     <TouchableWithoutFeedback
     onPress={() => {
-      setFocus(false)
+      moveFormUp(false)
       Keyboard.dismiss()
     }}
   >
@@ -35,12 +35,12 @@ function FormWrapper({ children, margin = -128 }: Props) {
         {
           transform: [
             {
-              translateY: animateProperty(isFocused ? margin : 0, true),
+              translateY: animateProperty(isFormUp ? margin : 0, true),
             }
           ],
         },
       ]}>
-        {children({isFocused, setFocus})}
+        {children({isFormUp, moveFormUp})}
       </Animated.View>
       </View>
     </TouchableWithoutFeedback>

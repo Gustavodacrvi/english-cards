@@ -24,7 +24,7 @@ function Authentication({navigation}) {
   const [isLogin, setLogin] = useState(true)
 
   const {data, user, signIn, signUp} = useContext(AuthContext)
-  const {pushToast} = useContext(ToastContext)
+  const {pushToast, error, success} = useContext(ToastContext)
 
   console.log('data', data)
   console.log('user', user)
@@ -54,17 +54,6 @@ function Authentication({navigation}) {
         !password.length
       )
     )
-
-  const error = msg => pushToast({
-    msg,
-    duration: 4500,
-    type: 'error',
-  })
-  const success = msg => pushToast({
-    msg,
-    duration: 4500,
-    type: 'success',
-  })
 
   const click = async () => {
     if (emptyFields) {
@@ -101,13 +90,13 @@ function Authentication({navigation}) {
     <FormWrapper
       margin={isLogin ? -70 : -128}
     >
-      {({setFocus, isFocused}) => {
+      {({moveFormUp, isFormUp}) => {
 
         return (
           <View>
             <AuthHeader
               isLogin={isLogin}
-              setLogin={!isFocused ? setLogin : () => {}}
+              setLogin={!isFormUp ? setLogin : () => {}}
             />
 
             <Animated.View
@@ -125,7 +114,7 @@ function Authentication({navigation}) {
               <InputComponent
                 style={s.marginTop}
                 placeholder="Nome de usuário:"
-                onFocus={() => setFocus(true)}
+                onFocus={() => moveFormUp(true)}
                 value={username}
                 onChangeText={setUsername}
               />
@@ -144,7 +133,7 @@ function Authentication({navigation}) {
               <InputComponent
                 style={s.marginTop}
                 placeholder="E-mail:"
-                onFocus={() => setFocus(true)}
+                onFocus={() => moveFormUp(true)}
                 value={email}
                 onChangeText={setEmail}
                 />
@@ -152,7 +141,7 @@ function Authentication({navigation}) {
                 style={s.marginTop}
                 placeholder="Senha:"
                 password={true}
-                onFocus={() => setFocus(true)}
+                onFocus={() => moveFormUp(true)}
                 value={password}
                 onChangeText={setPassword}
               />
