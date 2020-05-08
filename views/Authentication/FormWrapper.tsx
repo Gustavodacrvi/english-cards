@@ -6,7 +6,12 @@ import { Keyboard, View, Animated, StyleSheet } from 'react-native'
 import { animateProperty } from '../../animations'
 import { backgroundColor } from '../../styles/colors'
 
-function FormWrapper({ children }) {
+interface Props {
+  children: any;
+  margin?: number;
+}
+
+function FormWrapper({ children, margin = -128 }: Props) {
 
   const [isFocused, setFocus] = useState(false)
 
@@ -30,7 +35,7 @@ function FormWrapper({ children }) {
         {
           transform: [
             {
-              translateY: animateProperty(isFocused ? -128 : 0, true),
+              translateY: animateProperty(isFocused ? margin : 0, true),
             }
           ],
         },

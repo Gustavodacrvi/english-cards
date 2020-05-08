@@ -98,7 +98,9 @@ function Authentication({navigation}) {
   }
 
   return (
-    <FormWrapper>
+    <FormWrapper
+      margin={isLogin ? -70 : -128}
+    >
       {({setFocus, isFocused}) => {
 
         return (
