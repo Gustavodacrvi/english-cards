@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { View, StyleSheet, TouchableWithoutFeedback, Keyboard, Animated, Text } from "react-native"
 
-import { backgroundColor } from '../../styles/colors'
+import { backgroundColor, primary } from '../../styles/colors'
 import InputComponent from '../../components/Input'
 import { animateProperty } from '../../animations'
 import Button from '../../components/Button'
@@ -156,14 +156,36 @@ function Authentication({navigation}) {
                   blocked={isLoading}
                 />
               </View>
-              <Text
-                style={{
-                  textAlign: 'right',
-                }}
-                onPress={() => navigation.navigate('ResetPassword')}
-              >
-                Esqueceu a senha?
-              </Text>
+              {
+                isLogin ? 
+                  <Text
+                    style={{
+                      textAlign: 'right',
+                      color: primary,
+                    }}
+                    onPress={() => navigation.navigate('ResetPassword')}
+                  >
+                    Esqueceu a senha?
+                  </Text>
+                :
+                  <Text>
+                    Ao criar a conta você concorda com os <Text
+                      style={{
+                        color: primary,
+                      }}
+                      onPress={() => navigation.navigate('Terms')}
+                    >
+                      Termos de uso 
+                    </Text> e a <Text
+                      style={{
+                        color: primary,
+                      }}
+                      onPress={() => navigation.navigate('Privacy')}
+                    >
+                      Política de privacidade
+                    </Text>.
+                  </Text>
+              }
             </Animated.View>
           </View>
         )
