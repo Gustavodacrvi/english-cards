@@ -15,7 +15,10 @@ interface Props {
   signIn: (email: string, password: string) => void;
   signUp: (email: string, password: string, username: string) => void;
   signOut: () => void;
+  sendResetEmail: () => void;
 }
+
+let debounceTimeout = null
 
 class AuthContextProvider extends Component {
   state = {
@@ -67,7 +70,17 @@ class AuthContextProvider extends Component {
   }
   async signOut() {
     await auth().signOut()
-    return;
+  }
+  async sendResetEmail() {
+    if (debounceTimeout)
+      return;
+
+    console.log('run')
+    // auth().sendPasswordResetEmail()
+    debounceTimeout = setTimeout(() => {
+      clearTimeout(debounceTimeout)
+      debounceTimeout = null
+    }, 5000)
   }
 
   render() {
@@ -77,6 +90,7 @@ class AuthContextProvider extends Component {
         signIn: this.signIn,
         signUp: this.signUp,
         signOut: this.signOut,
+        sendResetEmail: this.sendResetEmail,
       }}>
         {this.props.children}
       </AuthContext.Provider>

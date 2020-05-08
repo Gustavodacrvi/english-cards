@@ -22,7 +22,7 @@ function AuthHeader({
         {
           transform: [
             {
-              translateX: animateProperty(!isLogin ? 130 : 0),
+              translateX: animateProperty(!isLogin ? 130 : 0, true),
             },
           ],
         },

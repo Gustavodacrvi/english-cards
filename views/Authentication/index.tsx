@@ -12,10 +12,10 @@ import AuthHeader from './AuthHeader'
 
 import { AuthContext } from '../../contexts/auth'
 import { ToastContext } from '../../contexts/toast'
+import FormWrapper from './FormWrapper'
 
-function Authentication() {
+function Authentication({navigation}) {
 
-  const [isFocused, setFocus] = useState(false)
   const [isLoading, setLoading] = useState(false)
 
   const [username, setUsername] = useState("")
@@ -23,19 +23,12 @@ function Authentication() {
   const [email, setEmail] = useState("")
   const [isLogin, setLogin] = useState(true)
 
-  const {data, user, signIn, signUp, signOut} = useContext(AuthContext)
+  const {data, user, signIn, signUp} = useContext(AuthContext)
   const {pushToast} = useContext(ToastContext)
 
   console.log('data', data)
   console.log('user', user)
   
-  const dismiss = () => setFocus(false)
-
-  useEffect(() => {
-    Keyboard.addListener('keyboardDidHide', dismiss)
-    return () => Keyboard.removeListener('keyboardDidHide', dismiss)
-  }, [])
-
   useEffect(() => {
     Keyboard.dismiss()
 
@@ -105,106 +98,90 @@ function Authentication() {
   }
 
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        setFocus(false)
-        Keyboard.dismiss()
+    <FormWrapper>
+      {({setFocus, isFocused}) => {
+
+        return (
+          <View>
+            <AuthHeader
+              isLogin={isLogin}
+              setLogin={!isFocused ? setLogin : () => {}}
+            />
+
+            <Animated.View
+              style={
+                {
+                  zIndex: -1,
+                  transform: [
+                    {
+                      translateY: animateProperty(isLogin ? -60 : 0, true)
+                    },
+                  ],
+                }
+              }
+            >
+              <InputComponent
+                style={s.marginTop}
+                placeholder="Nome de usuário:"
+                onFocus={() => setFocus(true)}
+                value={username}
+                onChangeText={setUsername}
+              />
+            </Animated.View>
+            <Animated.View
+              style={
+                {
+                  transform: [
+                    {
+                      translateY: animateProperty(isLogin ? -60 : 0, true),
+                    }
+                  ]
+                }
+              }
+            >
+              <InputComponent
+                style={s.marginTop}
+                placeholder="E-mail:"
+                onFocus={() => setFocus(true)}
+                value={email}
+                onChangeText={setEmail}
+                />
+              <InputComponent
+                style={s.marginTop}
+                placeholder="Senha:"
+                password={true}
+                onFocus={() => setFocus(true)}
+                value={password}
+                onChangeText={setPassword}
+              />
+              <View style={s.marginTop}>
+                <Button
+                  name={isLogin ? "Entrar" : "Criar"}
+                  type={emptyFields ? "slides" : "white"}
+                  click={click}
+                  icon={isLoading ? {
+                    icon: 'loading'
+                  } : null}
+                  blocked={isLoading}
+                />
+              </View>
+              <Text
+                style={{
+                  textAlign: 'right',
+                }}
+                onPress={() => navigation.navigate('ResetPassword')}
+              >
+                Esqueceu a senha?
+              </Text>
+            </Animated.View>
+          </View>
+        )
       }}
-    >
-      <View style={s.Auth}>
-        <Animated.View style={[
-          s.Wrapper,
-          {
-            transform: [
-              {
-                translateY: animateProperty(isFocused ? -128 : 0),
-              }
-            ],
-          },
-        ]}>
-
-          <AuthHeader
-            isLogin={isLogin}
-            setLogin={!isFocused ? setLogin : () => {}}
-          />
-
-          <Animated.View
-            style={
-              {
-                zIndex: -1,
-                transform: [
-                  {
-                    translateY: animateProperty(isLogin ? -60 : 0)
-                  },
-                ],
-              }
-            }
-          >
-            <InputComponent
-              style={s.marginTop}
-              placeholder="Nome de usuário:"
-              onFocus={() => setFocus(true)}
-              value={username}
-              onChangeText={setUsername}
-            />
-          </Animated.View>
-          <Animated.View
-            style={
-              {
-                transform: [
-                  {
-                    translateY: animateProperty(isLogin ? -60 : 0),
-                  }
-                ]
-              }
-            }
-          >
-            <InputComponent
-              style={s.marginTop}
-              placeholder="E-mail:"
-              onFocus={() => setFocus(true)}
-              value={email}
-              onChangeText={setEmail}
-              />
-            <InputComponent
-              style={s.marginTop}
-              placeholder="Senha:"
-              password={true}
-              onFocus={() => setFocus(true)}
-              value={password}
-              onChangeText={setPassword}
-            />
-            <View style={s.marginTop}>
-              <Button
-                name={isLogin ? "Entrar" : "Criar"}
-                type={emptyFields ? "slides" : "white"}
-                click={click}
-                icon={isLoading ? {
-                  icon: 'loading'
-                } : null}
-                blocked={isLoading}
-              />
-            </View>
-          </Animated.View>
-
-        </Animated.View>
-      </View>
-    </TouchableWithoutFeedback>
+    </FormWrapper>
   )
 }
 
 const s = StyleSheet.create({
-  Auth: {
-    backgroundColor,
-    height: '100%',
-    alignItems: 'center',
-  },
-  Wrapper: {
-    width: 268,
-    marginTop: 150,
-    position: 'relative',
-    overflow: 'visible',
-  },
   marginTop: {
     marginTop: 12,
   },

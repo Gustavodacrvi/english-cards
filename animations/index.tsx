@@ -5,7 +5,7 @@ import { Animated, Easing, TextStyle } from 'react-native'
 
 const defaultSpringProperties = {
   bounciness: 12,
-  speed: 25,
+  speed: 16,
 }
 
 export const animateProperty = (value: string | number, useNativeDriver: boolean = false, springProperties?: Animated.SpringAnimationConfig): Animated.AnimatedInterpolation => {
