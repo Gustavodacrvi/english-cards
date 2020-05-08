@@ -5,7 +5,7 @@ import { Animated, Easing, TextStyle } from 'react-native'
 
 const defaultSpringProperties = {
   bounciness: 12,
-  speed: 25,
+  speed: 16,
 }
 
 export const animateProperty = (value: string | number, useNativeDriver: boolean = false, springProperties?: Animated.SpringAnimationConfig): Animated.AnimatedInterpolation => {
@@ -86,20 +86,14 @@ export const animateOnOff = ({
     }, {})
   }
 
-  if (render) {
+  if (reactNode)
     node.current = reactNode
+
+  if (render) {
     if (events.beforeEnter) events.beforeEnter()
   } else {
     if (events.beforeLeave) events.beforeLeave()
   }
-
-  const jsx = node.current ? (
-    <Animated.View style={[
-      animatedStyle,
-    ]}>
-      { node.current }
-    </Animated.View>
-  ) : undefined
 
   animation.setValue(0)
 
@@ -119,7 +113,13 @@ export const animateOnOff = ({
     }
   })
 
-  return jsx
+  return (reactNode || node.current) ? (
+    <Animated.View style={[
+      animatedStyle,
+    ]}>
+      { reactNode || node.current }
+    </Animated.View>
+  ) : undefined
 }
 
 export const animateRotation = (duration: number = 500, invertDirection: boolean = false): Animated.AnimatedInterpolation => {

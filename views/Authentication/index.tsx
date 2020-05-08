@@ -1,30 +1,34 @@
 
 
-import React, { useState, useEffect } from 'react'
-import { View, StyleSheet, TouchableWithoutFeedback, Keyboard, Animated } from "react-native"
+import React, { useState, useEffect, useContext } from 'react'
+import { View, StyleSheet, TouchableWithoutFeedback, Keyboard, Animated, Text } from "react-native"
 
-import { backgroundColor } from '../../styles/colors'
+import { backgroundColor, primary } from '../../styles/colors'
 import InputComponent from '../../components/Input'
 import { animateProperty } from '../../animations'
 import Button from '../../components/Button'
 
 import AuthHeader from './AuthHeader'
 
-function Authentication() {
+import { AuthContext } from '../../contexts/auth'
+import { ToastContext } from '../../contexts/toast'
+import FormWrapper from './FormWrapper'
 
-  const [isFocused, setFocus] = useState(false)
+function Authentication({navigation}) {
+
+  const [isLoading, setLoading] = useState(false)
+
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [email, setEmail] = useState("")
   const [isLogin, setLogin] = useState(true)
+
+  const {data, user, signIn, signUp} = useContext(AuthContext)
+  const {pushToast, error, success} = useContext(ToastContext)
+
+/*   console.log('data', data)
+  console.log('user', user) */
   
-  const dismiss = () => setFocus(false)
-
-  useEffect(() => {
-    Keyboard.addListener('keyboardDidHide', dismiss)
-    return () => Keyboard.removeListener('keyboardDidHide', dismiss)
-  }, [])
-
   useEffect(() => {
     Keyboard.dismiss()
 
@@ -34,7 +38,7 @@ function Authentication() {
     
   }, [isLogin])
 
-  const isButtonBlocked = 
+  const emptyFields = 
     (
       isLogin &&
       (
@@ -51,103 +55,146 @@ function Authentication() {
       )
     )
 
+  const click = async () => {
+    if (emptyFields) {
+      error('Preencha os campos')
+      return;
+    }
+
+    Keyboard.dismiss()
+    setLoading(true)
+
+    if (isLogin) {
+      try {
+        await signIn(email, password)
+        success("Você entrou na sua conta com sucesso.")
+        setLoading(false)
+      } catch (err) {
+        error(err)
+        setLoading(false)
+      }
+    } else {
+      try {
+        await signUp(email, password, username)
+        success("Você criou uma conta com sucesso!")
+        setLoading(false)
+        setLogin(true)
+      } catch (err) {
+        error(err)
+        setLoading(false)
+      }
+    }
+  }
+
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        setFocus(false)
-        Keyboard.dismiss()
-      }}
+    <FormWrapper
+      margin={isLogin ? -70 : -128}
     >
-      <View style={s.Auth}>
-        <Animated.View style={[
-          s.Wrapper,
-          {
-            transform: [
-              {
-                translateY: animateProperty(isFocused ? -128 : 0, 200),
-              }
-            ],
-          },
-        ]}>
+      {({moveFormUp, isFormUp}) => {
 
-          <AuthHeader
-            isLogin={isLogin}
-            setLogin={!isFocused ? setLogin : () => {}}
-          />
-
-          <Animated.View
-            style={
-              {
-                zIndex: -1,
-                transform: [
-                  {
-                    translateY: animateProperty(isLogin ? -60 : 0, 200)
-                  },
-                ],
-              }
-            }
-          >
-            <InputComponent
-              style={s.marginTop}
-              placeholder="Nome de usuário:"
-              onFocus={() => setFocus(true)}
-              value={username}
-              onChangeText={setUsername}
+        return (
+          <View>
+            <AuthHeader
+              isLogin={isLogin}
+              setLogin={!isFormUp ? setLogin : () => {}}
             />
-          </Animated.View>
-          <Animated.View
-            style={
-              {
-                transform: [
-                  {
-                    translateY: animateProperty(isLogin ? -60 : 0, 200),
-                  }
-                ]
-              }
-            }
-          >
-            <InputComponent
-              style={s.marginTop}
-              placeholder="E-mail:"
-              onFocus={() => setFocus(true)}
-              value={email}
-              onChangeText={setEmail}
-              />
-            <InputComponent
-              style={s.marginTop}
-              placeholder="Senha:"
-              password={true}
-              onFocus={() => setFocus(true)}
-              value={password}
-              onChangeText={setPassword}
-            />
-            <View style={s.marginTop}>
-              <Button
-                name={isLogin ? "Entrar" : "Criar"}
-                type={isButtonBlocked ? "slides" : "white"}
-                blocked={isButtonBlocked}
-              />
-            </View>
-          </Animated.View>
 
-        </Animated.View>
-      </View>
-    </TouchableWithoutFeedback>
+            <Animated.View
+              style={
+                {
+                  zIndex: -1,
+                  transform: [
+                    {
+                      translateY: animateProperty(isLogin ? -60 : 0, true)
+                    },
+                  ],
+                }
+              }
+            >
+              <InputComponent
+                style={s.marginTop}
+                placeholder="Nome de usuário:"
+                onFocus={() => moveFormUp(true)}
+                value={username}
+                onChangeText={setUsername}
+              />
+            </Animated.View>
+            <Animated.View
+              style={
+                {
+                  transform: [
+                    {
+                      translateY: animateProperty(isLogin ? -60 : 0, true),
+                    }
+                  ]
+                }
+              }
+            >
+              <InputComponent
+                style={s.marginTop}
+                placeholder="E-mail:"
+                onFocus={() => moveFormUp(true)}
+                value={email}
+                onChangeText={setEmail}
+                />
+              <InputComponent
+                style={s.marginTop}
+                placeholder="Senha:"
+                password={true}
+                onFocus={() => moveFormUp(true)}
+                value={password}
+                onChangeText={setPassword}
+              />
+              <View style={s.marginTop}>
+                <Button
+                  name={isLogin ? "Entrar" : "Criar"}
+                  type={emptyFields ? "slides" : "white"}
+                  click={click}
+                  icon={isLoading ? {
+                    icon: 'loading'
+                  } : null}
+                  blocked={isLoading}
+                />
+              </View>
+              {
+                isLogin ? 
+                  <Text
+                    style={{
+                      textAlign: 'right',
+                      color: primary,
+                    }}
+                    onPress={() => navigation.navigate('ResetPassword')}
+                  >
+                    Esqueceu a senha?
+                  </Text>
+                :
+                  <Text>
+                    Ao criar a conta você concorda com os <Text
+                      style={{
+                        color: primary,
+                      }}
+                      onPress={() => navigation.navigate('Terms')}
+                    >
+                      Termos de uso 
+                    </Text> e a <Text
+                      style={{
+                        color: primary,
+                      }}
+                      onPress={() => navigation.navigate('Privacy')}
+                    >
+                      Política de privacidade
+                    </Text>.
+                  </Text>
+              }
+            </Animated.View>
+          </View>
+        )
+      }}
+    </FormWrapper>
   )
 }
 
 const s = StyleSheet.create({
-  Auth: {
-    backgroundColor,
-    height: '100%',
-    alignItems: 'center',
-  },
-  Wrapper: {
-    width: 268,
-    marginTop: 150,
-    position: 'relative',
-    overflow: 'visible',
-  },
   marginTop: {
     marginTop: 12,
   },

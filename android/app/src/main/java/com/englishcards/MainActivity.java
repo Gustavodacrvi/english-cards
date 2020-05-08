@@ -1,4 +1,4 @@
-package com.englishcards;
+package flash.translator;
 
 import com.facebook.react.ReactActivity;
 
