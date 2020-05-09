@@ -122,7 +122,7 @@ export const animateOnOff = ({
   ) : undefined
 }
 
-export const animateRotation = (duration: number = 500, invertDirection: boolean = false): Animated.AnimatedInterpolation => {
+export const animateRotation = (duration: number = 700, invertDirection: boolean = false): Animated.AnimatedInterpolation => {
   
   const [spinValue] = useState(new Animated.Value(0))
 

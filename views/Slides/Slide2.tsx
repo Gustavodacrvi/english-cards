@@ -11,13 +11,23 @@ function Slide2({slide}: {slide: 0 | 1 | 2}) {
 
   const transformed2 = [
     {
-      translateX: animateProperty(slide < 1 ? 330 : 0),
-      translateY: animateProperty(slide > 1 ? 480 : 0),
+      transform: [
+        {
+          translateX: animateProperty(slide < 1 ? 330 : 0, true),
+        },
+        {
+          translateY: animateProperty(slide > 1 ? 480 : 0, true),
+        },
+      ],
     }
   ]
   const transformed1 = [
     {
-      translateX: animateProperty(slide === 1 ? 0 : -330),
+      transform: [
+        {
+          translateX: animateProperty(slide === 1 ? 0 : -330, true),
+        },
+      ],
     }
   ]
   

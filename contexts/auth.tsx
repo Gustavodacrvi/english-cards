@@ -26,7 +26,7 @@ class AuthContextProvider extends Component {
     data: null,
   } as Props
 
-  componentWillMount() {
+  componentDidMount() {
     auth().onAuthStateChanged(user => {
       this.setState({user})
 

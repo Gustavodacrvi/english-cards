@@ -25,13 +25,13 @@ function Slide1({slide}: {slide: 0 | 1 | 2}) {
                 0: -325,
                 1: -335,
                 2: -345,
-              }[slide]),
+              }[slide], true),
             },{
               translateY: animateProperty({
                 0: 30,
                 1: -145,
                 2: -240,
-              }[slide]),
+              }[slide], true),
             }
           ]
         }}
