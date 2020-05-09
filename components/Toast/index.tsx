@@ -27,8 +27,6 @@ function Toast() {
     if (toastTimeout)
       clearTimeout(toastTimeout)
     
-    console.log((toast && toast.msg) || null)
-    
     if (toast)
       pushToast(null)
   }
