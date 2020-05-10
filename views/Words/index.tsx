@@ -5,7 +5,7 @@ import { View, Text, StyleSheet } from 'react-native'
 import TabWrapper from './Tab'
 
 function WordsPage() {
-  const [currentTab, setTab] = useState('Saved')
+  const [currentTab, setTab] = useState('forgotten' as 'saved' | 'forgotten' | 'learned')
   
   return (
     <View

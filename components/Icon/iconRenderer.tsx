@@ -29,7 +29,7 @@ const icons = {
   notification, plus, saved,
   search, sort, trash,
   user, wifi, arrow,
-  'notification-trash': notificationTrash,
+  'notification-dash': notificationTrash,
   'sort-by-name': sortByName,
 }
 

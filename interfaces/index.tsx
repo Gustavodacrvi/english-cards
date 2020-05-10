@@ -8,7 +8,7 @@ export interface IconInterface {
   secondaryColor?: string;
   icon:
     'home' | 'alert' | 'book' | 'words' | 'cards' | 'loading' |
-    'notification-trash' | 'notification' | 'plus' | 'saved' | 'search' |
+    'notification-dash' | 'notification' | 'plus' | 'saved' | 'search' |
     'sort-by-name' | 'sort' | 'trash' | 'user' | 'wifi' | 'arrow'
   ;
 }
