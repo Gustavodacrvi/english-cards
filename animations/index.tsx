@@ -73,15 +73,33 @@ export const animateOnOff = ({
   
   const [animation] = useState(new Animated.Value(0))
   const node = useRef(reactNode)
+
+  const getInterpolation = (offKey, onKey) => {
+    return animation.interpolate({
+      inputRange: [0, 1],
+      outputRange: render ? [offKey, onKey] : [onKey, offKey]
+    }) 
+  }
+  
+  const interpolateArray = (onKey: Array<ViewStyle | TextStyle>, offKey: Array<ViewStyle | TextStyle>) => {
+    // onKey : [{translateX: 50}]
+    const arr = []
+    for (let i = 0;i < onKey.length; i++) {
+      arr.push(
+        Object.keys(offKey[i]).reduce((obj, key) => ({
+          ...obj,
+          [key]: getInterpolation(offKey[i][key], onKey[i][key]),
+        }), {})
+      )
+    }
+    return arr
+  }
   
   const animatedStyle = {
     ...Object.keys(off).reduce((obj, key) => {
       return {
         ...obj,
-        [key]: animation.interpolate({
-          inputRange: [0, 1],
-          outputRange: render ? [off[key], on[key]] : [on[key], off[key]]
-        })
+        [key]: !Array.isArray(off[key]) ? getInterpolation(off[key], on[key]) : interpolateArray(on[key], off[key])
       }
     }, {})
   }
@@ -114,9 +132,7 @@ export const animateOnOff = ({
   })
 
   return (reactNode || node.current) ? (
-    <Animated.View style={[
-      animatedStyle,
-    ]}>
+    <Animated.View style={animatedStyle}>
       { reactNode || node.current }
     </Animated.View>
   ) : undefined

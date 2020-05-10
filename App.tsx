@@ -14,10 +14,11 @@ import Slides from './views/Slides'
 import ResetPassword from './views/ResetPassword'
 import ModalHeader from './components/ModalHeader'
 import InfoView from './views/InfoView'
-import { View, StatusBar } from 'react-native'
+import { View, StatusBar, AsyncStorage } from 'react-native'
 import changeNavigationBarColor from 'react-native-navigation-bar-color'
 import SplashScreen from './views/SplashScreen'
-import AsyncStorage from '@react-native-community/async-storage'
+import WordsPage from './views/Words'
+import Header from './components/Header/'
 
 const Stack = createStackNavigator()
 
@@ -102,6 +103,19 @@ function App() {
       />
     </>
   )
+
+  const userScreens = (
+    <>
+      <Stack.Screen
+        name='Words'
+        component={WordsPage}
+        options={{
+          header: Header,
+          ...TransitionPresets.DefaultTransition,
+        }}
+      />
+    </>
+  )
   
   return (
     <ToastContextProvider>
@@ -133,14 +147,14 @@ function App() {
 
               if (isLoggedIn)
                 return [
-                  // Insert user screen
+                  userScreens,
                   Auth,
                   Screens,
                 ]
 
               return [
                 Auth,
-                // Insert user screen
+                userScreens,
                 Screens,
               ]
             })()}

@@ -1,4 +1,5 @@
 import React, { createContext, Component } from 'react'
+import { AsyncStorage } from 'react-native'
 
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth'
 import fire from '@react-native-firebase/firestore'
@@ -51,6 +52,7 @@ class AuthContextProvider extends Component {
   async signIn(email: string, password: string) {
     try {
       await auth().signInWithEmailAndPassword(email, password)
+      AsyncStorage.setItem('FlashTranslator.isLoggedIn', 'true')
     } catch (err) {
       throw "Houve um erro ao tentar entrar, tente de novo."
     }
@@ -62,6 +64,7 @@ class AuthContextProvider extends Component {
         uid: res.user.uid,
         username, email,
       })
+      AsyncStorage.setItem('FlashTranslator.isLoggedIn', 'true')
     } catch (err) {
       if (auth().currentUser)
         auth().currentUser.delete()
@@ -70,6 +73,7 @@ class AuthContextProvider extends Component {
   }
   async signOut() {
     await auth().signOut()
+    AsyncStorage.setItem('FlashTranslator.isLoggedIn', 'false')
   }
   async sendResetEmail(email: string) {
     try {

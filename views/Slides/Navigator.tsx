@@ -1,8 +1,8 @@
 
 
-import React, { useEffect } from 'react'
+import React from 'react'
 
-import { View, StyleSheet, Animated, BackHandler } from 'react-native'
+import { View, StyleSheet, Animated, AsyncStorage } from 'react-native'
 import { backgroundColor, primary } from '../../styles/colors'
 import { animateStyles } from '../../animations'
 import Button from '../../components/Button'
@@ -35,6 +35,7 @@ function SlidesNavigator({
     if (newSlide < 3) {
       setSlide(newSlide as any)
     } else {
+      AsyncStorage.setItem('FlashTranslator.sawSlides', 'true')
       navigate('Authentication')
     }
   }

@@ -5,10 +5,9 @@ import { View, StyleSheet, Dimensions } from 'react-native'
 import { backgroundColor } from '../../styles/colors'
 
 import NavOption from './NavOption'
+import { StackHeaderProps } from '@react-navigation/stack'
 
-import { NavigationStackProp } from 'react-navigation-stack'
-
-function Header({navigation}: {navigation: NavigationStackProp}) {
+function Header(props: StackHeaderProps) {
 
   return (
     <View
@@ -19,19 +18,19 @@ function Header({navigation}: {navigation: NavigationStackProp}) {
       >
 
         <NavOption
-          active={navigation.state.routeName === "Home"}
+          active={props.scene.route.name === "Home"}
           displayName="Início"
           textWidth={58}
           icon={{icon: 'home'}}
           />
         <NavOption
-          active={navigation.state.routeName === "Words"}
+          active={props.scene.route.name === "Words"}
           displayName="Palavras"
           textWidth={88}
           icon={{icon: 'words'}}
           />
         <NavOption
-          active={navigation.state.routeName === "Profile"}
+          active={props.scene.route.name === "Profile"}
           displayName="Perfil"
           textWidth={58}
           icon={{icon: 'user'}}
