@@ -13,6 +13,7 @@ function WordsPage() {
     >
       <TabWrapper
         tab={currentTab}
+        setTab={setTab}
       />
     </View>
   )
