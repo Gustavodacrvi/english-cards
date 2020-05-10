@@ -2,8 +2,6 @@
 import React, { useState, useContext } from 'react'
 import { View, StyleSheet, Text } from "react-native"
 
-import Icon from '../components/Icon'
-import { backgroundColor } from '../styles/colors'
 import FormWrapper from './Authentication/FormWrapper'
 import Input from '../components/Input'
 import Button from '../components/Button'

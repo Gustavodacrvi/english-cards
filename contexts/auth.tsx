@@ -76,14 +76,13 @@ class AuthContextProvider extends Component {
       if (debounceTimeout)
         return;
   
-      console.log('run')
       await auth().sendPasswordResetEmail(email)
       debounceTimeout = setTimeout(() => {
         clearTimeout(debounceTimeout)
         debounceTimeout = null
       }, 5000)
     } catch (err) {
-      throw "Houve algum erro ao tentar mandar uma confirmação de e-mail."
+      throw "Houve algum erro ao tentar mandar uma e-mail de mudança de senha."
     }
   }
 

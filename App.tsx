@@ -14,9 +14,10 @@ import Slides from './views/Slides'
 import ResetPassword from './views/ResetPassword'
 import ModalHeader from './components/ModalHeader'
 import InfoView from './views/InfoView'
-import { View, StatusBar, AsyncStorage, Text } from 'react-native'
+import { View, StatusBar } from 'react-native'
 import changeNavigationBarColor from 'react-native-navigation-bar-color'
 import SplashScreen from './views/SplashScreen'
+import AsyncStorage from '@react-native-community/async-storage'
 
 const Stack = createStackNavigator()
 
