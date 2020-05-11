@@ -1,32 +1,39 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <transition name="fadeInOut">
+      <router-view />
+    </transition>
   </div>
 </template>
 
+
 <style>
+:root {
+  --primary: #525a79;
+  --white: #ffffff;
+  --almost-black: #5e5e5e;
+  --yellow: #FFD166;
+}
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap");
+html {
+  width: 400px;
+  height: 450px;
+  background: var(--primary);
+  box-sizing: border-box;
+}
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Open Sans";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: var(--white);
 }
-
-#nav {
-  padding: 30px;
+.fadeInOut-enter, .fadeInOut-leave-to {
+  opacity: 0;
+  transition-duration: 1s;
 }
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+.fadeInOut-enter-to, .fadeInOut-leave {
+  opacity: 1;
+  transition-duration: 1s;
 }
 </style>
