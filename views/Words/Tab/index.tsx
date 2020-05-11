@@ -14,8 +14,8 @@ interface Props {
 
 function TabWrapper({tab, setTab}: Props) {
   const saved: IconInterface = {icon: 'saved'}
-  const book: IconInterface = {icon: 'notification'}
-  const notification: IconInterface = {icon: 'book'}
+  const book: IconInterface = {icon: 'book'}
+  const notification: IconInterface = {icon: 'notification-dash'}
   const [width, setWidth] = useState(0)
 
   const learned = 138

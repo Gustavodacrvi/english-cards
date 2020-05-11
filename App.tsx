@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { backgroundColor } from './styles/colors'
 
 import Toast from "./components/Toast/"
+import Popup from "./components/Popup/"
 import ToastContextProvider from './contexts/toast'
 import AuthContextProvider from './contexts/auth'
 
@@ -19,6 +20,7 @@ import changeNavigationBarColor from 'react-native-navigation-bar-color'
 import SplashScreen from './views/SplashScreen'
 import WordsPage from './views/Words'
 import Header from './components/Header/'
+import PopupContextProvider from './contexts/popup'
 
 const Stack = createStackNavigator()
 
@@ -120,6 +122,7 @@ function App() {
   return (
     <ToastContextProvider>
       <AuthContextProvider>
+        <PopupContextProvider>
 
         <NavigationContainer>
           <Stack.Navigator
@@ -163,7 +166,9 @@ function App() {
         </NavigationContainer>
 
         <Toast/>
+        <Popup/>
 
+        </PopupContextProvider>
       </AuthContextProvider>
     </ToastContextProvider>
   )
