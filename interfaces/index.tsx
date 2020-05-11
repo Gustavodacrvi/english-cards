@@ -56,6 +56,17 @@ export interface LingueTranslationInterface {
   }>;
 }
 
+export interface WordInterface {
+  lastReview: null | Date,
+  reviewNumber: number | null,
+  api: 'linguee',
+  data: LingueTranslationInterface,
+}
+
+export interface WordData extends WordInterface {
+  name: string;
+}
+
 export interface ShortTerm extends FireData {
   uid: string; // FireData.uid
   input: {
@@ -66,12 +77,7 @@ export interface ShortTerm extends FireData {
   output: {
     [key: string]: {
       [key: string]: {
-        [key: string]: {
-          lastReview: null | Date,
-          reviewNumber: number | null,
-          api: 'linguee',
-          data: LingueTranslationInterface,
-        };
+        [key: string]: WordInterface;
       }; // target translation key
     }; // lang key
   } | null;
@@ -82,12 +88,7 @@ export interface LongTerm {
   output: {
     [key: string]: {
       [key: string]: {
-        [key: string]: {
-          lastReview: null | Date,
-          reviewNumber: number | null,
-          api: 'linguee',
-          data: LingueTranslationInterface,
-        };
+        [key: string]: WordInterface;
       }; // target translation key
     }; // lang key
   } | null;

@@ -6,6 +6,7 @@ import { View, Text, StyleSheet, Keyboard } from 'react-native'
 import TabWrapper from './Tab'
 import SearchBar from './SearchBar'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
+import List from './List'
 
 function WordsPage() {
   const [currentTab, setTab] = useState('saved' as 'saved' | 'forgotten' | 'learned')
@@ -31,9 +32,18 @@ function WordsPage() {
           setSearch={setSearch}
           setSort={setSort}
         />
-        <Text>
-          {sort}
-        </Text>
+        <List
+          list={[
+            {
+              name: 'Car',
+              translation: 'Carro',
+            },
+            {
+              name: 'Notification',
+              translation: 'Notificação',
+            },
+          ]}
+        />
         
       </View>
     </TouchableWithoutFeedback>
