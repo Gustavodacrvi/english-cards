@@ -5,6 +5,7 @@ import { View, StyleSheet } from 'react-native'
 import { darkBackgroundColor } from '../../../styles/colors'
 import TabOption from './TabOption'
 import TabBackground from './TabBackground'
+import { IconInterface } from '../../../interfaces'
 
 interface Props {
   tab: 'saved' | 'learned' | 'forgotten';
@@ -12,6 +13,10 @@ interface Props {
 }
 
 function TabWrapper({tab, setTab}: Props) {
+  const saved: IconInterface = {icon: 'saved'}
+  const book: IconInterface = {icon: 'notification'}
+  const notification: IconInterface = {icon: 'book'}
+  
   return (
     <View
       style={s.Wrapper}
@@ -39,7 +44,7 @@ function TabWrapper({tab, setTab}: Props) {
           textWidth={50}
           setTab={setTab}
           tabName='saved'
-          icon={{icon: 'saved'}}
+          icon={saved}
           />
         <TabOption
           active={tab === "learned"}
@@ -47,7 +52,7 @@ function TabWrapper({tab, setTab}: Props) {
           textWidth={83}
           setTab={setTab}
           tabName='learned'
-          icon={{icon: 'book'}}
+          icon={book}
           />
         <TabOption
           active={tab === "forgotten"}
@@ -55,7 +60,7 @@ function TabWrapper({tab, setTab}: Props) {
           textWidth={86}
           setTab={setTab}
           tabName='forgotten'
-          icon={{icon: 'notification-dash'}}
+          icon={notification}
         />
 
       </View>

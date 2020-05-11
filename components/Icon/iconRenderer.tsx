@@ -38,13 +38,12 @@ import React, { forwardRef } from 'react'
 import { animateRotation } from '../../animations'
 
 interface Props {
-  width: string;
+  width: number;
   icon: string;
   rotate: boolean;
   primaryColor: string;
   secondaryColor: string;
 }
-
 
 const IconRenderer = forwardRef(({
   primaryColor, icon, secondaryColor, width, rotate
@@ -52,6 +51,7 @@ const IconRenderer = forwardRef(({
     
   return (
     <Animated.View
+      ref={ref}
       style={{
         transform: [{rotate: rotate ? animateRotation() : '0deg'}],
       }}
@@ -66,4 +66,4 @@ const IconRenderer = forwardRef(({
   )
 })
 
-export default React.memo(IconRenderer)
+export default IconRenderer

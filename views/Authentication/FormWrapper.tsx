@@ -24,11 +24,11 @@ function FormWrapper({ children, margin = -128 }: Props) {
   
   return (
     <TouchableWithoutFeedback
-    onPress={() => {
-      moveFormUp(false)
-      Keyboard.dismiss()
-    }}
-  >
+      onPress={() => {
+        moveFormUp(false)
+        Keyboard.dismiss()
+      }}
+    >
     <View style={s.Auth}>
       <Animated.View style={[
         s.Wrapper,

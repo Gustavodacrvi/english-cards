@@ -24,11 +24,8 @@ function Authentication({navigation}) {
   const [isLogin, setLogin] = useState(true)
 
   const {data, user, signIn, signUp} = useContext(AuthContext)
-  const {pushToast, error, success} = useContext(ToastContext)
+  const {error, success} = useContext(ToastContext)
 
-/*   console.log('data', data)
-  console.log('user', user) */
-  
   useEffect(() => {
     Keyboard.dismiss()
 

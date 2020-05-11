@@ -1,6 +1,6 @@
 
 
-import iconRenderer from "./iconRenderer"
+import IconRenderer from "./iconRenderer"
 
 import React from 'react'
 import { Animated } from 'react-native'
@@ -8,18 +8,21 @@ import { IconInterface } from './../../interfaces'
 
 import {animateProperty} from './../../animations/'
 
-const AnimatedIconRenderer = Animated.createAnimatedComponent(iconRenderer)
+const AnimatedIconRenderer = Animated.createAnimatedComponent(IconRenderer)
 
-function Icon({color, primaryColor, secondaryColor, width = 32, icon, rotate}: IconInterface) {
+function Icon({color, primaryColor, secondaryColor, width = 32, icon, rotate, animate = true}: (IconInterface & {animate?: boolean})) {
 
-  return <AnimatedIconRenderer
-    width={width}
-    icon={icon}
-    rotate={rotate}
-
-    primaryColor={animateProperty(color || primaryColor || '#fff')}
-    secondaryColor={animateProperty(color || secondaryColor || '#FFD166')}
-  />
+  const props = {
+    width, icon, rotate,
+    primaryColor: animateProperty(color || primaryColor || '#fff'),
+    secondaryColor: animateProperty(color || secondaryColor || '#FFD166')
+  }
+  
+  return animate ? <AnimatedIconRenderer {...props} /> :
+    <IconRenderer {...props}
+      primaryColor={color || primaryColor || '#fff'}
+      secondaryColor={color || secondaryColor || '#FFD166'}
+    />
 
 }
 

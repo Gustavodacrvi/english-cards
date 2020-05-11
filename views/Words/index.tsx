@@ -1,27 +1,40 @@
 
 
 import React, { useState } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Keyboard } from 'react-native'
+
 import TabWrapper from './Tab'
+import SearchBar from './SearchBar'
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 
 function WordsPage() {
   const [currentTab, setTab] = useState('forgotten' as 'saved' | 'forgotten' | 'learned')
   
   return (
-    <View
-      style={s.Page}
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss()
+      }}
     >
-      <TabWrapper
-        tab={currentTab}
-        setTab={setTab}
-      />
-    </View>
+      <View
+        style={s.Page}
+      >
+
+        <TabWrapper
+          tab={currentTab}
+          setTab={setTab}
+        />
+        <SearchBar/>
+        
+      </View>
+    </TouchableWithoutFeedback>
   )
 }
 
 const s = StyleSheet.create({
   Page: {
     padding: 28,
+    height: '100%',
   },
 })
 

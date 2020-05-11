@@ -16,17 +16,22 @@ function TabBackground({left, width}: Props) {
       style={{
         transform: [
           {
-            translateX: animateProperty(left)
+            translateX: animateProperty(left, true)
           },
         ],
-        width: animateProperty(width, false),
-
         position: 'absolute',
         height: '100%',
         backgroundColor: primary,
         borderRadius: 8,
       }}
     >
+      <Animated.View
+        style={{
+          width: animateProperty(width),
+        }}
+      >
+
+      </Animated.View>
 
     </Animated.View>
   )

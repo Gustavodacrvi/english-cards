@@ -14,18 +14,14 @@ export const animateProperty = (value: string | number, useNativeDriver: boolean
   
   const animation = new Animated.Value(0)
   
-  const getConfig = animation.interpolate(
+  const config = animation.interpolate(
     {
       inputRange: [0, 1],
       outputRange: [oldValue.current as any, value as any],
     })
 
-  const config = useRef(getConfig)
-
-  config.current = getConfig
-  
   oldValue.current = value
-
+  
   animation.setValue(0)
 
   Animated.spring(
@@ -37,7 +33,7 @@ export const animateProperty = (value: string | number, useNativeDriver: boolean
     }
   ).start()
 
-  return config.current
+  return config
 }
 
 export const animateStyles = (style: ViewStyle | TextStyle, useNativeDriver: boolean = false, springProperties?: Animated.SpringAnimationConfig): {[key: string]: Animated.AnimatedInterpolation} => {

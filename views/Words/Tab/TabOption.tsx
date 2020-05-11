@@ -18,14 +18,8 @@ interface Props {
 
 function TabOption({active, name, icon, textWidth, tabName, setTab}: Props) {
 
-  const iconProps = {
-    ...icon,
-    width: 18,
-  }
+  console.log(active, name, tabName)
 
-  if (!active)
-    iconProps['color'] = darkBackgroundColor
-  
   return (
     <View
       style={[
@@ -67,7 +61,12 @@ function TabOption({active, name, icon, textWidth, tabName, setTab}: Props) {
               paddingLeft: 8,
             }}
           >
-            <Icon {...iconProps}/>
+            <Icon
+              {...icon}
+              width={18}
+              color={active ? darkBackgroundColor : null}
+              animate={false}
+            />
           </View>
         </TouchableNativeFeedback>
       </View>
