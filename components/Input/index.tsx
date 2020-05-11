@@ -63,6 +63,7 @@ const s = StyleSheet.create({
     color: '#fff',
     height: '100%',
     fontSize: 15,
+    fontFamily: 'OpenSans-Semibold',
   },
 })
 

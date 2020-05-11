@@ -81,7 +81,7 @@ const s = StyleSheet.create({
     justifyContent: 'center',
   },
   Text: {
-    fontFamily: 'OpenSans-Bold.ttf',
+    fontFamily: 'OpenSans-Bold',
     fontSize: 16,
     overflow: 'hidden',
     color: darkBackgroundColor,

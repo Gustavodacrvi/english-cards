@@ -31,7 +31,6 @@ function Popup() {
       >
         <TouchableWithoutFeedback
           onPress={evt => {
-            console.log('34334')
             if (Component)
                pushPopup(null)
           }}

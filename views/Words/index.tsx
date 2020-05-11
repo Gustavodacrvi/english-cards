@@ -9,6 +9,8 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 
 function WordsPage() {
   const [currentTab, setTab] = useState('saved' as 'saved' | 'forgotten' | 'learned')
+  const [search, setSearch] = useState("")
+  const [sort, setSort] = useState('creation' as 'alphabetical' | 'creation' | 'reviews')
   
   return (
     <TouchableWithoutFeedback
@@ -24,7 +26,14 @@ function WordsPage() {
           tab={currentTab}
           setTab={setTab}
         />
-        <SearchBar/>
+        <SearchBar
+          sort={sort}
+          setSearch={setSearch}
+          setSort={setSort}
+        />
+        <Text>
+          {sort}
+        </Text>
         
       </View>
     </TouchableWithoutFeedback>

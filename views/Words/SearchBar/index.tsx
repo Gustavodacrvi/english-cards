@@ -9,7 +9,13 @@ import { primary } from '../../../styles/colors'
 import { PopupContext } from '../../../contexts/popup'
 import OptionsPopup from './OptionsPopup'
 
-function SearchBar() {
+interface Props {
+  setSearch: (search: string) => void;
+  setSort: (sort: 'alphabetical' | 'creation' | 'reviews') => void;
+  sort: string;
+}
+
+function SearchBar({setSearch, setSort, sort}: Props) {
 
   const {pushPopup} = useContext(PopupContext)
   
@@ -21,7 +27,7 @@ function SearchBar() {
         flexDirection: 'row',
       }}
     >
-      <Input/>
+      <Input setSearch={setSearch}/>
       <View
         style={{
           borderRadius: 8,
@@ -32,7 +38,11 @@ function SearchBar() {
           background={TouchableNativeFeedback.Ripple(primary, false)}
           useForeground={true}
           onPress={() => {
-            pushPopup(OptionsPopup)
+            pushPopup(() => <OptionsPopup
+              sort={sort}
+              setSort={setSort}
+              close={() => pushPopup(null)}
+            />)
           }}
         >
           <View
