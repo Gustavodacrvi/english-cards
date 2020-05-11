@@ -19,6 +19,7 @@ function List({list}: Props) {
   return (
     <View
       style={{
+        overflow: 'visible',
         marginTop: 30,
       }}
     >

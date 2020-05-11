@@ -52,7 +52,7 @@ function WordsPage() {
 
 const s = StyleSheet.create({
   Page: {
-    padding: 28,
+    padding: 20,
     height: '100%',
   },
 })
