@@ -8,7 +8,7 @@ import SearchBar from './SearchBar'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 
 function WordsPage() {
-  const [currentTab, setTab] = useState('forgotten' as 'saved' | 'forgotten' | 'learned')
+  const [currentTab, setTab] = useState('saved' as 'saved' | 'forgotten' | 'learned')
   
   return (
     <TouchableWithoutFeedback

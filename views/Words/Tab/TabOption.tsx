@@ -18,8 +18,6 @@ interface Props {
 
 function TabOption({active, name, icon, textWidth, tabName, setTab}: Props) {
 
-  console.log(active, name, tabName)
-
   return (
     <View
       style={[

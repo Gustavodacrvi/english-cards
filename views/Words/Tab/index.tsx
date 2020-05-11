@@ -1,6 +1,6 @@
 
 
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import { View, StyleSheet } from 'react-native'
 import { darkBackgroundColor } from '../../../styles/colors'
 import TabOption from './TabOption'
@@ -16,6 +16,10 @@ function TabWrapper({tab, setTab}: Props) {
   const saved: IconInterface = {icon: 'saved'}
   const book: IconInterface = {icon: 'notification'}
   const notification: IconInterface = {icon: 'book'}
+  const [width, setWidth] = useState(0)
+
+  const learned = 138
+  const forgotten = 154
   
   return (
     <View
@@ -23,18 +27,21 @@ function TabWrapper({tab, setTab}: Props) {
     >
       <View
         style={s.TabBar}
+        onLayout={evt => {
+          setWidth(evt.nativeEvent.layout.width)
+        }}
       >
 
         <TabBackground
           left={{
             saved: 0,
-            learned: 76,
-            forgotten: 142,
+            learned: (width / 2) - (learned / 2) -4,
+            forgotten: width - forgotten,
           }[tab]}
           width={{
             saved: 108,
-            learned: 138,
-            forgotten: 154,
+            learned,
+            forgotten,
           }[tab]}
         />
 
@@ -82,8 +89,8 @@ const s = StyleSheet.create({
     flexDirection: 'row',
     position: 'relative',
     justifyContent: 'space-between',
-    paddingLeft: 14,
-    paddingRight: 14,
+    paddingLeft: 15,
+    paddingRight: 15,
     width: '100%',
     height: '100%',
   },

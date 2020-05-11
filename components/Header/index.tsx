@@ -9,9 +9,21 @@ import { StackHeaderProps } from '@react-navigation/stack'
 
 function Header(props: StackHeaderProps) {
 
+  const tabHeight = 73
+  
+  const [height, setHeight] = useState(Dimensions.get('window').height - tabHeight)
+
   return (
     <View
-      style={s.Header}
+      style={[
+        s.Header,
+        {
+          top: height,
+        },
+      ]}
+      onLayout={evt => {
+        setHeight(Dimensions.get('window').height - tabHeight)
+      }}
     >
       <View
         style={s.Wrapper}
@@ -41,14 +53,11 @@ function Header(props: StackHeaderProps) {
   )
 }
 
-const height = 73
-
 const s = StyleSheet.create({
   Header: {
     position: 'absolute',
     width: '100%',
-    height,
-    top: Dimensions.get('window').height - height,
+    height: 73,
     backgroundColor,
   },
   Wrapper: {
