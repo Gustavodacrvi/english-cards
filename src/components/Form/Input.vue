@@ -1,11 +1,16 @@
 <template>
   <div class="form-control">
-      <input :type="type" class="inp" :placeholder="placeholder" />
+      <input :type="type" class="inp" v-model="str" :placeholder="placeholder" />
   </div>
 </template>
 
 <script>
 export default {
+    data() {
+        return {
+          str: this.value || "",
+        }
+    },
     props: {
         placeholder: {
             type: String,
@@ -14,8 +19,20 @@ export default {
         type: {
             type: String,
             default: 'text'
+        },
+        value: {
+            type: String,
+            required: false
         }
-    }
+    },
+    watch: {
+        value() {
+          this.str = this.value
+        },
+        str() {
+          this.$emit('input', this.str)
+    },
+  },
 }
 </script>
 

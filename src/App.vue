@@ -16,10 +16,7 @@
 }
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap");
 html {
-  width: 400px;
-  height: 450px;
   background: var(--primary);
-  box-sizing: border-box;
 }
 #app {
   font-family: "Open Sans";

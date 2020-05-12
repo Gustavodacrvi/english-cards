@@ -7,8 +7,8 @@
       </transition>
       <input-vue type="email" v-model="user.email" placeholder="E-mail:"/>
       <input-vue type="password" v-model="user.password" placeholder="Senha:"/>
-      <button-vue text="Entrar" v-if="!firstTime" @click="login" :color="{'back': '#FFF', 'text': '#525A79'}" :border="true" />
-      <button-vue text="Criar conta" @click="signUp" v-if="firstTime" :color="{'back': '#FFF', 'text': '#525A79'}" :border="true" />
+      <button-vue text="Entrar" v-if="!firstTime" @click.native="login" :color="{'back': '#FFF', 'text': '#525A79'}" :border="true" />
+      <button-vue text="Criar conta" @click.native="signUp" v-if="firstTime" :color="{'back': '#FFF', 'text': '#525A79'}" :border="true" />
       <span v-if="!firstTime" @click="openForgotPasswordPopup">Esqueceu a senha?</span>
        <div v-if="firstTime" class="termos">	
           <div class="wrapper">	
@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
 import BaseFormVue from './BaseForm.vue'
 import InputVue from './Input.vue'
 import ButtonVue from '../Button.vue'
@@ -48,6 +49,19 @@ export default {
         InputVue,
         ButtonVue,
         MessagePopupVue
+    },
+    watch: {
+      error() {
+        if(this.error) {
+          this.popup = true
+          this.color = '#F00',
+          this.message = this.error
+          setTimeout(()=> {
+            this.popup = false
+            this.message = ''
+          }, 5000)
+        }
+      }
     },
     methods: {
         openForgotPasswordPopup() {
@@ -76,11 +90,14 @@ export default {
         },
         login() {
           this.$store.dispatch('login', this.user)
-          this.$browser.runtime.sendMessage({msg: 'Login'})
+          this.$router.push('/dashboard')
         },
         signUp() {
           this.$store.dispatch('signUp', this.user)
         }
+    },
+    computed: {
+      ...mapState(['error'])
     }
 }
 </script>

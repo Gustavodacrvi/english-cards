@@ -3,6 +3,9 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Privacy from '../views/Privacy.vue'
 import Therms from '../views/Therms.vue'
+import Dashboard from '../views/Dashboard.vue'
+import { storage } from '@/services/storage'
+import store from '@/store'
 Vue.use(VueRouter)
 
 const routes = [
@@ -20,6 +23,11 @@ const routes = [
         path: '/privacy',
         name: 'Privacy',
         component: Privacy
+    },
+    {
+        path: '/dashboard',
+        name: 'Dashboard',
+        component: Dashboard
     }
 ]
 
@@ -28,7 +36,23 @@ const router = new VueRouter({
     routes
 })
 router.beforeEach((to, from, next) => {
-    next()
+    const anyRoute = ['Privacy', 'Therms', 'Home']
+    const isLogged = store.state.isLogged || storage.get('isLogged')
+    if(!isLogged) {
+        if(!anyRoute.includes(to.name)) {
+            next('/')
+        }
+        else {
+            next()
+        }
+    }
+    else {
+        if(to.path === '/') {
+            next('/dashboard')
+        }
+        else {
+            next()
+        }
+    }
 })
-const anyRoute = ['Privacy', 'Therms', 'Home']
 export default router
