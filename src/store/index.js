@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import firebase from 'firebase/app'
-import { storage } from '@/services/storage'
+import { storage } from '../services/storage'
 import 'firebase/auth'
 import 'firebase/firestore'
 const firebaseConfig = {
@@ -26,7 +26,7 @@ export default new Vuex.Store({
       words: [],
       errors: {
         'auth/invalid-email': 'O email não está formatado corretamente',
-        'auth/wrong-password': 'Você digitou a senha errada'
+        'auth/wrong-password': 'Você digitou a senha errada',
       }
     },
     mutations: {

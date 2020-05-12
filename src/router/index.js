@@ -4,8 +4,8 @@ import Home from '../views/Home.vue'
 import Privacy from '../views/Privacy.vue'
 import Therms from '../views/Therms.vue'
 import Dashboard from '../views/Dashboard.vue'
-import { storage } from '@/services/storage'
-import store from '@/store'
+import { storage } from '../services/storage'
+import store from '../store'
 Vue.use(VueRouter)
 
 const routes = [
@@ -37,7 +37,7 @@ const router = new VueRouter({
 })
 router.beforeEach((to, from, next) => {
     const anyRoute = ['Privacy', 'Therms', 'Home']
-    const isLogged = store.state.isLogged || storage.get('isLogged')
+    const isLogged = store.state.user || storage.get('isLogged')
     if(!isLogged) {
         if(!anyRoute.includes(to.name)) {
             next('/')
