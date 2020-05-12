@@ -42,6 +42,18 @@ function WordsPage() {
               name: 'Notification',
               translation: 'Notificação',
             },
+            {
+              name: 'Random',
+              translation: 'Aleatório',
+            },
+            {
+              name: 'Computer',
+              translation: 'Computador',
+            },
+            {
+              name: 'Arrows',
+              translation: 'Flechas',
+            },
           ]}
         />
         

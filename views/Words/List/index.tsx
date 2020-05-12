@@ -2,9 +2,8 @@
 
 import React from 'react'
 
-import { WordData } from '../../../interfaces'
 import { View } from 'react-native'
-import WordElement from './WordElement'
+import WordElement from './WordElement/'
 
 interface Props {
   infoObj?: {
@@ -19,7 +18,6 @@ function List({list}: Props) {
   return (
     <View
       style={{
-        overflow: 'visible',
         marginTop: 30,
       }}
     >
