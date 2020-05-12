@@ -25,7 +25,6 @@ export default {
 
 <style scoped>
 .dashboard {
-  height: 400px;
   width: 100%;
 }
 .wrapper {
