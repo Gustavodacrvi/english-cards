@@ -1,5 +1,5 @@
 
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, forwardRef, useImperativeHandle } from 'react'
 
 import { View, Text, StyleSheet, Animated, Vibration } from 'react-native'
 import { faded, primary, backgroundColor, red } from '../../../../styles/colors'
@@ -7,37 +7,45 @@ import { TouchableNativeFeedback, PanGestureHandler, State } from 'react-native-
 import GestureBackground from './GestureBackground'
 import WordContent from './WordContent'
 
-function WordElement({name, translation}: {name: string; translation: string}) {
+const WordElement = forwardRef(({name, translation, id}: {name: string; translation: string, id: string}, ref) => {
+
+  const touchX = useRef(new Animated.Value(0))
+  const deleteValue = useRef(new Animated.Value(0))
   
-  const touchX = new Animated.Value(0)
-  const deleteValue = new Animated.Value(0)
-  
-  const onGestureEvent = Animated.event([{nativeEvent: {translationX: touchX}}], { useNativeDriver: true })
+  const onGestureEvent = Animated.event([{nativeEvent: {translationX: touchX.current}}], { useNativeDriver: true })
 
   const cancelGesture = () => {
-    Animated.spring(touchX, {
+    Animated.spring(touchX.current, {
       toValue: 0,
       bounciness: 12,
       speed: 16,
       useNativeDriver: true,
     }).start()
   }
-  const deleteElement = () => {
-/*     Animated.spring(touchX, {
-      toValue: 0,
-      bounciness: 0,
-      speed: 50,
-      useNativeDriver: true,
-    }).start()
-    Animated.spring(deleteValue, {
-      toValue: 1,
-      bounciness: 0,
-      speed: 50,
-      useNativeDriver: false,
-    }).start() */
+  const select = () => {
+    cancelGesture()
   }
 
+  const runDeleteAnimation = () => {
+    return new Promise((solve) => {
+      Animated.spring(touchX.current, {
+        toValue: 0,
+        bounciness: 0,
+        speed: 50,
+        useNativeDriver: true,
+      }).start()
+      Animated.spring(deleteValue.current, {
+        toValue: 1,
+        bounciness: 0,
+        speed: 50,
+        useNativeDriver: false,
+      }).start(solve)
+    })
+  }
+  
   const activeOffsetX = 75
+
+  useImperativeHandle(ref, () => ({cancelGesture, runDeleteAnimation, select, id}))
   
   return (
     <View
@@ -55,15 +63,17 @@ function WordElement({name, translation}: {name: string; translation: string}) {
           onHandlerStateChange={evt => {
 
             if (evt.nativeEvent.state === State.END) {
-
+              const x = evt.nativeEvent.translationX
               
-              if (evt.nativeEvent.translationX < activeOffsetX) {
-                console.log('cancel')
+              cancelGesture()
+
+/*               if (Math.abs(x) < activeOffsetX) {
                 cancelGesture()
-              } else if (evt.nativeEvent.translationX > 0) {
-                console.log('delete')
-                deleteElement()
-              }
+              } else if (x > 0) {
+                runDeleteAnimation()
+              } else if (x < 0) {
+                select()
+              } */
               
             }
           }}
@@ -72,7 +82,7 @@ function WordElement({name, translation}: {name: string; translation: string}) {
             style={[
               s.GestureWrapper,
               {
-                height: deleteValue.interpolate({
+                height: deleteValue.current.interpolate({
                   inputRange: [0, 1],
                   outputRange: [43, 0],
                   extrapolate: 'clamp',
@@ -81,13 +91,13 @@ function WordElement({name, translation}: {name: string; translation: string}) {
             ]}
           >
             <GestureBackground
-              touchX={touchX}
+              touchX={touchX.current}
               activeOffsetX={activeOffsetX}
             />
             <WordContent
-              touchX={touchX}
+              touchX={touchX.current}
               name={name}
-              deleteValue={deleteValue}
+              deleteValue={deleteValue.current}
               translation={translation}
             />
           </Animated.View>
@@ -95,7 +105,7 @@ function WordElement({name, translation}: {name: string; translation: string}) {
       </TouchableNativeFeedback>
     </View>
   )
-}
+})
 
 const s = StyleSheet.create({
   GestureWrapper: {
@@ -104,7 +114,6 @@ const s = StyleSheet.create({
   WordElement: {
     borderRadius: 8,
     overflow: 'hidden',
-    // maxHeight: 43,
   },
 })
 

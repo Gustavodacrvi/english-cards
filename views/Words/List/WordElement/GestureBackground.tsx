@@ -64,7 +64,7 @@ function GestureBackground({touchX, activeOffsetX}: Props) {
             {
               opacity: touchX.interpolate({
                 inputRange: [activeOffsetX, activeOffsetX + 5],
-                outputRange: [0, 1],
+                outputRange: [1, 0],
               })
             },
           ]}
