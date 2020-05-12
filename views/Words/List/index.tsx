@@ -13,8 +13,8 @@ import WordElement from './WordElement/'
     
     // console.log(getCompRefById('Arrows'))
   
-/*     if (refs.current[2].current.runDeleteAnimation)
-      console.log(refs.current[2].current.runDeleteAnimation().then(() => console.log('animation complete'))) */
+/*     if (refs.current[2].current.runLeaveAnimation)
+      console.log(refs.current[2].current.runLeaveAnimation().then(() => console.log('animation complete'))) */
 
 interface Props {
   infoObj?: {
@@ -90,7 +90,8 @@ function List({list, id}: Props) {
       const {toRemove, toFlip, toAdd, finalList} = transitionData.current
 
       Promise.all([
-        ...toRemove.map(id => getCompRefById(id).runDeleteAnimation())
+        ...toRemove.map(id => getCompRefById(id).runLeaveAnimation()),
+        ...toAdd.map(id => getCompRefById(id).runEnterAnimation()),
       ]).then(() => {
         setModel(finalList)
       })
@@ -110,6 +111,7 @@ function List({list, id}: Props) {
         model.map((obj, i) =>
           <WordElement
             key={obj[id]}
+            willEnter={isTransitioning.current && transitionData.current.toAdd.includes(obj[id])}
             ref={el => refs.current[i] = el}
             id={obj[id]}
             {...obj}
