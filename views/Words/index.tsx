@@ -48,12 +48,20 @@ function WordsPage() {
 
     setTimeout(() => {
 
-      // C K A L F E
-      
+      // D J F K A B
+
       setList([
         {
-          name: 'C',
-          translation: 'c',
+          name: 'D',
+          translation: 'd',
+        },
+        {
+          name: 'J',
+          translation: 'j',
+        },
+        {
+          name: 'F',
+          translation: 'f',
         },
         {
           name: 'K',
@@ -64,16 +72,8 @@ function WordsPage() {
           translation: 'a',
         },
         {
-          name: 'L',
-          translation: 'l',
-        },
-        {
-          name: 'F',
-          translation: 'f',
-        },
-        {
-          name: 'E',
-          translation: 'e',
+          name: 'B',
+          translation: 'b',
         },
       ])
 
@@ -83,9 +83,9 @@ function WordsPage() {
 
         change()
         
-      }, 4000)
+      }, 10000)
       
-    }, 4000)
+    }, 10000)
 
   }
 

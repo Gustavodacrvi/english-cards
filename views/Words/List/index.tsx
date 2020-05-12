@@ -44,6 +44,9 @@ function List({list, id}: Props) {
 
   useEffect(() => {
 
+    const toAdd = list.filter(old => !model.some(obj => old[id] === obj[id])).map(obj => obj[id])
+    const toRemoveObjs = model.filter(old => !list.some(obj => old[id] === obj[id]))
+    const toRemove = toRemoveObjs.map(obj => obj[id])
     const getFlipped = () => {
       const dontChange = model.filter(old => list.some(obj => old[id] === obj[id])).map(el => el[id])
       const couples = []
@@ -52,18 +55,31 @@ function List({list, id}: Props) {
           return;
         let oldElement
         for (let i = 0;i < list.length;i++)
-          if (list[i][id] === key) {
+          if (list[i][id] === key && model[i]) {
             oldElement = model[i][id]
+            break
           }
-        if (oldElement !== key)
-          couples.push([oldElement, key])
+
+        
+        const arentUndefinedAndArentBeingAddedOrRemoved = oldElement && oldElement !== key && !couples.includes(oldElement) && !toRemove.includes(key) && !toRemove.includes(oldElement)
+        
+        if (arentUndefinedAndArentBeingAddedOrRemoved) {
+
+          const oldElIndex = model.findIndex(obj => obj[id] === oldElement)
+          const newElIndex = list.findIndex(obj => obj[id] === oldElement)
+
+          const oldKeyIndex = model.findIndex(obj => obj[id] === key)
+          const newKeyIndex = list.findIndex(obj => obj[id] === key)
+
+          const thereWasFlip = Math.sign(oldElIndex - oldKeyIndex) !== Math.sign(newElIndex - newKeyIndex)
+          if (thereWasFlip)
+            couples.push([oldElement, key])
+        }
       })
+
       
       return couples
     }
-
-    const toAdd = list.filter(old => !model.some(obj => old[id] === obj[id])).map(obj => obj[id])
-    const toRemoveObjs = model.filter(old => !list.some(obj => old[id] === obj[id]))
     const toFlip = getFlipped()
 
     const finalList = list.slice()
@@ -75,9 +91,7 @@ function List({list, id}: Props) {
       transitionArray.splice(i, 0, obj)
     })
 
-    const toRemove = toRemoveObjs.map(obj => obj[id])
-
-    if (toAdd.length && toRemove.length && toFlip.length) {
+    if (toAdd.length || toRemove.length || toFlip.length) {
       isTransitioning.current = true
       transitionData.current = {toRemove, toAdd, toFlip, finalList}
       setModel(transitionArray)
@@ -92,6 +106,18 @@ function List({list, id}: Props) {
       Promise.all([
         ...toRemove.map(id => getCompRefById(id).runLeaveAnimation()),
         ...toAdd.map(id => getCompRefById(id).runEnterAnimation()),
+        ...toFlip.map(([el1, el2]) => {
+          const ref1 = getCompRefById(el1)
+          const ref2 = getCompRefById(el2)
+
+          const x = ref1.layout.x - ref2.layout.x
+          const y = ref1.layout.y - ref2.layout.y
+
+          return Promise.all([
+            ref1.runFlipAnimation({x, y}),
+            ref2.runFlipAnimation({x: -x, y: -y}),
+          ])
+        }),
       ]).then(() => {
         setModel(finalList)
       })
