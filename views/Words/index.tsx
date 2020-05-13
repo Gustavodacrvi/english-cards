@@ -1,125 +1,127 @@
 
 
-import React, { useState, useEffect } from 'react'
-import { View, Text, StyleSheet, Keyboard } from 'react-native'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
+import { View, Text, StyleSheet, Keyboard, GestureResponderEvent } from 'react-native'
 
 import TabWrapper from './Tab'
 import SearchBar from './SearchBar'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import List from './List'
 
-function WordsPage() {
-  const [currentTab, setTab] = useState('saved' as 'saved' | 'forgotten' | 'learned')
-  const [search, setSearch] = useState("")
-  const [sort, setSort] = useState('creation' as 'alphabetical' | 'creation' | 'reviews')
-
-  // A B C D E F
-
-  const initial = [
-    {
-      name: 'A',
-      translation: 'a',
-    },
-    {
-      name: 'B',
-      translation: 'b',
-    },
-    {
-      name: 'C',
-      translation: 'c',
-    },
-    {
-      name: 'D',
-      translation: 'd',
-    },
-    {
-      name: 'E',
-      translation: 'e',
-    },
-    {
-      name: 'F',
-      translation: 'f',
-    },
-  ]
-  
-  const [list, setList] = useState(initial)
-
-  const change = () => {
-
-    setTimeout(() => {
-
-      // D J F K A B
-
-      setList([
-        {
-          name: 'D',
-          translation: 'd',
-        },
-        {
-          name: 'J',
-          translation: 'j',
-        },
-        {
-          name: 'F',
-          translation: 'f',
-        },
-        {
-          name: 'K',
-          translation: 'k',
-        },
-        {
-          name: 'A',
-          translation: 'a',
-        },
-        {
-          name: 'B',
-          translation: 'b',
-        },
-      ])
-
-      setTimeout(() => {
-
-        setList(initial)
-
-        change()
-        
-      }, 10000)
-      
-    }, 10000)
-
+class WordsPage extends React.Component {
+  state = {
+    currentTab: 'saved' as 'saved' | 'forgotten' | 'learned',
+    list: [
+      {
+        name: 'Car',
+        translation: 'Carro',
+      },
+      {
+        name: 'Notification',
+        translation: 'Notificação',
+      },
+      {
+        name: 'Random',
+        translation: 'Aleatório',
+      },
+      {
+        name: 'Computer',
+        translation: 'Computador',
+      },
+      {
+        name: 'Arrows',
+        translation: 'Flechas',
+      },
+      {
+        name: 'Chair',
+        translation: 'Cadeira',
+      },
+      {
+        name: 'Hand',
+        translation: 'Mão',
+      },
+      {
+        name: 'Sleep',
+        translation: 'Dormir',
+      },
+    ],
+    search: '',
+    sort: 'creation' as 'alphabetical' | 'creation' | 'reviews',
+    selected: [],
   }
 
-  useEffect(() => {
-    change()
-  }, [])
-  
-  return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        Keyboard.dismiss()
-      }}
-    >
-      <View
-        style={s.Page}
-      >
+  selectWord = name => {
+    if (!this.state.selected.includes(name))
+      this.setState({
+        selected: [...this.state.selected, name],
+      })
+    else
+    this.setState({
+      selected: this.state.selected.filter(key => key !== name),
+    })
+  }
 
-        <TabWrapper
-          tab={currentTab}
-          setTab={setTab}
-        />
-        <SearchBar
-          sort={sort}
-          setSearch={setSearch}
-          setSort={setSort}
-        />
-        <List
-          id="name"
-          list={list}
-        />
-        
-      </View>
-    </TouchableWithoutFeedback>
-  )
+  onPress = (id: string) => {
+    this.selectWord(id)
+  }
+
+  setTab = (tab: 'saved' | 'forgotten' | 'learned') => {
+    this.setState({
+      currentTab: tab,
+    })
+  }
+  setSearch = (search: string) => {
+    this.setState({
+      search,
+    })
+  }
+  setSort = (sort: 'alphabetical' | 'creation' | 'reviews') => {
+    this.setState({
+      sort,
+    })
+  }
+  removeWord = (name) => {
+    this.setState({
+      list: this.state.list.filter(el => el.name !== name)
+    })
+  }
+
+  render() {
+    return (
+      <TouchableWithoutFeedback
+        onPress={() => {
+          this.setState({
+            selected: [],
+          })
+          Keyboard.dismiss()
+        }}
+      >
+        <View
+          style={s.Page}
+        >
+  
+          <TabWrapper
+            tab={this.state.currentTab}
+            setTab={this.setTab}
+          />
+          <SearchBar
+            sort={this.state.sort}
+            setSearch={this.setSearch}
+            setSort={this.setSort}
+          />
+          <List
+            id="name"
+            selected={this.state.selected}
+            leftAction={this.removeWord}
+            rightAction={this.selectWord}
+            onPress={this.onPress}
+            list={this.state.list}
+          />
+          
+        </View>
+      </TouchableWithoutFeedback>
+    )
+  }
 }
 
 const s = StyleSheet.create({

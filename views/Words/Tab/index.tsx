@@ -13,9 +13,9 @@ interface Props {
 }
 
 function TabWrapper({tab, setTab}: Props) {
-  const saved: IconInterface = {icon: 'saved'}
-  const book: IconInterface = {icon: 'book'}
-  const notification: IconInterface = {icon: 'notification-dash'}
+  const saved = useRef({icon: 'saved'} as IconInterface)
+  const book = useRef({icon: 'book'} as IconInterface)
+  const notification = useRef({icon: 'notification-dash'} as IconInterface)
   const [width, setWidth] = useState(0)
 
   const learned = 138
@@ -51,7 +51,7 @@ function TabWrapper({tab, setTab}: Props) {
           textWidth={50}
           setTab={setTab}
           tabName='saved'
-          icon={saved}
+          icon={saved.current}
           />
         <TabOption
           active={tab === "learned"}
@@ -59,7 +59,7 @@ function TabWrapper({tab, setTab}: Props) {
           textWidth={83}
           setTab={setTab}
           tabName='learned'
-          icon={book}
+          icon={book.current}
           />
         <TabOption
           active={tab === "forgotten"}
@@ -67,7 +67,7 @@ function TabWrapper({tab, setTab}: Props) {
           textWidth={86}
           setTab={setTab}
           tabName='forgotten'
-          icon={notification}
+          icon={notification.current}
         />
 
       </View>

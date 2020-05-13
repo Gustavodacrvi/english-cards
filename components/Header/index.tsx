@@ -1,17 +1,22 @@
 
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { View, StyleSheet, Dimensions } from 'react-native'
 import { backgroundColor } from '../../styles/colors'
 
 import NavOption from './NavOption'
 import { StackHeaderProps } from '@react-navigation/stack'
+import { IconInterface } from '../../interfaces'
 
 function Header(props: StackHeaderProps) {
 
-  const tabHeight = 73
+  const tabHeight = useRef(73)
   
-  const [height, setHeight] = useState(Dimensions.get('window').height - tabHeight)
+  const [height, setHeight] = useState(Dimensions.get('window').height - tabHeight.current)
+
+  const home = useRef({icon: 'home'} as IconInterface)
+  const words = useRef({icon: 'words'} as IconInterface)
+  const user = useRef({icon: 'user'} as IconInterface)
 
   return (
     <View
@@ -22,7 +27,7 @@ function Header(props: StackHeaderProps) {
         },
       ]}
       onLayout={evt => {
-        setHeight(Dimensions.get('window').height - tabHeight)
+        setHeight(Dimensions.get('window').height - tabHeight.current)
       }}
     >
       <View
@@ -33,19 +38,19 @@ function Header(props: StackHeaderProps) {
           active={props.scene.route.name === "Home"}
           displayName="Início"
           textWidth={58}
-          icon={{icon: 'home'}}
+          icon={home.current}
           />
         <NavOption
           active={props.scene.route.name === "Words"}
           displayName="Palavras"
           textWidth={88}
-          icon={{icon: 'words'}}
+          icon={words.current}
           />
         <NavOption
           active={props.scene.route.name === "Profile"}
           displayName="Perfil"
           textWidth={58}
-          icon={{icon: 'user'}}
+          icon={user.current}
         />
         
       </View>

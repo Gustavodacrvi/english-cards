@@ -3,18 +3,7 @@
 import React, { useEffect, useState, useRef, createRef } from 'react'
 
 import { View } from 'react-native'
-import WordElement from './WordElement/'
-/*     const getCompRefById = (key: string): object | undefined => {
-      // console.log(refs.current[2].data)
-      const res = refs.current.find(el => el.data[id] === key)
-      if (res)
-        return res.current
-    } */
-    
-    // console.log(getCompRefById('Arrows'))
-  
-/*     if (refs.current[2].current.runLeaveAnimation)
-      console.log(refs.current[2].current.runLeaveAnimation().then(() => console.log('animation complete'))) */
+import ListRenderer from './ListRenderer'
 
 interface Props {
   infoObj?: {
@@ -24,23 +13,21 @@ interface Props {
   };
   list: Array<{name: string; translation: string}>;
   id: string;
+  selected: string[];
+  leftAction: (id: string) => void;
+  rightAction: (id: string) => void;
+  onPress: (id: string) => void;
 }
 
 const initalTransitionData = {toFlip: [], toAdd: [], toRemove: [], finalList: []}
 
-function List({list, id}: Props) {
+function List({list, id, leftAction, rightAction, onPress, selected = []}: Props) {
 
   const refs = useRef([])
   const isTransitioning = useRef(false)
   const transitionData = useRef(initalTransitionData)
   
   const [model, setModel] = useState(list)
-
-  refs.current = refs.current.slice(0, model.length)
-
-  const getCompRefById = (key: string): any => {
-    return refs.current.find(ref => ref && ref.id === key)
-  }
 
   useEffect(() => {
 
@@ -100,6 +87,10 @@ function List({list, id}: Props) {
   }, [list])
 
   useEffect(() => {
+    const getCompRefById = (key: string): any => {
+      return refs.current.find(ref => ref && ref.id === key)
+    }
+    refs.current = refs.current.slice(0, model.length)
     if (isTransitioning.current) {
       const {toRemove, toFlip, toAdd, finalList} = transitionData.current
 
@@ -133,19 +124,19 @@ function List({list, id}: Props) {
         marginTop: 30,
       }}
     >
-      {
-        model.map((obj, i) =>
-          <WordElement
-            key={obj[id]}
-            willEnter={isTransitioning.current && transitionData.current.toAdd.includes(obj[id])}
-            ref={el => refs.current[i] = el}
-            id={obj[id]}
-            {...obj}
-          />
-        )
-      }
+      <ListRenderer
+        list={model}
+        refs={refs}
+        leftAction={leftAction}
+        rightAction={rightAction}
+        id={id}
+        onPress={onPress}
+        selected={selected}
+        isTransitioning={isTransitioning}
+        transitionData={transitionData}
+      />
     </View>
   )
 }
 
-export default List
+export default React.memo(List)

@@ -2,26 +2,45 @@
 
 import React from 'react'
 import { View, Animated, Text, StyleSheet } from 'react-native'
-import { backgroundColor, faded } from '../../../../styles/colors'
+import { backgroundColor, faded, darkBackgroundColor } from '../../../../styles/colors'
+import { animateProperty } from '../../../../animations'
 
 interface Props {
   touchX: Animated.Value;
   deleteValue: Animated.Value;
   name: string;
+  active: boolean;
   translation: string;
 }
 
-function WordContent({touchX, deleteValue, name, translation}: Props) {
+function WordContent({touchX, deleteValue, active, name, translation}: Props) {
   return (
-    <View>
+    <View
+      style={{
+        position: 'relative',
+      }}
+      >
       <Animated.View
         style={[
           s.Wrapper,
           {
             transform: [{translateX: touchX}],
-          }
+          },
         ]}
       >
+        <Animated.View
+          style={{
+            backgroundColor: 'white',
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            width: '100%',
+            height: '100%',
+            opacity: animateProperty(active ? 1 : 0, true),
+          }}
+        >
+
+        </Animated.View>
         <Animated.View
           style={[
             s.Content,
@@ -34,10 +53,20 @@ function WordContent({touchX, deleteValue, name, translation}: Props) {
           ]}
         >
           <View>
-            <Text style={s.BigText}>{name}</Text>
+            <Animated.Text style={[
+              s.BigText,
+              {
+                color: animateProperty(active ? darkBackgroundColor : 'white'),
+              },
+            ]}>{name}</Animated.Text>
           </View>
           <View>
-            <Text style={s.Info}>{translation}</Text>
+            <Animated.Text style={[
+              s.Info,
+              {
+                color: animateProperty(active ? darkBackgroundColor : faded),
+              },
+            ]}>{translation}</Animated.Text>
           </View>
         </Animated.View>
       </Animated.View>
@@ -51,14 +80,14 @@ const s = StyleSheet.create({
     overflow: 'hidden',
     backgroundColor,
     justifyContent: 'center',
-    paddingLeft: 8,
     height: '100%',
-    paddingBottom: 2,
     borderRadius: 8,
   },
   Content: {
     height: 25,
     display: 'flex',
+    marginLeft: 8,
+    marginBottom: 2,
     justifyContent: 'space-around',
   },
   BigText: {

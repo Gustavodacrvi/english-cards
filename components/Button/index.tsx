@@ -1,6 +1,6 @@
 
 
-import React from 'react'
+import React, { useRef } from 'react'
 import {
   Animated,
 } from 'react-native'
@@ -34,14 +34,14 @@ function Button({
 }: ButtonProps) {
   const key = type
 
-  const iconWidth = 22
+  const iconWidth = useRef(22)
 
   return <AnimatedButtonRenderer
     name={name}
     click={!blocked ? click : (() => {})}
 
     icon={icon}
-    iconWidth={iconWidth}
+    iconWidth={iconWidth.current}
     disableIconTransition={disableIconTransition}
 
     textColor={animateProperty({
