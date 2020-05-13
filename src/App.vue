@@ -17,6 +17,7 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap");
 html {
   background: var(--primary);
+  min-height: 100vh;
 }
 #app {
   font-family: "Open Sans";
@@ -24,6 +25,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: var(--white);
+  min-height: 100vh;
 }
 .fadeInOut-enter, .fadeInOut-leave-to {
   opacity: 0;

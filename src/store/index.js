@@ -4,6 +4,7 @@ import firebase from 'firebase/app'
 import { storage } from '../services/storage'
 import 'firebase/auth'
 import 'firebase/firestore'
+import router from '../router'
 const firebaseConfig = {
   apiKey: "AIzaSyDB4r-56op-Z9sgHzE39W3ygp7PH8BbNFk",
   authDomain: "english-cards-1c691.firebaseapp.com",
@@ -25,8 +26,17 @@ export default new Vuex.Store({
       error: null,
       words: [],
       errors: {
-        'auth/invalid-email': 'O email não está formatado corretamente',
+        'auth/invalid-email': 'O email digitado não está válido',
         'auth/wrong-password': 'Você digitou a senha errada',
+        'auth/account-exists-with-different-credential': 'Conta já existe com credencial diferente',
+        'auth/credential-already-in-use': 'A credencial já está em uso',
+        'auth/email-already-in-use': 'O email já está em uso',
+        'auth/weak-password': 'A senha está fraca. Tente com uma mais forte',
+        'auth/expired-action-code': 'O código de resetar a senha expirou',
+        'auth/invalid-action-code': 'O código de resetar a senha não é válido ou já está em uso',
+        'auth/user-not-found': 'Usuário não encontrado',
+        'auth/invalid-user-token': 'Token inválido',
+        'auth/user-token-expired': 'Token expirado'
       }
     },
     mutations: {
@@ -37,6 +47,9 @@ export default new Vuex.Store({
         if(payload) {
           state.isLogged = true
           storage.set('isLogged', true)
+        }
+        else {
+          storage.remove('isLogged')
         }
         state.user = payload
 
@@ -66,6 +79,7 @@ export default new Vuex.Store({
         .catch(err => {
           commit('setError', err.code)
         })
+        router.push('/')
       },
       async signUp({commit}, payload) {
         try {

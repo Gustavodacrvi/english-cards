@@ -3,6 +3,7 @@
     <div class="wrapper">
       <input-vue placeholder="Palavra em inglês" v-model="word" />
       <button-vue :border="true" text="Salvar palavra" :color="{'back':'#FFF', 'text': '#525A79'}" @click.native="saveWord"/>
+      <span @click="logout">Sair</span>
     </div>
   </div>
 </template>
@@ -16,20 +17,33 @@ export default {
       word: ''
     }
   },
-    components: {
-      ButtonVue,
-      InputVue
+  components: {
+    ButtonVue,
+    InputVue
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch('logout')
     }
+  }
 }
 </script>
 
 <style scoped>
 .dashboard {
   width: 100%;
+  height: 100vh;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
 }
 .wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+}
+span {
+  color: var(--white);
 }
 </style>
