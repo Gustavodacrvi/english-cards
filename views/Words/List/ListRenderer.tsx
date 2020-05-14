@@ -11,14 +11,27 @@ interface Props {
   selected: string[];
   id: string;
   isTransitioning: any;
+  width: number;
   transitionData: any;
   refs: any;
+  transformProperty: 'translateX' | 'translateY';
 }
 
-function ListRenderer({list, isTransitioning, transitionData, leftAction, id, rightAction, onPress, selected, refs}: Props) {
-
+function ListRenderer({list, width, isTransitioning, transformProperty, transitionData, leftAction, id, rightAction, onPress, selected, refs}: Props) {
   
   const functionRefs = useRef({})
+  const lastListLength = useRef(list.length)
+  const uniqueIds = useRef(new Set(list.map(el => el[id])))
+
+  useEffect((): any => {
+    if (lastListLength.current !== list.length) {
+      lastListLength.current = list.length
+      functionRefs.current = {}
+    } else if (!list.every(obj => uniqueIds.current.has(obj[id]))) {
+      uniqueIds.current = new Set(list.map(el => el[id]))
+      functionRefs.current = {}
+    }
+  }, [list])
 
   return (
     <>
@@ -35,8 +48,10 @@ function ListRenderer({list, isTransitioning, transitionData, leftAction, id, ri
           leftAction={leftAction}
           rightAction={rightAction}
           onPress={onPress}
+          width={width}d
           active={selected.includes(obj[id])}
-          ref={getRef}
+          ref={(el => refs.current[i] = el)}
+          transformProperty={transformProperty}
         
           key={obj[id]}
           id={obj[id]}

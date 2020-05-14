@@ -1,9 +1,10 @@
 
 
-import React, { useState, useEffect, useRef, useCallback } from 'react'
-import { View, Text, StyleSheet, Keyboard, GestureResponderEvent } from 'react-native'
+import React from 'react'
+import { View, StyleSheet, Keyboard, GestureResponderEvent } from 'react-native'
 
 import TabWrapper from './Tab'
+import ActionButton from './ActionButton'
 import SearchBar from './SearchBar'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import List from './List'
@@ -13,12 +14,12 @@ class WordsPage extends React.Component {
     currentTab: 'saved' as 'saved' | 'forgotten' | 'learned',
     list: [
       {
-        name: 'Car',
-        translation: 'Carro',
-      },
-      {
         name: 'Notification',
         translation: 'Notificação',
+      },
+      {
+        name: 'Car',
+        translation: 'Carro',
       },
       {
         name: 'Random',
@@ -29,20 +30,12 @@ class WordsPage extends React.Component {
         translation: 'Computador',
       },
       {
-        name: 'Arrows',
-        translation: 'Flechas',
-      },
-      {
         name: 'Chair',
         translation: 'Cadeira',
       },
       {
         name: 'Hand',
         translation: 'Mão',
-      },
-      {
-        name: 'Sleep',
-        translation: 'Dormir',
       },
     ],
     search: '',
@@ -111,11 +104,17 @@ class WordsPage extends React.Component {
           />
           <List
             id="name"
+            direction="vertical"
+            width={45}
+            
             selected={this.state.selected}
             leftAction={this.removeWord}
             rightAction={this.selectWord}
             onPress={this.onPress}
             list={this.state.list}
+          />
+          <ActionButton
+            active={this.state.currentTab === 'saved'}
           />
           
         </View>
@@ -128,6 +127,7 @@ const s = StyleSheet.create({
   Page: {
     padding: 20,
     height: '100%',
+    position: 'relative',
   },
 })
 

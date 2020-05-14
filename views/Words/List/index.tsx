@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef, createRef } from 'react'
 
-import { View } from 'react-native'
+import { View, InteractionManager } from 'react-native'
 import ListRenderer from './ListRenderer'
 
 interface Props {
@@ -13,6 +13,8 @@ interface Props {
   };
   list: Array<{name: string; translation: string}>;
   id: string;
+  direction: 'vertical' | 'horizontal';
+  width: number;
   selected: string[];
   leftAction: (id: string) => void;
   rightAction: (id: string) => void;
@@ -21,7 +23,7 @@ interface Props {
 
 const initalTransitionData = {toFlip: [], toAdd: [], toRemove: [], finalList: []}
 
-function List({list, id, leftAction, rightAction, onPress, selected = []}: Props) {
+function List({list, direction, id, leftAction, width, rightAction, onPress, selected = []}: Props) {
 
   const refs = useRef([])
   const isTransitioning = useRef(false)
@@ -35,37 +37,39 @@ function List({list, id, leftAction, rightAction, onPress, selected = []}: Props
     const toRemoveObjs = model.filter(old => !list.some(obj => old[id] === obj[id]))
     const toRemove = toRemoveObjs.map(obj => obj[id])
     const getFlipped = () => {
-      const dontChange = model.filter(old => list.some(obj => old[id] === obj[id])).map(el => el[id])
-      const couples = []
-      dontChange.forEach(key => {
-        if (couples.some(arr => arr.includes(key)))
-          return;
-        let oldElement
-        for (let i = 0;i < list.length;i++)
-          if (list[i][id] === key && model[i]) {
-            oldElement = model[i][id]
-            break
+      const dontChange = model.filter(obj => !toRemove.includes(obj[id]) && !toAdd.includes(obj[id])).map(el => el[id])
+
+      return dontChange.map(key => {
+        let oldIndex = model.findIndex(obj => obj[id] === key)
+        let newIndex = list.findIndex(obj => obj[id] === key)
+        let multiplier = width
+        const getNumberOfRemovedElementsBeforeKey = () => {
+          const oldEls = new Set()
+          for (const el of model) {
+            if (el[id] === key)
+              break
+            oldEls.add(el[id])
           }
-
-        
-        const arentUndefinedAndArentBeingAddedOrRemoved = oldElement && oldElement !== key && !couples.includes(oldElement) && !toRemove.includes(key) && !toRemove.includes(oldElement)
-        
-        if (arentUndefinedAndArentBeingAddedOrRemoved) {
-
-          const oldElIndex = model.findIndex(obj => obj[id] === oldElement)
-          const newElIndex = list.findIndex(obj => obj[id] === oldElement)
-
-          const oldKeyIndex = model.findIndex(obj => obj[id] === key)
-          const newKeyIndex = list.findIndex(obj => obj[id] === key)
-
-          const thereWasFlip = Math.sign(oldElIndex - oldKeyIndex) !== Math.sign(newElIndex - newKeyIndex)
-          if (thereWasFlip)
-            couples.push([oldElement, key])
+          return toRemove.reduce((tot, el) => oldEls.has(el) ? tot + 1 : tot , 0)
         }
-      })
+        const getNumberOfRemovedElementsAfterKey = () => {
+          const oldEls = new Set()
+          for (const el of list) {
+            if (el[id] === key)
+              break
+            oldEls.add(el[id])
+          }
+          return toAdd.reduce((tot, el) => oldEls.has(el) ? tot + 1 : tot , 0)
+        }
 
-      
-      return couples
+        const translate = ((oldIndex - newIndex) - getNumberOfRemovedElementsBeforeKey() + getNumberOfRemovedElementsAfterKey()) * multiplier
+        
+        if (translate)
+          return {
+            translate,
+            key,
+          }
+      }).filter(el => el)
     }
     const toFlip = getFlipped()
 
@@ -87,28 +91,17 @@ function List({list, id, leftAction, rightAction, onPress, selected = []}: Props
   }, [list])
 
   useEffect(() => {
+    refs.current = refs.current.slice(0, model.length)
     const getCompRefById = (key: string): any => {
       return refs.current.find(ref => ref && ref.id === key)
     }
-    refs.current = refs.current.slice(0, model.length)
     if (isTransitioning.current) {
       const {toRemove, toFlip, toAdd, finalList} = transitionData.current
 
       Promise.all([
         ...toRemove.map(id => getCompRefById(id).runLeaveAnimation()),
         ...toAdd.map(id => getCompRefById(id).runEnterAnimation()),
-        ...toFlip.map(([el1, el2]) => {
-          const ref1 = getCompRefById(el1)
-          const ref2 = getCompRefById(el2)
-
-          const x = ref1.layout.x - ref2.layout.x
-          const y = ref1.layout.y - ref2.layout.y
-
-          return Promise.all([
-            ref1.runFlipAnimation({x, y}),
-            ref2.runFlipAnimation({x: -x, y: -y}),
-          ])
-        }),
+        ...toFlip.map(({translate, key}) => getCompRefById(key).runFlipAnimation(translate)),
       ]).then(() => {
         setModel(finalList)
       })
@@ -122,6 +115,7 @@ function List({list, id, leftAction, rightAction, onPress, selected = []}: Props
     <View
       style={{
         marginTop: 30,
+        position: 'relative',
       }}
     >
       <ListRenderer
@@ -129,7 +123,9 @@ function List({list, id, leftAction, rightAction, onPress, selected = []}: Props
         refs={refs}
         leftAction={leftAction}
         rightAction={rightAction}
+        transformProperty={direction === 'vertical' ? 'translateY' : 'translateX'}
         id={id}
+        width={width}
         onPress={onPress}
         selected={selected}
         isTransitioning={isTransitioning}

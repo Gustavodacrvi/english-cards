@@ -15,16 +15,16 @@ interface Props {
   translation: string;
   id: string;
   willEnter: boolean;
+  width: number;
   active: boolean;
+  transformProperty: 'translateX' | 'translateY';
 }
 
-const WordElement = forwardRef(({name, leftAction, onPress, rightAction, willEnter, translation, active, id}: Props, ref) => {
+const WordElement = forwardRef(({name, width, transformProperty, leftAction, onPress, rightAction, willEnter, translation, active, id}: Props, ref) => {
 
   const touchX = useRef(new Animated.Value(0))
-  const flipX = useRef(new Animated.Value(0))
-  const flipY = useRef(new Animated.Value(0))
+  const flipValue = useRef(new Animated.Value(0))
   const deleteValue = useRef(new Animated.Value(willEnter ? 1 : 0))
-  const layout = useRef(null)
 
   const onGestureEvent = Animated.event([{nativeEvent: {translationX: touchX.current}}], { useNativeDriver: true })
 
@@ -39,12 +39,6 @@ const WordElement = forwardRef(({name, leftAction, onPress, rightAction, willEnt
 
   const runLeaveAnimation = () => {
     return new Promise((solve) => {
-      Animated.spring(touchX.current, {
-        toValue: 0,
-        bounciness: 0,
-        speed: 50,
-        useNativeDriver: true,
-      }).start()
       Animated.spring(deleteValue.current, {
         toValue: 1,
         bounciness: 12,
@@ -57,38 +51,31 @@ const WordElement = forwardRef(({name, leftAction, onPress, rightAction, willEnt
     return new Promise(solve => {
       Animated.spring(deleteValue.current, {
         toValue: 0,
-        bounciness: 12,
         speed: 6,
         useNativeDriver: false,
       }).start(solve)
     })
   }
-  const runFlipAnimation = ({x, y}) => {
+  const runFlipAnimation = (translate) => {
     return new Promise(solve => {
-      flipX.current.setValue(x)
-      flipY.current.setValue(y)
 
-      Animated.spring(flipX.current, {
-        toValue: 0,
-        bounciness: 12,
-        speed: 6,
-        useNativeDriver: true,
-      }).start()
-      Animated.spring(flipY.current, {
-        toValue: 0,
-        bounciness: 12,
-        speed: 6,
-        useNativeDriver: true,
-      }).start(solve)
+      flipValue.current.setValue(translate)
+
+      requestAnimationFrame(() => {
+        Animated.spring(flipValue.current, {
+          toValue: 0,
+          bounciness: 12,
+          speed: 6,
+          useNativeDriver: true,
+        }).start(solve)
+      })
     })
   }
-  
+
   const activeOffsetX = 40
 
-  useImperativeHandle(ref, () => ({cancelGesture, runFlipAnimation, layout: layout.current, runEnterAnimation, runLeaveAnimation, id}))
+  useImperativeHandle(ref, () => ({cancelGesture, runFlipAnimation, runEnterAnimation, runLeaveAnimation, id}))
 
-  console.log('run', name)
-  
   return (
     <Animated.View
       onResponderTerminationRequest={() => false}
@@ -97,15 +84,11 @@ const WordElement = forwardRef(({name, leftAction, onPress, rightAction, willEnt
         {
           transform: [
             {
-              translateX: flipX.current,
-            },
-            {
-              translateY: flipY.current,
+              [transformProperty]: flipValue.current,
             },
           ],
         },
       ]}
-      onLayout={evt => layout.current = evt.nativeEvent.layout}
     >
       <TouchableNativeFeedback
         background={TouchableNativeFeedback.Ripple(primary, false)}
@@ -145,7 +128,7 @@ const WordElement = forwardRef(({name, leftAction, onPress, rightAction, willEnt
                 {
                   height: deleteValue.current.interpolate({
                     inputRange: [0, 1],
-                    outputRange: [43, 0],
+                    outputRange: [width, 0],
                     extrapolate: 'clamp',
                   }),
                 },
