@@ -5,6 +5,7 @@ import { View, StyleSheet, Keyboard, TouchableWithoutFeedback } from 'react-nati
 
 import TabWrapper from './Tab'
 import ActionButton from './ActionButton'
+import SelectedMenu from './SelectedMenu'
 import SearchBar from './SearchBar'
 import List from './List'
 
@@ -91,34 +92,39 @@ class WordsPage extends React.Component {
           Keyboard.dismiss()
         }}
       >
-        <View
-          style={s.Page}
-        >
-  
-          <TabWrapper
-            tab={this.state.currentTab}
-            setTab={this.setTab}
-          />
-          <SearchBar
-            sort={this.state.sort}
-            setSearch={this.setSearch}
-            setSort={this.setSort}
-          />
-          <List
-            id="name"
-            direction="vertical"
-            width={45}
+        <View>
+          <View
+            style={s.Page}
+          >
+    
+            <TabWrapper
+              tab={this.state.currentTab}
+              setTab={this.setTab}
+            />
+            <SearchBar
+              sort={this.state.sort}
+              setSearch={this.setSearch}
+              setSort={this.setSort}
+            />
+            <List
+              id="name"
+              direction="vertical"
+              width={45}
+              
+              selected={this.state.selected}
+              leftAction={this.removeWord}
+              rightAction={this.selectWord}
+              onPress={this.onPress}
+              list={this.state.list}
+            />
+            <ActionButton
+              active={this.state.currentTab === 'saved'}
+            />
             
-            selected={this.state.selected}
-            leftAction={this.removeWord}
-            rightAction={this.selectWord}
-            onPress={this.onPress}
-            list={this.state.list}
+          </View>
+          <SelectedMenu
+            active={this.state.selected.length > 0}
           />
-          <ActionButton
-            active={this.state.currentTab === 'saved'}
-          />
-          
         </View>
       </TouchableWithoutFeedback>
     )

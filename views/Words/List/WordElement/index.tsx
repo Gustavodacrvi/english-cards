@@ -118,9 +118,7 @@ const WordElement = forwardRef(({name, cleanUp, affectMultiple, width, transform
           useForeground={true}
           onPress={evt => {
             evt.stopPropagation()
-            // if (activated.current)
-            //   onPress(id)
-            // activated.current = false
+            onPress(id)
           }}
         >
           <View>
@@ -146,7 +144,6 @@ const WordElement = forwardRef(({name, cleanUp, affectMultiple, width, transform
                 }
               }}
               minDist={10}
-              // shouldCancelWhenOutside={true}
               activeOffsetX={activeOffsetX}
               onHandlerStateChange={evt => {
                 const state = evt.nativeEvent.state
