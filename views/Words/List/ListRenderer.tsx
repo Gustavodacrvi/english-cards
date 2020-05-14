@@ -1,5 +1,5 @@
 
-import React, { useRef, useCallback, useEffect, createRef } from 'react'
+import React, { useRef, useCallback, useEffect, createRef, MutableRefObject } from 'react'
 
 import WordElement from './WordElement'
 
@@ -14,12 +14,15 @@ interface Props {
   width: number;
   transitionData: any;
   refs: any;
+  cleanUp: () => void;
+  affectMultiple: {current: ({target, key, translationX, isPositive}: {isPositive: boolean, target: number, key: string, translationX: number}) => void};
   transformProperty: 'translateX' | 'translateY';
 }
 
-function ListRenderer({list, width, isTransitioning, transformProperty, transitionData, leftAction, id, rightAction, onPress, selected, refs}: Props) {
+function ListRenderer({list, cleanUp, width, affectMultiple, isTransitioning, transformProperty, transitionData, leftAction, id, rightAction, onPress, selected, refs}: Props) {
   
   const functionRefs = useRef({})
+  const isMagicSelecting = useRef(false)
   const lastListLength = useRef(list.length)
   const uniqueIds = useRef(new Set(list.map(el => el[id])))
 
@@ -48,9 +51,12 @@ function ListRenderer({list, width, isTransitioning, transformProperty, transiti
           leftAction={leftAction}
           rightAction={rightAction}
           onPress={onPress}
-          width={width}d
+          cleanUp={cleanUp}
+          width={width}
+          affectMultiple={affectMultiple}
+          isMagicSelecting={isMagicSelecting}
           active={selected.includes(obj[id])}
-          ref={(el => refs.current[i] = el)}
+          ref={getRef}
           transformProperty={transformProperty}
         
           key={obj[id]}

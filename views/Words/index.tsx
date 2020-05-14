@@ -1,12 +1,11 @@
 
 
 import React from 'react'
-import { View, StyleSheet, Keyboard, GestureResponderEvent } from 'react-native'
+import { View, StyleSheet, Keyboard, TouchableWithoutFeedback } from 'react-native'
 
 import TabWrapper from './Tab'
 import ActionButton from './ActionButton'
 import SearchBar from './SearchBar'
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import List from './List'
 
 class WordsPage extends React.Component {
@@ -59,9 +58,10 @@ class WordsPage extends React.Component {
   }
 
   setTab = (tab: 'saved' | 'forgotten' | 'learned') => {
-    this.setState({
-      currentTab: tab,
-    })
+    if (tab !== this.state.currentTab)
+      this.setState({
+        currentTab: tab,
+      })
   }
   setSearch = (search: string) => {
     this.setState({
@@ -69,9 +69,10 @@ class WordsPage extends React.Component {
     })
   }
   setSort = (sort: 'alphabetical' | 'creation' | 'reviews') => {
-    this.setState({
-      sort,
-    })
+    if (sort !== this.state.sort)
+      this.setState({
+        sort,
+      })
   }
   removeWord = (name) => {
     this.setState({
@@ -82,10 +83,11 @@ class WordsPage extends React.Component {
   render() {
     return (
       <TouchableWithoutFeedback
-        onPress={() => {
-          this.setState({
-            selected: [],
-          })
+        onPress={evt => {
+          if (this.state.selected.length)
+            this.setState({
+              selected: [],
+            })
           Keyboard.dismiss()
         }}
       >

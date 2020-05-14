@@ -1,9 +1,9 @@
 
-import React, { useRef, forwardRef, useImperativeHandle } from 'react'
+import React, { useRef, forwardRef, useImperativeHandle, MutableRefObject } from 'react'
 
-import { StyleSheet, Animated, GestureResponderEvent, View } from 'react-native'
+import { StyleSheet, Animated, TouchableNativeFeedback, View, Easing } from 'react-native'
 import { primary } from '../../../../styles/colors'
-import { PanGestureHandler, TouchableNativeFeedback, State } from 'react-native-gesture-handler'
+import { PanGestureHandler, State, Directions } from 'react-native-gesture-handler'
 import GestureBackground from './GestureBackground'
 import WordContent from './WordContent'
 
@@ -17,24 +17,40 @@ interface Props {
   willEnter: boolean;
   width: number;
   active: boolean;
+  cleanUp: () => void;
+  isMagicSelecting: {current: boolean};
+  affectMultiple: {current: ({target, key, translationX, isPositive}: {isPositive: boolean, target: number, key: string, translationX: number}) => void};
   transformProperty: 'translateX' | 'translateY';
 }
 
-const WordElement = forwardRef(({name, width, transformProperty, leftAction, onPress, rightAction, willEnter, translation, active, id}: Props, ref) => {
+const WordElement = forwardRef(({name, cleanUp, affectMultiple, width, transformProperty, leftAction, onPress, rightAction, willEnter, translation, active, id}: Props, ref) => {
 
   const touchX = useRef(new Animated.Value(0))
   const flipValue = useRef(new Animated.Value(0))
   const deleteValue = useRef(new Animated.Value(willEnter ? 1 : 0))
+  const activated = useRef(false)
 
-  const onGestureEvent = Animated.event([{nativeEvent: {translationX: touchX.current}}], { useNativeDriver: true })
-
+  const activeOffsetX = 58
+  
   const cancelGesture = () => {
     Animated.spring(touchX.current, {
       toValue: 0,
       bounciness: 12,
-      speed: 28,
+      speed: 24,
       useNativeDriver: true,
     }).start()
+  }
+  const activate = x => {
+    cancelGesture()
+    setTimeout(() => {
+      if (Math.abs(x) > activeOffsetX) {
+        if (x > 0) {
+          leftAction(id)
+        } else if (x < 0) {
+          rightAction(id)
+        }
+      }
+    })
   }
 
   const runLeaveAnimation = () => {
@@ -71,14 +87,21 @@ const WordElement = forwardRef(({name, width, transformProperty, leftAction, onP
       })
     })
   }
+  const pull = (toValue: number) => {
+    Animated.timing(touchX.current, {
+      toValue,
+      duration: 250,
+      easing: Easing.ease,
+      useNativeDriver: true,
+    }).start(() => activate(toValue))
+  }
 
-  const activeOffsetX = 40
+  useImperativeHandle(ref, () => ({cancelGesture, activate, pull, runFlipAnimation, runEnterAnimation, runLeaveAnimation, id}))
 
-  useImperativeHandle(ref, () => ({cancelGesture, runFlipAnimation, runEnterAnimation, runLeaveAnimation, id}))
+  const onGestureEvent = Animated.event([{nativeEvent: {translationX: touchX.current}}], { useNativeDriver: true })
 
   return (
     <Animated.View
-      onResponderTerminationRequest={() => false}
       style={[
         s.WordElement,
         {
@@ -90,65 +113,82 @@ const WordElement = forwardRef(({name, width, transformProperty, leftAction, onP
         },
       ]}
     >
-      <TouchableNativeFeedback
-        background={TouchableNativeFeedback.Ripple(primary, false)}
-        useForeground={true}
-        onPress={() => onPress(id)}
-      >
-        <View>
-          <PanGestureHandler
-            maxPointers={1}
-            onGestureEvent={onGestureEvent}
-            minDist={10}
-            shouldCancelWhenOutside={true}
-            activeOffsetX={activeOffsetX}
-            onHandlerStateChange={evt => {
+        <TouchableNativeFeedback
+          background={TouchableNativeFeedback.Ripple(primary, false)}
+          useForeground={true}
+          onPress={evt => {
+            evt.stopPropagation()
+            // if (activated.current)
+            //   onPress(id)
+            // activated.current = false
+          }}
+        >
+          <View>
+            <PanGestureHandler
+              maxPointers={1}
+              onGestureEvent={evt => {
+                const y = evt.nativeEvent.y
 
-              if (evt.nativeEvent.state === State.END || evt.nativeEvent.state === State.CANCELLED) {
-                const x = evt.nativeEvent.translationX
+                if (y > 0 && y <= width && !activated.current)
+                  touchX.current.setValue(evt.nativeEvent.translationX)
+                else if (!activated.current) {
+                  activated.current = true
+                  activate(evt.nativeEvent.translationX)
+                }
+                  
+                if (affectMultiple.current) {
+                  affectMultiple.current({
+                    isPositive: y > 0,
+                    target: Math.abs(Math.ceil(y / width) - 1),
+                    key: id,
+                    translationX: evt.nativeEvent.translationX,
+                  })
+                }
+              }}
+              minDist={10}
+              // shouldCancelWhenOutside={true}
+              activeOffsetX={activeOffsetX}
+              onHandlerStateChange={evt => {
+                const state = evt.nativeEvent.state
                 
-                cancelGesture()
-                
-                setTimeout(() => {
-                  if (Math.abs(x) > activeOffsetX) {
-                    if (x > 0) {
-                      leftAction(id)
-                    } else if (x < 0) {
-                      rightAction(id)
-                    }
+                if (state === State.END) {
+                  cleanUp()
+                  if (!activated.current) {
+                    activate(evt.nativeEvent.translationX)
                   }
-                })
-                
-              }
-            }}
-          >
-            <Animated.View
-              style={[
-                s.GestureWrapper,
-                {
-                  height: deleteValue.current.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [width, 0],
-                    extrapolate: 'clamp',
-                  }),
-                },
-              ]}
+                } else if (state === State.BEGAN) {
+                  activated.current = false
+                  cleanUp()
+                }
+              }}
             >
-              <GestureBackground
-                touchX={touchX.current}
-                activeOffsetX={activeOffsetX}
-              />
-              <WordContent
-                touchX={touchX.current}
-                name={name}
-                active={active}
-                deleteValue={deleteValue.current}
-                translation={translation}
-              />
-            </Animated.View>
-          </PanGestureHandler>
-        </View>
-      </TouchableNativeFeedback>
+              <Animated.View
+                style={[
+                  s.GestureWrapper,
+                  {
+                    height: deleteValue.current.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [width, 0],
+                      extrapolate: 'clamp',
+                    }),
+                  },
+                ]}
+              >
+                <GestureBackground
+                  touchX={touchX.current}
+                  activeOffsetX={activeOffsetX}
+                />
+                <WordContent
+                  touchX={touchX.current}
+                  name={name}
+                  active={active}
+                  deleteValue={deleteValue.current}
+                  translation={translation}
+                />
+              </Animated.View>
+            </PanGestureHandler>
+          </View>
+        </TouchableNativeFeedback>
     </Animated.View>
   )
 })

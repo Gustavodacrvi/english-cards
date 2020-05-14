@@ -30,6 +30,39 @@ function List({list, direction, id, leftAction, width, rightAction, onPress, sel
   const transitionData = useRef(initalTransitionData)
   
   const [model, setModel] = useState(list)
+  const affectSourceIndex = useRef(null)
+  const lastSourceKey = useRef(null)
+  const lastTarget = useRef(null)
+  const isAnimatingRefs = useRef({})
+
+  const cleanUp = useRef(() => {
+    isAnimatingRefs.current = {}
+    affectSourceIndex.current = null
+    lastTarget.current = null
+    lastSourceKey.current = null
+  })
+
+  const pullComponent = (index: number, translationX: number) => {
+    const ref = refs.current[index]
+    if (!ref || isAnimatingRefs.current[ref.id])
+      return;
+
+    ref.pull(translationX)
+  }
+  
+  const affectMultipleFunction = ({key, translationX, target, isPositive}) => {
+    if (!affectSourceIndex.current || lastSourceKey.current !== key) {
+      affectSourceIndex.current = model.findIndex(obj => obj[id] === key)
+      lastSourceKey.current = affectSourceIndex.current
+    }
+    if (affectSourceIndex.current && target !== 0 && (lastTarget.current === null || lastTarget.current !== target)) {
+      lastTarget.current = target
+      const source = affectSourceIndex.current
+      let index = isPositive ? source + target : source - target
+      pullComponent(index, translationX)
+    }
+  }
+  const affectMultiple = useRef(affectMultipleFunction)
 
   useEffect(() => {
 
@@ -91,6 +124,8 @@ function List({list, direction, id, leftAction, width, rightAction, onPress, sel
   }, [list])
 
   useEffect(() => {
+    cleanUp.current()
+    affectMultiple.current = affectMultipleFunction
     refs.current = refs.current.slice(0, model.length)
     const getCompRefById = (key: string): any => {
       return refs.current.find(ref => ref && ref.id === key)
@@ -117,11 +152,36 @@ function List({list, direction, id, leftAction, width, rightAction, onPress, sel
         marginTop: 30,
         position: 'relative',
       }}
+
+/*       onStartShouldSetResponder={() => true}
+      onStartShouldSetResponderCapture={() => true}
+      onMoveShouldSetResponder={() => true}
+      onMoveShouldSetResponderCapture={() => true}
+
+      onResponderGrant={() => {
+        // Called when the gesture starts
+        
+        // After a timeout (long press), save in state the day on which the user pressed
+      }}
+      onResponderMove={(evt) => {
+        // Called at each movement
+      
+        // Find the day on which the user's finger currently is
+        // Select all days between the first selected day (saved in state) and the current day
+        console.log(evt.nativeEvent.locationX)
+      }}
+      onResponderRelease={() => {
+        // Called when the gesture succeeds
+      
+        // Do something with the selected day(s) (API call)
+      }} */
     >
       <ListRenderer
         list={model}
         refs={refs}
+        affectMultiple={affectMultiple}
         leftAction={leftAction}
+        cleanUp={cleanUp.current}
         rightAction={rightAction}
         transformProperty={direction === 'vertical' ? 'translateY' : 'translateX'}
         id={id}
