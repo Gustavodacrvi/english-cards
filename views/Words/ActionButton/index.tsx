@@ -1,29 +1,60 @@
 
 
-import React from 'react'
-import { View, StyleSheet } from 'react-native'
+import React, { useState } from 'react'
+import { View, StyleSheet, Animated } from 'react-native'
 import { TouchableNativeFeedback } from 'react-native-gesture-handler'
 import { primary, backgroundColor } from '../../../styles/colors'
 import Icon from '../../../components/Icon'
+import { animateProperty } from '../../../animations'
 
 interface Props {
   active: boolean;
 }
 
 function ActionButton({active}: Props) {
+  const [pressing, setPress] = useState(false)
+
+  const onPress = () => {
+
+  }
+  
   return (
     <View
       style={s.ActionButton}
     >
-      <View
-        style={s.Wrapper}
+      <Animated.View
+        style={[
+          s.Wrapper,
+          {
+            transform: [
+              {
+                translateX: animateProperty(!active ? 80 : 0, true)
+              },
+            ],
+          },
+        ]}
       >
-        <View
-          style={s.Ball}
+        <Animated.View
+          style={[
+            s.Ball,
+            {
+              transform: [
+                {
+                  scale: animateProperty(pressing ? .9 : 1, true)
+                }
+              ]
+            },
+          ]}
         >
           <TouchableNativeFeedback
-            background={TouchableNativeFeedback.Ripple(backgroundColor, false)}
+            background={TouchableNativeFeedback.Ripple('white', false)}
             useForeground={true}
+            delayPressIn={0}
+            delayPressOut={0}
+
+            onPress={onPress}
+            onPressIn={() => setPress(true)}
+            onPressOut={() => setPress(false)}
           >
             <View
               style={s.IconWrapper}
@@ -34,8 +65,8 @@ function ActionButton({active}: Props) {
               />
             </View>
           </TouchableNativeFeedback>
-        </View>
-      </View>
+        </Animated.View>
+      </Animated.View>
     </View>
   )
 }
