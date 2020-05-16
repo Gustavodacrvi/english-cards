@@ -2,14 +2,8 @@ const createStorage = typeStorage => {
     if(typeStorage == 'extension') {
         const get = (key) => {
             let value
-            $browser.storage.sync.get([String(key), (result) => {
-                try {
-                    value = JSON.parse(result[String(key)])
-                }
-                catch(err) {
-                    value = result[String(key)]
-                }
-                return value
+            $browser.storage.sync.get([key, (result) => {
+                value = result[key]
             }])
             return value
         }
@@ -31,13 +25,8 @@ const createStorage = typeStorage => {
     else if(typeStorage == 'browser') {
         let parseValue
         const get = key => {
-            const value = localStorage.getItem(String(key))
-            try {
-                parseValue = JSON.parse(value)
-            }
-            catch (err) {
-                parseValue = value
-            }
+            const value = localStorage.getItem(key)
+					return value
         }
         const set = (key, value) => {
             const parseValue = typeof value === "object" ? JSON.stringify(value) : String(value)

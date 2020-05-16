@@ -4,7 +4,6 @@ import firebase from 'firebase/app'
 import { storage } from '../services/storage'
 import 'firebase/auth'
 import 'firebase/firestore'
-import router from '../router'
 const firebaseConfig = {
   apiKey: "AIzaSyDB4r-56op-Z9sgHzE39W3ygp7PH8BbNFk",
   authDomain: "english-cards-1c691.firebaseapp.com",
@@ -22,7 +21,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
       isLogged: false,
-      user: {} ,
+      user: null ,
       error: null,
       words: [],
       errors: {
@@ -47,13 +46,14 @@ export default new Vuex.Store({
         if(payload) {
           state.isLogged = true
           storage.set('isLogged', true)
+          state.user = payload
         }
-        else {
-          storage.remove('isLogged')
-        }
-        state.user = payload
 
       },
+			removeUser(state) {
+				state.user = null
+				storage.remove('isLogged')
+			},
       setWord(state, payload) {
         state.words.push(payload)
       }
@@ -63,7 +63,7 @@ export default new Vuex.Store({
       async login({commit}, payload) {
         try {
           const firebaseUser = await auth.signInWithEmailAndPassword(payload.email, payload.password)
-          commit('setUser', firebaseUser.user)
+          commit('setUser', {uid: firebaseUser.user?.uid, email: firebaseUser.user?.email, username: payload.username})
           commit('setError', null)
         } catch (err) {
           commit('setUser', null)
@@ -72,14 +72,8 @@ export default new Vuex.Store({
         
       },
       async logout({commit}) {
-        auth.signOut()
-        .then(() => {
-          commit('setUser', null)
-        })
-        .catch(err => {
-          commit('setError', err.code)
-        })
-        router.push('/')
+         await auth.signOut()
+         commit('removeUser')
       },
       async signUp({commit}, payload) {
         try {

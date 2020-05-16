@@ -88,12 +88,12 @@ export default {
         goToPrivacyPolicyPage() {	
             this.$router.push('/privacy')	
         },
-        login() {
-          this.$store.dispatch('login', this.user)
-          this.$router.push('/dashboard')
+      async login() {
+         await this.$store.dispatch('login', this.user)
+					this.$router.push({'name': 'Dashboard'})
         },
-        signUp() {
-          this.$store.dispatch('signUp', this.user)
+     async signUp() {
+         await this.$store.dispatch('signUp', this.user)
         }
     },
     computed: {

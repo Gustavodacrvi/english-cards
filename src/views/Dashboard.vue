@@ -22,10 +22,16 @@ export default {
     InputVue
   },
   methods: {
-    logout() {
-      this.$store.dispatch('logout')
-    }
+  async logout() {
+    await this.$store.dispatch('logout')
+		try {
+			await this.$router.push({'name': 'Home'})
+		}
+		catch(err) {
+			console.log(err)
+		}
   }
+}
 }
 </script>
 
@@ -45,5 +51,6 @@ export default {
 }
 span {
   color: var(--white);
+  cursor: pointer;
 }
 </style>

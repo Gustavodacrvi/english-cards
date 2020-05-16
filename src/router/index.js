@@ -35,24 +35,27 @@ const router = new VueRouter({
     mode: 'history',
     routes
 })
-router.beforeEach((to, from, next) => {
-    const anyRoute = ['Privacy', 'Therms', 'Home']
-    const isLogged = store.state.user || storage.get('isLogged')
-    if(!isLogged) {
-        if(!anyRoute.includes(to.name)) {
-            next('/')
-        }
-        else {
-            next()
-        }
-    }
-    else {
-        if(to.path === '/') {
-            next('/dashboard')
-        }
-        else {
-            next()
-        }
-    }
+
+router.beforeEach(
+        (to, from, next) => {
+            const anyRoute = ['Privacy', 'Therms', 'Home']
+            const isLogged = store.state.user|| storage.get('isLogged') === 'true'
+					console.log(isLogged)
+            if(!isLogged) {
+                            if(!anyRoute.includes(to.name)) {
+                                                next('/')
+                                            }
+                            else {
+                                                next()
+                                            }
+                        }
+            else {
+                            if(to.name == 'Home') {
+                                                next('/dashboard')
+                                            }
+                            else {
+                                                next()
+                                            }
+                        }
 })
 export default router
