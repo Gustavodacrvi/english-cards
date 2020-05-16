@@ -5,13 +5,19 @@ import { View, Animated, Text, StyleSheet, TextStyle } from 'react-native'
 import { backgroundColor, faded, darkBackgroundColor } from '../../../../styles/colors'
 import { animateProperty } from '../../../../animations'
 import { LingueTranslationInterface, SimpleTranslationData } from '../../../../interfaces'
-import { getHumanReadable } from '../../../../utils'
+import { getHumanReadable, getNextReviewDate } from '../../../../utils'
+import Icon from '../../../../components/Icon'
 
 interface Props {
   touchX: Animated.Value;
   deleteValue: Animated.Value;
   active: boolean;
+  showCreationDate: boolean;
+  showNextReviewDate: boolean;
+  showLastReviewDate: boolean;
+  reviewNumber: null | number;
   creationDate: string;
+  lastReview: null | string;
   api: 'linguee' | 'simple',
   data: LingueTranslationInterface | SimpleTranslationData;
 }
@@ -20,8 +26,13 @@ function WordContent({
   touchX,
   deleteValue,
   active,
+  showCreationDate,
   api,
+  reviewNumber,
+  showNextReviewDate,
+  showLastReviewDate,
   data,
+  lastReview,
   creationDate,
 }: Props) {
 
@@ -101,10 +112,65 @@ function WordContent({
             style={s.InfoWrapper}
           >
             <Text style={textStyles}>{translation}</Text>
-            <View>
-              <Text style={textStyles}>
-                {getHumanReadable(creationDate)}
-              </Text>
+            <View
+              style={s.RightSection}
+            >
+{/*               {(showLastReviewDate && lastReview) ? <View
+                style={s.InfoOption}
+              >
+                <Icon
+                  icon="book"
+                  width={9}
+                />
+                <Text style={[textStyles, s.InfoText]}>
+                  {getHumanReadable(lastReview)}
+                </Text>
+              </View> : undefined}
+              {showCreationDate ? <View
+                style={s.InfoOption}
+              >
+                <Icon
+                  icon="saved"
+                  width={9}
+                />
+                <Text style={[textStyles, s.InfoText]}>
+                  {getHumanReadable(creationDate)}
+                </Text>
+              </View> : undefined}
+              {showNextReviewDate ? <View
+                style={s.InfoOption}
+              >
+                <Icon
+                  icon='notification'
+                  width={9}
+                />
+                <Text style={[textStyles, s.InfoText]}>
+                  {getHumanReadable(
+                    getNextReviewDate({
+                      creationDate,
+                      lastReview,
+                      reviewNumber,
+                    })
+                  )}
+                </Text>
+              </View> : undefined} */}
+              {true ? <View
+                style={s.InfoOption}
+              >
+                <Icon
+                  icon='notification'
+                  width={9}
+                />
+                <Text style={[textStyles, s.InfoText]}>
+                  {getHumanReadable(
+                    getNextReviewDate({
+                      creationDate,
+                      lastReview,
+                      reviewNumber,
+                    })
+                  )}
+                </Text>
+              </View> : undefined}
             </View>
           </View>
         </Animated.View>
@@ -122,12 +188,22 @@ const s = StyleSheet.create({
     height: '100%',
     borderRadius: 8,
   },
+  RightSection: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
   Content: {
     height: 25,
     display: 'flex',
     marginLeft: 8,
     marginBottom: 2,
     justifyContent: 'space-around',
+  },
+  InfoOption: {
+    marginLeft: 4,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   InfoWrapper: {
     display: 'flex',
@@ -143,6 +219,11 @@ const s = StyleSheet.create({
     marginTop: 4,
     color: faded,
     fontFamily: 'OpenSans-Semibold',
+  },
+  InfoText: {
+    fontSize: 9,
+    marginTop: 0,
+    marginLeft: 4,
   },
 })
 

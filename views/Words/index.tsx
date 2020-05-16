@@ -19,7 +19,7 @@ class WordsPage extends React.Component {
       {
         lastReview: null,
         reviewNumber: null,
-        creationDate: '2020-05-13',
+        creationDate: '2020-05-16',
         api: 'simple',
         data: {
           term: 'Notification',
@@ -29,7 +29,7 @@ class WordsPage extends React.Component {
       {
         lastReview: null,
         reviewNumber: null,
-        creationDate: '2010-04-16',
+        creationDate: '2020-05-16',
         api: 'simple',
         data: {
           term: 'Car',
@@ -37,9 +37,9 @@ class WordsPage extends React.Component {
         },
       },
       {
-        lastReview: null,
-        reviewNumber: null,
-        creationDate: '2020-05-08',
+        lastReview: '2020-05-16',
+        reviewNumber: 7,
+        creationDate: '2020-05-16',
         api: 'simple',
         data: {
           term: 'Random',
@@ -49,7 +49,7 @@ class WordsPage extends React.Component {
       {
         lastReview: null,
         reviewNumber: null,
-        creationDate: '2020-09-22',
+        creationDate: '2020-05-16',
         api: 'simple',
         data: {
           term: 'Computer',
@@ -59,7 +59,7 @@ class WordsPage extends React.Component {
       {
         lastReview: null,
         reviewNumber: null,
-        creationDate: '2020-05-19',
+        creationDate: '2020-05-16',
         api: 'simple',
         data: {
           term: 'Chair',
@@ -69,7 +69,7 @@ class WordsPage extends React.Component {
       {
         lastReview: null,
         reviewNumber: null,
-        creationDate: '2020-05-18',
+        creationDate: '2020-05-16',
         api: 'simple',
         data: {
           term: 'Hand',
@@ -176,6 +176,10 @@ class WordsPage extends React.Component {
               rightAction={this.selectWord}
               onPress={this.onPress}
               list={this.state.sorted}
+
+              showCreationDate={this.state.currentTab === 'saved'}
+              showNextReviewDate={this.state.currentTab !== 'saved'}
+              showLastReviewDate={this.state.currentTab === 'learned'}
             />
             <ActionButton
               active={this.state.currentTab === 'saved' && this.state.selected.length === 0}

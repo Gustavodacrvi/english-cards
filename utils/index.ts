@@ -3,6 +3,7 @@ import { useEffect } from "react"
 import mom from 'moment-timezone'
 
 const TOD = mom().startOf('day')
+const TOD_STR = mom().format('Y-M-D')
 
 export const memoize = <T extends Function>(func: T): T => {
   const cache = {}
@@ -35,7 +36,7 @@ export const inputHandler = input => {
   }, [])
 }
 
-export const getHumanReadable = memoize((date: string) => {
+export const getHumanReadable = memoize((date: string): string => {
 
   const m = mom(date, 'Y-M-D', true).startOf('day')
 
@@ -72,7 +73,7 @@ export const getHumanReadable = memoize((date: string) => {
   if (weeksDiff <= 4 && weeksDiff > 0) {
     if (Math.abs(weeksDiff) === 1)
       return 'Daqui 1 semana'
-    return `Daqui ${Math.abs(weeksDiff)} semana`
+    return `Daqui ${Math.abs(weeksDiff)} semanas`
   }
 
   const monthsDiff = m.diff(TOD, 'months')
@@ -99,4 +100,37 @@ export const getHumanReadable = memoize((date: string) => {
     return 'Daqui 1 ano'
   return `Daqui ${Math.abs(years)} anos`
 
+})
+
+export const getNextReviewDate = memoize(({
+  lastReview,
+  reviewNumber,
+}: {
+  lastReview: string | null; // Y-M-D
+  reviewNumber: null | number;
+}): string => {
+  
+  if (!lastReview)
+    return TOD.clone().add(1, 'days').format('Y-M-D')
+
+  const last = mom(lastReview, 'Y-M-D', true)
+
+  if (!last.isValid())
+    throw `"lastReview" property isn't valid, the data might be corrupted; lastReview: "${lastReview}"`
+
+  if (reviewNumber === null)
+    throw `"reviewNumber" should NOT be null when lastReview isn't null, when updating the "lastReview" property, make sure you're updating "reviewNumber" too; lastReview: ${lastReview}, reviewNumber: ${reviewNumber}`
+
+  return last.add({
+
+    0: 1,
+    1: 4,
+    2: 7,
+    3: 21,
+    4: 64,
+    5: 128,
+    6: 250,
+    7: 364,
+    
+  }[reviewNumber] || 364, 'days').format('Y-M-D')
 })

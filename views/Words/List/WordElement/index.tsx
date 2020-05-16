@@ -17,7 +17,10 @@ interface Props {
   width: number;
   active: boolean;
   cleanUp: () => void;
+  showNextReviewDate: boolean;
+  showLastReviewDate: boolean;
   isMagicSelecting: {current: boolean};
+  showCreationDate: boolean;
   affectMultiple: {current: ({target, key, translationX, isPositive}: {isPositive: boolean, target: number, key: string, translationX: number}) => void};
   transformProperty: 'translateX' | 'translateY';
 }
@@ -31,8 +34,11 @@ const WordElement = forwardRef(({
   onPress,
   rightAction,
   lastReview,
+  showLastReviewDate,
+  showNextReviewDate,
   reviewNumber,
   creationDate,
+  showCreationDate,
   api,
   data,
   willEnter,
@@ -196,6 +202,11 @@ const WordElement = forwardRef(({
                   deleteValue={deleteValue.current}
                   
                   data={data}
+                  lastReview={lastReview}
+                  showLastReviewDate={showLastReviewDate}
+                  showNextReviewDate={showNextReviewDate}
+                  showCreationDate={showCreationDate}
+                  reviewNumber={reviewNumber}
                   creationDate={creationDate}
                   api={api}
                 />

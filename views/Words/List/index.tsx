@@ -14,6 +14,9 @@ interface Props {
   };
   list: WordInterface[];
   id: string;
+  showCreationDate: boolean;
+  showNextReviewDate: boolean;
+  showLastReviewDate: boolean;
   direction: 'vertical' | 'horizontal';
   width: number;
   selected: string[];
@@ -24,7 +27,7 @@ interface Props {
 
 const initalTransitionData = {toFlip: [], toAdd: [], toRemove: [], finalList: []}
 
-function List({list, direction, id, leftAction, width, rightAction, onPress, selected = []}: Props) {
+function List({list, direction, id, showCreationDate, showNextReviewDate, showLastReviewDate, leftAction, width, rightAction, onPress, selected = []}: Props) {
 
   const refs = useRef([])
   const isTransitioning = useRef(false)
@@ -180,6 +183,9 @@ function List({list, direction, id, leftAction, width, rightAction, onPress, sel
       <ListRenderer
         list={model}
         refs={refs}
+        showCreationDate={showCreationDate}
+        showNextReviewDate={showLastReviewDate}
+        showLastReviewDate={showNextReviewDate}
         affectMultiple={affectMultiple}
         leftAction={leftAction}
         cleanUp={cleanUp.current}

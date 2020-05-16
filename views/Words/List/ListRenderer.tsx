@@ -14,13 +14,16 @@ interface Props {
   isTransitioning: any;
   width: number;
   transitionData: any;
+  showCreationDate: boolean;
+  showNextReviewDate: boolean;
+  showLastReviewDate: boolean;
   refs: any;
   cleanUp: () => void;
   affectMultiple: {current: ({target, key, translationX, isPositive}: {isPositive: boolean, target: number, key: string, translationX: number}) => void};
   transformProperty: 'translateX' | 'translateY';
 }
 
-function ListRenderer({list, cleanUp, width, affectMultiple, isTransitioning, transformProperty, transitionData, leftAction, id, rightAction, onPress, selected, refs}: Props) {
+function ListRenderer({list, cleanUp, showLastReviewDate, showNextReviewDate, width, showCreationDate, affectMultiple, isTransitioning, transformProperty, transitionData, leftAction, id, rightAction, onPress, selected, refs}: Props) {
   
   const functionRefs = useRef({})
   const isMagicSelecting = useRef(false)
@@ -54,7 +57,10 @@ function ListRenderer({list, cleanUp, width, affectMultiple, isTransitioning, tr
           onPress={onPress}
           cleanUp={cleanUp}
           width={width}
+          showNextReviewDate={showLastReviewDate}
+          showLastReviewDate={showNextReviewDate}
           affectMultiple={affectMultiple}
+          showCreationDate={showCreationDate}
           isMagicSelecting={isMagicSelecting}
           active={selected.includes(obj[id])}
           ref={getRef}
