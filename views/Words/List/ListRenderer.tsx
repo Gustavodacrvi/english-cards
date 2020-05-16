@@ -2,9 +2,10 @@
 import React, { useRef, useCallback, useEffect, createRef, MutableRefObject } from 'react'
 
 import WordElement from './WordElement'
+import { WordInterface } from '../../../interfaces'
 
 interface Props {
-  list: any[];
+  list: WordInterface[];
   leftAction: (id: string) => void;
   rightAction: (id: string) => void;
   onPress: (id: string) => void;

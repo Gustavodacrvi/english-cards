@@ -8,39 +8,96 @@ import ActionButton from './ActionButton'
 import SelectedMenu from './SelectedMenu'
 import SearchBar from './SearchBar'
 import List from './List'
+import { WordInterface } from '../../interfaces'
+
+const emptyList = []
 
 class WordsPage extends React.Component {
   state = {
     currentTab: 'saved' as 'saved' | 'forgotten' | 'learned',
     list: [
       {
-        name: 'Notification',
-        translation: 'Notificação',
+        lastReview: null,
+        reviewNumber: null,
+        creationDate: '16-05-2020',
+        api: 'simple',
+        data: {
+          term: 'Notification',
+          translation: 'Notificação',
+        },
       },
       {
-        name: 'Car',
-        translation: 'Carro',
+        lastReview: null,
+        reviewNumber: null,
+        creationDate: '16-05-2020',
+        api: 'simple',
+        data: {
+          term: 'Car',
+          translation: 'Carro',
+        },
       },
       {
-        name: 'Random',
-        translation: 'Aleatório',
+        lastReview: null,
+        reviewNumber: null,
+        creationDate: '16-05-2020',
+        api: 'simple',
+        data: {
+          term: 'Random',
+          translation: 'Aleatório',
+        },
       },
       {
-        name: 'Computer',
-        translation: 'Computador',
+        lastReview: null,
+        reviewNumber: null,
+        creationDate: '16-05-2020',
+        api: 'simple',
+        data: {
+          term: 'Computer',
+          translation: 'Computador',
+        },
       },
       {
-        name: 'Chair',
-        translation: 'Cadeira',
+        lastReview: null,
+        reviewNumber: null,
+        creationDate: '16-05-2020',
+        api: 'simple',
+        data: {
+          term: 'Chair',
+          translation: 'Cadeira',
+        },
       },
       {
-        name: 'Hand',
-        translation: 'Mão',
+        lastReview: null,
+        reviewNumber: null,
+        creationDate: '16-05-2020',
+        api: 'simple',
+        data: {
+          term: 'Hand',
+          translation: 'Mão',
+        },
       },
-    ],
+    ] as WordInterface[],
     search: '',
     sort: 'creation' as 'alphabetical' | 'creation' | 'reviews',
     selected: [],
+    sorted: [],
+  }
+
+  constructor(props) {
+    super(props)
+
+    this.state.sorted = this.sortList(this.state.sort, this.state.currentTab, this.state.list, this.state.search)
+  }
+
+  componentDidUpdate() {
+    if (this.state.selected !== this.state.selected)
+      this.setState({
+        selected: emptyList,
+      })
+  }
+
+  sortList(sort: 'alphabetical' | 'creation' | 'reviews', currentTab: 'saved' | 'forgotten' | 'learned', arr: any[], search: string) {
+    return arr.slice()
   }
 
   selectWord = name => {
@@ -61,24 +118,27 @@ class WordsPage extends React.Component {
   setTab = (tab: 'saved' | 'forgotten' | 'learned') => {
     if (tab !== this.state.currentTab)
       this.setState({
+        sorted: this.sortList(this.state.sort, tab, this.state.list, this.state.search),
         currentTab: tab,
       })
   }
   setSearch = (search: string) => {
     this.setState({
+      sorted: this.sortList(this.state.sort, this.state.currentTab, this.state.list, search),
       search,
     })
   }
   setSort = (sort: 'alphabetical' | 'creation' | 'reviews') => {
     if (sort !== this.state.sort)
       this.setState({
+        sorted: this.sortList(this.state.sort, this.state.currentTab, this.state.list, this.state.search),
         sort,
       })
   }
   removeWord = (name) => {
-    this.setState({
+/*     this.setState({
       list: this.state.list.filter(el => el.name !== name)
-    })
+    }) */
   }
 
   render() {
@@ -115,10 +175,10 @@ class WordsPage extends React.Component {
               leftAction={this.removeWord}
               rightAction={this.selectWord}
               onPress={this.onPress}
-              list={this.state.list}
+              list={this.state.sorted}
             />
             <ActionButton
-              active={this.state.currentTab === 'saved'}
+              active={this.state.currentTab === 'saved' && this.state.selected.length === 0}
             />
             
           </View>

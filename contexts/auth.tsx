@@ -21,6 +21,20 @@ interface Props {
 
 let debounceTimeout = null
 
+const errors = {
+  'auth/invalid-email': 'O email digitado não está válido',
+  'auth/wrong-password': 'Você digitou a senha errada',
+  'auth/account-exists-with-different-credential': 'Conta já existe com credencial diferente',
+  'auth/credential-already-in-use': 'A credencial já está em uso',
+  'auth/email-already-in-use': 'O email já está em uso',
+  'auth/weak-password': 'A senha está fraca. Tente com uma mais forte',
+  'auth/expired-action-code': 'O código de resetar a senha expirou',
+  'auth/invalid-action-code': 'O código de resetar a senha não é válido ou já está em uso',
+  'auth/user-not-found': 'Usuário não encontrado',
+  'auth/invalid-user-token': 'Token inválido',
+  'auth/user-token-expired': 'Token expirado'
+}
+
 class AuthContextProvider extends Component {
   state = {
     user: null,
@@ -54,7 +68,7 @@ class AuthContextProvider extends Component {
       await auth().signInWithEmailAndPassword(email, password)
       AsyncStorage.setItem('FlashTranslator.isLoggedIn', 'true')
     } catch (err) {
-      throw "Houve um erro ao tentar entrar, tente de novo."
+      throw errors[err.code] || "Houve um erro ao tentar entrar, tente de novo."
     }
   }
   async signUp(email: string, password: string, username: string) {
@@ -68,7 +82,7 @@ class AuthContextProvider extends Component {
     } catch (err) {
       if (auth().currentUser)
         auth().currentUser.delete()
-      throw "Houve algum erro ao tentar criar conta, tente de novo."
+      throw errors[err.code] || "Houve algum erro ao tentar criar conta, tente de novo."
     }
   }
   async signOut() {

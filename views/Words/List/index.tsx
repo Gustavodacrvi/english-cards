@@ -4,6 +4,7 @@ import React, { useEffect, useState, useRef, createRef } from 'react'
 
 import { View, InteractionManager } from 'react-native'
 import ListRenderer from './ListRenderer'
+import { WordInterface } from '../../../interfaces'
 
 interface Props {
   infoObj?: {
@@ -11,7 +12,7 @@ interface Props {
     lastReview: boolean;
     nextReview: boolean
   };
-  list: Array<{name: string; translation: string}>;
+  list: WordInterface[];
   id: string;
   direction: 'vertical' | 'horizontal';
   width: number;

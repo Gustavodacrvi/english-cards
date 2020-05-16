@@ -100,4 +100,4 @@ const s = StyleSheet.create({
   },
 })
 
-export default SelectedMenu
+export default React.memo(SelectedMenu)

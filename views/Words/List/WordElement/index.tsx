@@ -6,13 +6,12 @@ import { primary } from '../../../../styles/colors'
 import { PanGestureHandler, State, Directions } from 'react-native-gesture-handler'
 import GestureBackground from './GestureBackground'
 import WordContent from './WordContent'
+import { WordInterface } from '../../../../interfaces'
 
 interface Props {
   leftAction: (id: string) => void;
   rightAction: (id: string) => void;
   onPress: (id: string) => void;
-  name: string;
-  translation: string;
   id: string;
   willEnter: boolean;
   width: number;
@@ -23,7 +22,23 @@ interface Props {
   transformProperty: 'translateX' | 'translateY';
 }
 
-const WordElement = forwardRef(({name, cleanUp, affectMultiple, width, transformProperty, leftAction, onPress, rightAction, willEnter, translation, active, id}: Props, ref) => {
+const WordElement = forwardRef(({
+  cleanUp,
+  affectMultiple,
+  width,
+  transformProperty,
+  leftAction,
+  onPress,
+  rightAction,
+  lastReview,
+  reviewNumber,
+  creationDate,
+  api,
+  data,
+  willEnter,
+  active,
+  id,
+}: Props & WordInterface, ref) => {
 
   const touchX = useRef(new Animated.Value(0))
   const flipValue = useRef(new Animated.Value(0))
@@ -177,10 +192,12 @@ const WordElement = forwardRef(({name, cleanUp, affectMultiple, width, transform
                 />
                 <WordContent
                   touchX={touchX.current}
-                  name={name}
                   active={active}
                   deleteValue={deleteValue.current}
-                  translation={translation}
+                  
+                  data={data}
+                  creationDate={creationDate}
+                  api={api}
                 />
               </Animated.View>
             </PanGestureHandler>

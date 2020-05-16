@@ -1,19 +1,50 @@
 
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import { View, Animated, Text, StyleSheet } from 'react-native'
 import { backgroundColor, faded, darkBackgroundColor } from '../../../../styles/colors'
 import { animateProperty } from '../../../../animations'
+import { LingueTranslationInterface, SimpleTranslationData } from '../../../../interfaces'
 
 interface Props {
   touchX: Animated.Value;
   deleteValue: Animated.Value;
-  name: string;
   active: boolean;
-  translation: string;
+  creationDate: string;
+  api: 'linguee' | 'simple',
+  data: LingueTranslationInterface | SimpleTranslationData;
 }
 
-function WordContent({touchX, deleteValue, active, name, translation}: Props) {
+function WordContent({
+  touchX,
+  deleteValue,
+  active,
+  api,
+  data,
+  creationDate,
+}: Props) {
+
+  const name = useMemo(() => {
+    switch (api) {
+      case 'linguee': {
+        return (data as LingueTranslationInterface).query 
+      }
+      case 'simple': {
+        return (data as SimpleTranslationData).term
+      }
+    }
+  }, [api, data])
+  const translation = useMemo(() => {
+    switch (api) {
+      case 'linguee': {
+        return (data as LingueTranslationInterface).words[0].translations[0].term
+      }
+      case 'simple': {
+        return (data as SimpleTranslationData).translation
+      }
+    }
+  }, [api, data])
+  
   return (
     <View
       style={{

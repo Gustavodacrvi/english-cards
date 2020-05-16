@@ -56,11 +56,17 @@ export interface LingueTranslationInterface {
   }>;
 }
 
+export interface SimpleTranslationData {
+  term: string;
+  translation: string;
+}
+
 export interface WordInterface {
-  lastReview: null | Date,
-  reviewNumber: number | null,
-  api: 'linguee',
-  data: LingueTranslationInterface,
+  creationDate: string; 'Y-M-D'
+  lastReview: null | string; // 'Y-M-D'
+  reviewNumber: number | null;
+  api: 'linguee' | 'simple';
+  data: LingueTranslationInterface | SimpleTranslationData;
 }
 
 export interface WordData extends WordInterface {
