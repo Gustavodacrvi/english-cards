@@ -1,10 +1,11 @@
 
 
 import React, { useMemo } from 'react'
-import { View, Animated, Text, StyleSheet } from 'react-native'
+import { View, Animated, Text, StyleSheet, TextStyle } from 'react-native'
 import { backgroundColor, faded, darkBackgroundColor } from '../../../../styles/colors'
 import { animateProperty } from '../../../../animations'
 import { LingueTranslationInterface, SimpleTranslationData } from '../../../../interfaces'
+import { getHumanReadable } from '../../../../utils'
 
 interface Props {
   touchX: Animated.Value;
@@ -44,6 +45,11 @@ function WordContent({
       }
     }
   }, [api, data])
+
+  const textStyles: TextStyle[] = [
+    s.Info,
+    {color: active ? darkBackgroundColor : faded},
+  ]
   
   return (
     <View
@@ -91,13 +97,15 @@ function WordContent({
               },
             ]}>{name}</Animated.Text>
           </View>
-          <View>
-            <Animated.Text style={[
-              s.Info,
-              {
-                color: animateProperty(active ? darkBackgroundColor : faded),
-              },
-            ]}>{translation}</Animated.Text>
+          <View
+            style={s.InfoWrapper}
+          >
+            <Text style={textStyles}>{translation}</Text>
+            <View>
+              <Text style={textStyles}>
+                {getHumanReadable(creationDate)}
+              </Text>
+            </View>
           </View>
         </Animated.View>
       </Animated.View>
@@ -120,6 +128,11 @@ const s = StyleSheet.create({
     marginLeft: 8,
     marginBottom: 2,
     justifyContent: 'space-around',
+  },
+  InfoWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   BigText: {
     fontFamily: 'OpenSans-Bold',

@@ -19,7 +19,7 @@ class WordsPage extends React.Component {
       {
         lastReview: null,
         reviewNumber: null,
-        creationDate: '16-05-2020',
+        creationDate: '2020-05-13',
         api: 'simple',
         data: {
           term: 'Notification',
@@ -29,7 +29,7 @@ class WordsPage extends React.Component {
       {
         lastReview: null,
         reviewNumber: null,
-        creationDate: '16-05-2020',
+        creationDate: '2010-04-16',
         api: 'simple',
         data: {
           term: 'Car',
@@ -39,7 +39,7 @@ class WordsPage extends React.Component {
       {
         lastReview: null,
         reviewNumber: null,
-        creationDate: '16-05-2020',
+        creationDate: '2020-05-08',
         api: 'simple',
         data: {
           term: 'Random',
@@ -49,7 +49,7 @@ class WordsPage extends React.Component {
       {
         lastReview: null,
         reviewNumber: null,
-        creationDate: '16-05-2020',
+        creationDate: '2020-09-22',
         api: 'simple',
         data: {
           term: 'Computer',
@@ -59,7 +59,7 @@ class WordsPage extends React.Component {
       {
         lastReview: null,
         reviewNumber: null,
-        creationDate: '16-05-2020',
+        creationDate: '2020-05-19',
         api: 'simple',
         data: {
           term: 'Chair',
@@ -69,7 +69,7 @@ class WordsPage extends React.Component {
       {
         lastReview: null,
         reviewNumber: null,
-        creationDate: '16-05-2020',
+        creationDate: '2020-05-18',
         api: 'simple',
         data: {
           term: 'Hand',
