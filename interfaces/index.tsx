@@ -62,6 +62,7 @@ export interface SimpleTranslationData {
 }
 
 export interface WordInterface {
+  uid: string;
   creationDate: string; // 'Y-M-D'
   lastReview: null | string; // 'Y-M-D'
   reviewNumber: number | null;

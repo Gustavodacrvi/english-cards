@@ -1,6 +1,7 @@
 import { Keyboard } from "react-native"
 import { useEffect } from "react"
 import mom from 'moment-timezone'
+import { LingueTranslationInterface, SimpleTranslationData, WordInterface } from "../interfaces"
 
 const TOD = mom().startOf('day')
 const TOD_STR = mom().format('Y-M-D')
@@ -134,3 +135,14 @@ export const getNextReviewDate = memoize(({
     
   }[reviewNumber] || 364, 'days').format('Y-M-D')
 })
+
+export const getWordName = ({api, data}: WordInterface) => {
+  switch (api) {
+    case 'linguee': {
+      return (data as LingueTranslationInterface).query 
+    }
+    case 'simple': {
+      return (data as SimpleTranslationData).term
+    }
+  }
+}

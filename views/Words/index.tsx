@@ -9,6 +9,9 @@ import SelectedMenu from './SelectedMenu'
 import SearchBar from './SearchBar'
 import List from './List'
 import { WordInterface } from '../../interfaces'
+import { getWordName, getNextReviewDate } from '../../utils'
+
+import mom from 'moment-timezone'
 
 const emptyList = []
 
@@ -17,6 +20,7 @@ class WordsPage extends React.Component {
     currentTab: 'saved' as 'saved' | 'forgotten' | 'learned',
     list: [
       {
+        uid: 'a',
         lastReview: null,
         reviewNumber: null,
         creationDate: '2020-05-16',
@@ -27,9 +31,10 @@ class WordsPage extends React.Component {
         },
       },
       {
+        uid: 'b',
         lastReview: null,
         reviewNumber: null,
-        creationDate: '2020-05-16',
+        creationDate: '2020-05-15',
         api: 'simple',
         data: {
           term: 'Car',
@@ -37,6 +42,7 @@ class WordsPage extends React.Component {
         },
       },
       {
+        uid: 'c',
         lastReview: '2020-05-16',
         reviewNumber: 7,
         creationDate: '2020-05-16',
@@ -47,6 +53,7 @@ class WordsPage extends React.Component {
         },
       },
       {
+        uid: 'd',
         lastReview: null,
         reviewNumber: null,
         creationDate: '2020-05-16',
@@ -57,6 +64,7 @@ class WordsPage extends React.Component {
         },
       },
       {
+        uid: 'e',
         lastReview: null,
         reviewNumber: null,
         creationDate: '2020-05-16',
@@ -67,6 +75,7 @@ class WordsPage extends React.Component {
         },
       },
       {
+        uid: 'f',
         lastReview: null,
         reviewNumber: null,
         creationDate: '2020-05-16',
@@ -96,7 +105,32 @@ class WordsPage extends React.Component {
       })
   }
 
-  sortList(sort: 'alphabetical' | 'creation' | 'reviews', currentTab: 'saved' | 'forgotten' | 'learned', arr: any[], search: string) {
+  sortList(sort: 'alphabetical' | 'creation' | 'reviews', currentTab: 'saved' | 'forgotten' | 'learned', list: WordInterface[], search: string) {
+
+    let arr = !search ? list.slice() : list.filter(w => getWordName(w).toLowerCase().includes(search))
+
+    if (sort === 'alphabetical')
+      arr.sort((a, b) => getWordName(a).toLowerCase().localeCompare(getWordName(b).toLowerCase()))
+    else if (sort === 'creation') {
+      arr.sort((word1, word2) => {
+        const a = mom(word1.creationDate, 'Y-M-D')
+        const b = mom(word2.creationDate, 'Y-M-D')
+
+        if (a.isSame(b, 'day')) return 0
+        if (a.isAfter(b, 'day')) return -1
+        if (b.isAfter(a, 'day')) return 1
+      })
+    } else {
+      arr.sort((word1, word2) => {
+        const a = mom(getNextReviewDate(word1), 'Y-M-D')
+        const b = mom(getNextReviewDate(word2), 'Y-M-D')
+
+        if (a.isSame(b, 'day')) return 0
+        if (a.isAfter(b, 'day')) return -1
+        if (b.isAfter(a, 'day')) return 1
+      })
+    }
+    
     return arr.slice()
   }
 
@@ -131,7 +165,7 @@ class WordsPage extends React.Component {
   setSort = (sort: 'alphabetical' | 'creation' | 'reviews') => {
     if (sort !== this.state.sort)
       this.setState({
-        sorted: this.sortList(this.state.sort, this.state.currentTab, this.state.list, this.state.search),
+        sorted: this.sortList(sort, this.state.currentTab, this.state.list, this.state.search),
         sort,
       })
   }
@@ -167,7 +201,7 @@ class WordsPage extends React.Component {
               setSort={this.setSort}
             />
             <List
-              id="name"
+              id="uid"
               direction="vertical"
               width={45}
               

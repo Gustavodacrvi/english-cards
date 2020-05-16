@@ -69,7 +69,7 @@ function OptionsPopup({sort, setSort, close}: Props) {
       >
         {getOption({icon: 'sort-by-name'}, 'Ordem alfabética', 'alphabetical')}
         {getOption({icon: 'saved'}, 'Dia de criação', 'creation')}
-        {getOption({icon: 'notification'}, 'Número de Revisões', 'reviews')}
+        {getOption({icon: 'notification'}, 'Dia de revisão', 'reviews')}
       </View>
       
     </View>

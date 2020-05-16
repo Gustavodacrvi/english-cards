@@ -5,7 +5,7 @@ import { View, Animated, Text, StyleSheet, TextStyle } from 'react-native'
 import { backgroundColor, faded, darkBackgroundColor } from '../../../../styles/colors'
 import { animateProperty } from '../../../../animations'
 import { LingueTranslationInterface, SimpleTranslationData } from '../../../../interfaces'
-import { getHumanReadable, getNextReviewDate } from '../../../../utils'
+import { getHumanReadable, getNextReviewDate, getWordName } from '../../../../utils'
 import Icon from '../../../../components/Icon'
 
 interface Props {
@@ -37,14 +37,7 @@ function WordContent({
 }: Props) {
 
   const name = useMemo(() => {
-    switch (api) {
-      case 'linguee': {
-        return (data as LingueTranslationInterface).query 
-      }
-      case 'simple': {
-        return (data as SimpleTranslationData).term
-      }
-    }
+    return getWordName({api, data} as any)
   }, [api, data])
   const translation = useMemo(() => {
     switch (api) {
@@ -115,7 +108,7 @@ function WordContent({
             <View
               style={s.RightSection}
             >
-{/*               {(showLastReviewDate && lastReview) ? <View
+              {(showLastReviewDate && lastReview) ? <View
                 style={s.InfoOption}
               >
                 <Icon
@@ -147,24 +140,6 @@ function WordContent({
                 <Text style={[textStyles, s.InfoText]}>
                   {getHumanReadable(
                     getNextReviewDate({
-                      creationDate,
-                      lastReview,
-                      reviewNumber,
-                    })
-                  )}
-                </Text>
-              </View> : undefined} */}
-              {true ? <View
-                style={s.InfoOption}
-              >
-                <Icon
-                  icon='notification'
-                  width={9}
-                />
-                <Text style={[textStyles, s.InfoText]}>
-                  {getHumanReadable(
-                    getNextReviewDate({
-                      creationDate,
                       lastReview,
                       reviewNumber,
                     })
