@@ -47,6 +47,7 @@ export default new Vuex.Store({
           state.isLogged = true
           storage.set('isLogged', true)
           state.user = payload
+					storage.set('uid', payload.uid)
         }
 
       },
@@ -89,7 +90,14 @@ export default new Vuex.Store({
         catch(err) {
           commit('setError', err.code)
         }
-      }
+      },
+	async findUser(context, uid) {
+		const res = await firestore.collection('users').where('uid', '==', uid).get()
+		if(!res.docs[0]) {
+			return null
+		}
+		return res.docs[0].data()
+	}
     },
     modules: {}
 })

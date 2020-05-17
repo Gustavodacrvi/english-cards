@@ -11,27 +11,38 @@
 <script>
 import InputVue from '../components/Form/Input.vue'
 import ButtonVue from '../components/Button.vue'
+import {storage} from '../services/storage'
 export default {
   data(){
     return {
       word: ''
     }
   },
+	created() {
+		this.$store.dispatch('findUser', this.user.uid).then(result => {
+			console.log(result, 'a')
+		})
+	},
   components: {
     ButtonVue,
     InputVue
   },
   methods: {
-  async logout() {
-    await this.$store.dispatch('logout')
-		try {
-			await this.$router.push({'name': 'Home'})
+  	async logout() {
+    	await this.$store.dispatch('logout')
+			try {
+				await this.$router.push({'name': 'Home'})
+			}
+			catch(err) {
+				console.log(err)
+			}
+ 	 }
+	},
+	computed: {
+		user() {
+			return this.$store.state.user || {uid: storage.get('uid')}
 		}
-		catch(err) {
-			console.log(err)
-		}
-  }
-}
+	}
 }
 </script>
 
