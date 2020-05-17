@@ -11,6 +11,7 @@
 <script>
 import InputVue from '../components/Form/Input.vue'
 import ButtonVue from '../components/Button.vue'
+import {mapState} from 'vuex'
 export default {
   data(){
     return {
@@ -32,6 +33,9 @@ export default {
 			}
  	 }
 	},
+  computed: {
+    ...mapState(['user'])
+  }
 }
 </script>
 

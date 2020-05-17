@@ -91,18 +91,20 @@ const store = new Vuex.Store({
           commit('setError', err.code)
         }
       },
-	async findUser(context, uid) {
+	async findUser({commit} , uid) {
 		const res = await firestore.collection('users').where('uid', '==', uid).get()
 		if(!res.docs[0]) {
+      console.log('null')
 			return null
 		}
-		return res.docs[0].data()
+    console.log('there is data')
+		commit('setUser', res.docs[0].data())
 	}
     },
     modules: {}
 })
 auth.onAuthStateChanged(async user => {
-	console.log(user.uid)
-	store.commit('setUser', {uid: user.uid, email: user.email})
+	console.log(user)
+  store.dispatch('findUser', user.uid)
 })
 export default store
