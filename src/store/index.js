@@ -18,7 +18,7 @@ export const auth = firebase.auth()
 export const firestore = firebase.firestore()
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
     state: {
       isLogged: false,
       user: null ,
@@ -101,3 +101,8 @@ export default new Vuex.Store({
     },
     modules: {}
 })
+auth.onAuthStateChanged(async user => {
+	console.log(user.uid)
+	store.commit('setUser', {uid: user.uid, email: user.email})
+})
+export default store

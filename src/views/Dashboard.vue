@@ -11,18 +11,12 @@
 <script>
 import InputVue from '../components/Form/Input.vue'
 import ButtonVue from '../components/Button.vue'
-import {storage} from '../services/storage'
 export default {
   data(){
     return {
       word: ''
     }
   },
-	created() {
-		this.$store.dispatch('findUser', this.user.uid).then(result => {
-			console.log(result, 'a')
-		})
-	},
   components: {
     ButtonVue,
     InputVue
@@ -38,11 +32,6 @@ export default {
 			}
  	 }
 	},
-	computed: {
-		user() {
-			return this.$store.state.user || {uid: storage.get('uid')}
-		}
-	}
 }
 </script>
 
