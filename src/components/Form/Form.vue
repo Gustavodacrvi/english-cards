@@ -65,14 +65,16 @@ export default {
     },
     methods: {
         openForgotPasswordPopup() {
-          this.popup = true
-            if (this.counter < 1) {
+          if(this.user.email) {
+          this.$store.dispatch('sendResetPassword', this.user.email).then(()=> {
+              this.popup = true
+              if (this.counter < 1) {
                 this.color = '#88E976'
                 this.message = 'Um e-mail de confirmação foi mandado para e-mail dado.'
                 this.counter++
-            } else {
-              this.color = '#F00'
-              this.message = 'Você não pode enviar uma confirmação de email, tente novamente daqui a um segundo'
+              } else {
+                this.color = '#F00'
+                this.message = 'Você não pode enviar uma confirmação de email, tente novamente daqui a um segundo'
             }
             setTimeout(()=>{
             this.counter = 0
@@ -81,6 +83,19 @@ export default {
               this.popup = false
             }, 5000)
             }, 1000)
+          }
+          )
+          }
+          else {
+            setTimeout(()=> {
+              this.popup = true
+              this.message = "Por favor insira um email válido"
+              setTimeout(()=> {
+                this.popup = false
+              }, 5000)
+            }, 1000)
+          }
+          console.log(this.user.email)
         },
         goToThermsPage() {	
             this.$router.push("/therms")	

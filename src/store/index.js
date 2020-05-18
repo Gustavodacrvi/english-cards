@@ -47,7 +47,6 @@ const store = new Vuex.Store({
           state.isLogged = true
           storage.set('isLogged', true)
           state.user = payload
-					storage.set('uid', payload.uid)
         }
 
       },
@@ -97,11 +96,20 @@ const store = new Vuex.Store({
 			return null
 		}
 		commit('setUser', res.docs[0].data())
-	}
+	},
+  sendResetPassword({commit},email) {
+    try {
+      auth.sendPasswordResetEmail(email)
+    } catch (err) {
+      commit('setError', err.code)
+    }
+  }
     },
     modules: {}
 })
 auth.onAuthStateChanged(async user => {
+  if(user) {
   store.dispatch('findUser', user.uid)
+  }
 })
 export default store
