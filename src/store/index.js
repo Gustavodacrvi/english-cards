@@ -90,12 +90,12 @@ const store = new Vuex.Store({
           commit('setError', err.code)
         }
       },
-	async findUser({commit} , uid) {
-		const res = await firestore.collection('users').where('uid', '==', uid).get()
+	async findUser({commit} , user) {
+		const res = await firestore.collection('users').where('uid', '==', user.uid).get()
 		if(!res.docs[0]) {
 			return null
 		}
-		commit('setUser', res.docs[0].data())
+    commit('setUser', {...res.docs[0].data(), verified: user.emailVerified})
 	},
   sendResetPassword({commit},email) {
     try {
@@ -109,7 +109,7 @@ const store = new Vuex.Store({
 })
 auth.onAuthStateChanged(async user => {
   if(user) {
-  store.dispatch('findUser', user.uid)
+  store.dispatch('findUser', user)
   }
 })
 export default store
