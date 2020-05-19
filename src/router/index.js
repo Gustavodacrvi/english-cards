@@ -2,32 +2,38 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Privacy from '../views/Privacy.vue'
+import About from '../views/About.vue'
 import Therms from '../views/Therms.vue'
 import Dashboard from '../views/Dashboard.vue'
-import { storage } from '../services/storage'
+import {storage} from '../services/storage'
 import store from '../store'
 Vue.use(VueRouter)
 
 const routes = [
   {
-      path: '/',
-      name: 'Home',
-      component: Home
+    path: '/',
+    name: 'Home',
+    component: Home
   },
   {
-      path: '/therms',
-      name: 'Therms',
-      component: Therms
+    path: '/therms',
+    name: 'Therms',
+    component: Therms
   },
   {
-      path: '/privacy',
-      name: 'Privacy',
-      component: Privacy
+    path: '/privacy',
+    name: 'Privacy',
+    component: Privacy
   },
   {
-      path: '/dashboard',
-      name: 'Dashboard',
-      component: Dashboard
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: Dashboard
+  },
+  {
+    name: 'About',
+    component: About,
+    path: '/about'
   }
 ]
 
@@ -39,9 +45,9 @@ const router = new VueRouter({
 router.beforeEach(
   (to, from, next) => {
     const anyRoute = ['Privacy', 'Therms', 'Home']
-    const isLogged = store.state.user|| storage.get('isLogged') === 'true'
-    if(!isLogged) {
-      if(!anyRoute.includes(to.name)) {
+    const isLogged = store.state.user || storage.get('isLogged') === 'true'
+    if (!isLogged) {
+      if (!anyRoute.includes(to.name)) {
         next('/')
       }
       else {
@@ -49,12 +55,12 @@ router.beforeEach(
       }
     }
     else {
-      if(to.name == 'Home') {
+      if (to.name == 'Home') {
         next('/dashboard')
       }
       else {
         next()
       }
     }
-})
+  })
 export default router

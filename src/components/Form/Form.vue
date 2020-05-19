@@ -29,7 +29,7 @@ import {mapState} from 'vuex'
 import BaseFormVue from './BaseForm.vue'
 import InputVue from './Input.vue'
 import ButtonVue from '../Button.vue'
-import MessagePopupVue from '../Popup/MessagePopup.vue'
+import MessagePopupVue from '../MessagePopup.vue'
 export default {
   props: ['firstTime'],
   data(){

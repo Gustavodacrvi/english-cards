@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import firebase from 'firebase/app'
-import { storage } from '../services/storage'
+import {storage} from '../services/storage'
 import 'firebase/auth'
 import 'firebase/firestore'
 const firebaseConfig = {
@@ -19,97 +19,111 @@ export const firestore = firebase.firestore()
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
-    state: {
-      isLogged: false,
-      user: null ,
-      error: null,
-      words: [],
-      errors: {
-        'auth/invalid-email': 'O email digitado não está válido',
-        'auth/wrong-password': 'Você digitou a senha errada',
-        'auth/account-exists-with-different-credential': 'Conta já existe com credencial diferente',
-        'auth/credential-already-in-use': 'A credencial já está em uso',
-        'auth/email-already-in-use': 'O email já está em uso',
-        'auth/weak-password': 'A senha está fraca. Tente com uma mais forte',
-        'auth/expired-action-code': 'O código de resetar a senha expirou',
-        'auth/invalid-action-code': 'O código de resetar a senha não é válido ou já está em uso',
-        'auth/user-not-found': 'Usuário não encontrado',
-        'auth/invalid-user-token': 'Token inválido',
-        'auth/user-token-expired': 'Token expirado'
-      }
-    },
-    mutations: {
-      setError(state, payload) {
-        state.error = state.errors[payload] || null
-      },
-      setUser(state, payload) {
-        if(payload) {
-          state.isLogged = true
-          storage.set('isLogged', true)
-          state.user = payload
-        }
-
-      },
-			removeUser(state) {
-				state.user = null
-				storage.remove('isLogged')
-			},
-      setWord(state, payload) {
-        state.words.push(payload)
-      }
-      
-    },
-    actions: {
-      async login({commit}, payload) {
-        try {
-          const firebaseUser = await auth.signInWithEmailAndPassword(payload.email, payload.password)
-          commit('setUser', {uid: firebaseUser.user?.uid, email: firebaseUser.user?.email, username: payload.username})
-          commit('setError', null)
-        } catch (err) {
-          commit('setUser', null)
-          commit('setError', err.code)
-        }
-        
-      },
-      async logout({commit}) {
-         await auth.signOut()
-         commit('removeUser')
-      },
-      async signUp({commit}, payload) {
-        try {
-          const firebaseUser = await auth.createUserWithEmailAndPassword(payload.email, payload.password)
-          commit('setUser', {uid: firebaseUser.user?.uid, email: firebaseUser.user?.email, username: payload.username})
-          await firestore.collection('users').doc(firebaseUser.user?.uid).set({
-            uid: firebaseUser.user?.uid,
-            username: payload.username,
-            email: firebaseUser.user?.email
-          })
-          commit('setError', null)
-        }
-        catch(err) {
-          commit('setError', err.code)
-        }
-      },
-	async findUser({commit} , user) {
-		const res = await firestore.collection('users').where('uid', '==', user.uid).get()
-		if(!res.docs[0]) {
-			return null
-		}
-    commit('setUser', {...res.docs[0].data(), verified: user.emailVerified})
-	},
-  sendResetPassword({commit},email) {
-    try {
-      auth.sendPasswordResetEmail(email)
-    } catch (err) {
-      commit('setError', err.code)
+  state: {
+    isLogged: false,
+    user: null,
+    error: null,
+    words: [],
+    errors: {
+      'auth/invalid-email': 'O email digitado não está válido',
+      'auth/wrong-password': 'Você digitou a senha errada',
+      'auth/account-exists-with-different-credential': 'Conta já existe com credencial diferente',
+      'auth/credential-already-in-use': 'A credencial já está em uso',
+      'auth/email-already-in-use': 'O email já está em uso',
+      'auth/weak-password': 'A senha está fraca. Tente com uma mais forte',
+      'auth/expired-action-code': 'O código de resetar a senha expirou',
+      'auth/invalid-action-code': 'O código de resetar a senha não é válido ou já está em uso',
+      'auth/user-not-found': 'Usuário não encontrado',
+      'auth/invalid-user-token': 'Token inválido',
+      'auth/user-token-expired': 'Token expirado'
     }
-  }
+  },
+  mutations: {
+    setError(state, payload) {
+      state.error = state.errors[payload] || null
     },
-    modules: {}
+    setUser(state, payload) {
+      if (payload) {
+        state.isLogged = true
+        storage.set('isLogged', true)
+        state.user = payload
+      }
+
+    },
+    removeUser(state) {
+      state.user = null
+      storage.remove('isLogged')
+    },
+    setWord(state, payload) {
+      state.words.push(payload)
+    }
+
+  },
+  actions: {
+    async login({commit}, payload) {
+      try {
+        const firebaseUser = await auth.signInWithEmailAndPassword(payload.email, payload.password)
+        commit('setUser', {uid: firebaseUser.user?.uid, email: firebaseUser.user?.email, username: payload.username})
+        commit('setError', null)
+      } catch (err) {
+        commit('setUser', null)
+        commit('setError', err.code)
+      }
+
+    },
+    async logout({commit}) {
+      await auth.signOut()
+      commit('removeUser')
+    },
+    async signUp({commit}, payload) {
+      try {
+        const firebaseUser = await auth.createUserWithEmailAndPassword(payload.email, payload.password)
+        commit('setUser', {uid: firebaseUser.user?.uid, email: firebaseUser.user?.email, username: payload.username})
+        await firestore.collection('users').doc(firebaseUser.user?.uid).set({
+          uid: firebaseUser.user?.uid,
+          username: payload.username,
+          email: firebaseUser.user?.email
+        })
+        commit('setError', null)
+      }
+      catch (err) {
+        commit('setError', err.code)
+      }
+    },
+    async findUser({commit}, user) {
+      const res = await firestore.collection('users').where('uid', '==', user.uid).get()
+      if (!res.docs[0]) {
+        return null
+      }
+      commit('setUser', {...res.docs[0].data(), verified: user.emailVerified})
+    },
+    sendResetPassword({commit}, email) {
+      try {
+        auth.sendPasswordResetEmail(email)
+      } catch (err) {
+        commit('setError', err.code)
+      }
+    },
+    async confirmEmail({commit}) {
+      if (!auth.currentUser.emailVerified) {
+        try {
+          await auth.currentUser.sendEmailVerification()
+          return "Um link acabou de ser mandado para confirmar seu email"
+        }
+        catch (err) {
+          commit('setError', err.code)
+        }
+      }
+      else {
+        return "Seu email já foi confirmado"
+      }
+    }
+  },
+  modules: {}
 })
 auth.onAuthStateChanged(async user => {
-  if(user) {
-  store.dispatch('findUser', user)
+  if (user) {
+    store.dispatch('findUser', user)
   }
 })
 export default store
