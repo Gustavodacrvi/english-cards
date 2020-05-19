@@ -5,7 +5,9 @@
 			<span>Se você recebeu essa mensagem significa que você não confirmou seu email. Por favor confirme seu email ou aperte nesse botão para enviarmos um link de confirmação</span>
 		</div>
     <button-vue text="Confirmar Email" @click.native="confirmEmail" :color="{'back': '#FFF', 'text': '#525A79'}" :border="true" class="button" />
-      <message-popup-vue :message="message" :color="color"/>
+      <transition name="popup" >
+        <message-popup-vue v-if="popup" :message="message" :color="color"/>
+      </transition>
   </div>
 </template>
 
@@ -27,9 +29,12 @@ export default {
   methods: {
     confirmEmail() {
       this.$store.dispatch('confirmEmail').then((answer)=> {
-      this.message = answer
+        this.message = answer
+        this.popup = true
         setTimeout(()=>{
-          this.popup = false
+          setTimeout(() => {
+            this.popup = false
+          }, 5000)
         }, 1000)
       })
     }
@@ -51,4 +56,24 @@ export default {
 .button {
   width: 216px;
 }
+.popup-enter {
+  transform: translateY(100%);
+  opacity: .5;
+  transition-duration: .2s;
+}
+.popup-enter-to {
+  transform: translateX(0%);
+  opacity: 1;
+  transition-duration: .2s;
+}
+.popup-leave-to {
+  transform: translateY(25%);
+  opacity: .5;
+  transition-duration: .2s;
+}
+.popup-leave {
+  transform: translateY(150%);
+  transition-duration: .2s;
+}
 </style>
+
