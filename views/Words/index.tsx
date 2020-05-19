@@ -9,7 +9,6 @@ import SelectedMenu from './SelectedMenu'
 import SearchBar from './SearchBar'
 import List from './List'
 import { WordInterface } from '../../interfaces'
-import { getWordName, getNextReviewDate } from '../../utils'
 
 import mom from 'moment-timezone'
 
@@ -90,6 +89,7 @@ class WordsPage extends React.Component {
     sort: 'creation' as 'alphabetical' | 'creation' | 'reviews',
     selected: [],
     sorted: [],
+    num: 0,
   }
 
   constructor(props) {
@@ -105,9 +105,17 @@ class WordsPage extends React.Component {
       })
   }
 
+/*   componentDidMount() {
+    setInterval(() => {
+      this.setState({
+        num: this.state.num + 1
+      })
+    }, 1000)
+  } */
+
   sortList(sort: 'alphabetical' | 'creation' | 'reviews', currentTab: 'saved' | 'forgotten' | 'learned', list: WordInterface[], search: string) {
 
-    let arr = !search ? list.slice() : list.filter(w => getWordName(w).toLowerCase().includes(search))
+/*     let arr = !search ? list.slice() : list.filter(w => getWordName(w).toLowerCase().includes(search))
 
     if (sort === 'alphabetical')
       arr.sort((a, b) => getWordName(a).toLowerCase().localeCompare(getWordName(b).toLowerCase()))
@@ -129,9 +137,9 @@ class WordsPage extends React.Component {
         if (a.isAfter(b, 'day')) return -1
         if (b.isAfter(a, 'day')) return 1
       })
-    }
+    } */
     
-    return arr.slice()
+    return list.slice()
   }
 
   selectWord = name => {
@@ -176,20 +184,25 @@ class WordsPage extends React.Component {
   }
 
   render() {
+
     return (
       <TouchableWithoutFeedback
-        onPress={evt => {
+      onPress={evt => {
           if (this.state.selected.length)
             this.setState({
               selected: [],
             })
           Keyboard.dismiss()
         }}
-      >
+        >
         <View>
           <View
             style={s.Page}
           >
+{/*           <View>
+            <Test num={this.state.num}/>
+            <Test num={this.state.num}/>
+          </View> */}
     
             <TabWrapper
               tab={this.state.currentTab}
@@ -204,6 +217,7 @@ class WordsPage extends React.Component {
               id="uid"
               direction="vertical"
               width={45}
+              activateAnimations={false}
               
               selected={this.state.selected}
               leftAction={this.removeWord}

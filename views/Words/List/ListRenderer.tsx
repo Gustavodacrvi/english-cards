@@ -26,11 +26,10 @@ interface Props {
 function ListRenderer({list, cleanUp, showLastReviewDate, showNextReviewDate, width, showCreationDate, affectMultiple, isTransitioning, transformProperty, transitionData, leftAction, id, rightAction, onPress, selected, refs}: Props) {
   
   const functionRefs = useRef({})
-  const isMagicSelecting = useRef(false)
   const lastListLength = useRef(list.length)
   const uniqueIds = useRef(new Set(list.map(el => el[id])))
 
-  useEffect((): any => {
+/*   useEffect((): any => {
     if (lastListLength.current !== list.length) {
       lastListLength.current = list.length
       functionRefs.current = {}
@@ -38,7 +37,7 @@ function ListRenderer({list, cleanUp, showLastReviewDate, showNextReviewDate, wi
       uniqueIds.current = new Set(list.map(el => el[id]))
       functionRefs.current = {}
     }
-  }, [list])
+  }, [list]) */
 
   return (
     <>
@@ -61,9 +60,8 @@ function ListRenderer({list, cleanUp, showLastReviewDate, showNextReviewDate, wi
           showLastReviewDate={showNextReviewDate}
           affectMultiple={affectMultiple}
           showCreationDate={showCreationDate}
-          isMagicSelecting={isMagicSelecting}
           active={selected.includes(obj[id])}
-          ref={getRef}
+          ref={(el => refs.current[i] = el)}
           transformProperty={transformProperty}
         
           key={obj[id]}

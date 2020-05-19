@@ -17,7 +17,7 @@ function ActionButton({active}: Props) {
   const onPress = () => {
 
   }
-  
+
   return (
     <View
       style={s.ActionButton}

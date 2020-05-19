@@ -36,6 +36,7 @@ const icons = {
 import React, { forwardRef } from 'react'
 
 import { animateRotation } from '../../animations'
+import { memoize } from '../../utils'
 
 interface Props {
   width: number;

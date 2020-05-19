@@ -1,12 +1,12 @@
 
 
-import React, { useMemo } from 'react'
-import { View, Animated, Text, StyleSheet, TextStyle } from 'react-native'
-import { backgroundColor, faded, darkBackgroundColor } from '../../../../styles/colors'
+import React from 'react'
+import { View, Animated, StyleSheet } from 'react-native'
+import { backgroundColor } from '../../../../styles/colors'
 import { animateProperty } from '../../../../animations'
 import { LingueTranslationInterface, SimpleTranslationData } from '../../../../interfaces'
-import { getHumanReadable, getNextReviewDate, getWordName } from '../../../../utils'
-import Icon from '../../../../components/Icon'
+import { getWordName } from '../../../../utils'
+import WordContentRendering from './WordContentRendering'
 
 interface Props {
   touchX: Animated.Value;
@@ -36,31 +36,21 @@ function WordContent({
   creationDate,
 }: Props) {
 
-  const name = useMemo(() => {
-    return getWordName({api, data} as any)
-  }, [api, data])
-  const translation = useMemo(() => {
-    switch (api) {
-      case 'linguee': {
-        return (data as LingueTranslationInterface).words[0].translations[0].term
-      }
-      case 'simple': {
-        return (data as SimpleTranslationData).translation
-      }
+  const name = getWordName({api, data} as any)
+  let translation
+  switch (api) {
+    case 'linguee': {
+      translation = (data as LingueTranslationInterface).words[0].translations[0].term
     }
-  }, [api, data])
+    case 'simple': {
+      translation = (data as SimpleTranslationData).translation
+    }
+  }
 
-  const textStyles: TextStyle[] = [
-    s.Info,
-    {color: active ? darkBackgroundColor : faded},
-  ]
-  
   return (
     <View
-      style={{
-        position: 'relative',
-      }}
-      >
+      style={s.WordElement}
+    >
       <Animated.View
         style={[
           s.Wrapper,
@@ -70,15 +60,12 @@ function WordContent({
         ]}
       >
         <Animated.View
-          style={{
-            backgroundColor: 'white',
-            position: 'absolute',
-            left: 0,
-            top: 0,
-            width: '100%',
-            height: '100%',
-            opacity: animateProperty(active ? 1 : 0, true),
-          }}
+          style={[
+            s.TransparentBack,
+            {
+              opacity: animateProperty(active ? 1 : 0, true),
+            }
+          ]}
         >
 
         </Animated.View>
@@ -93,61 +80,17 @@ function WordContent({
             }
           ]}
         >
-          <View>
-            <Animated.Text style={[
-              s.BigText,
-              {
-                color: animateProperty(active ? darkBackgroundColor : 'white'),
-              },
-            ]}>{name}</Animated.Text>
-          </View>
-          <View
-            style={s.InfoWrapper}
-          >
-            <Text style={textStyles}>{translation}</Text>
-            <View
-              style={s.RightSection}
-            >
-              {(showLastReviewDate && lastReview) ? <View
-                style={s.InfoOption}
-              >
-                <Icon
-                  icon="book"
-                  width={9}
-                />
-                <Text style={[textStyles, s.InfoText]}>
-                  {getHumanReadable(lastReview)}
-                </Text>
-              </View> : undefined}
-              {showCreationDate ? <View
-                style={s.InfoOption}
-              >
-                <Icon
-                  icon="saved"
-                  width={9}
-                />
-                <Text style={[textStyles, s.InfoText]}>
-                  {getHumanReadable(creationDate)}
-                </Text>
-              </View> : undefined}
-              {showNextReviewDate ? <View
-                style={s.InfoOption}
-              >
-                <Icon
-                  icon='notification'
-                  width={9}
-                />
-                <Text style={[textStyles, s.InfoText]}>
-                  {getHumanReadable(
-                    getNextReviewDate({
-                      lastReview,
-                      reviewNumber,
-                    })
-                  )}
-                </Text>
-              </View> : undefined}
-            </View>
-          </View>
+          <WordContentRendering
+            name={name}
+            active={active}
+            translation={translation}
+            showLastReviewDate={showLastReviewDate}
+            lastReview={lastReview}
+            showCreationDate={showCreationDate}
+            creationDate={creationDate}
+            showNextReviewDate={showNextReviewDate}
+            reviewNumber={reviewNumber}
+          />
         </Animated.View>
       </Animated.View>
     </View>
@@ -155,6 +98,17 @@ function WordContent({
 }
 
 const s = StyleSheet.create({
+  TransparentBack: {
+    backgroundColor: 'white',
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: '100%',
+    height: '100%',
+  },
+  WordElement: {
+    position: 'relative',
+  },
   Wrapper: {
     display: 'flex',
     overflow: 'hidden',
@@ -163,10 +117,6 @@ const s = StyleSheet.create({
     height: '100%',
     borderRadius: 8,
   },
-  RightSection: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
   Content: {
     height: 25,
     display: 'flex',
@@ -174,33 +124,7 @@ const s = StyleSheet.create({
     marginBottom: 2,
     justifyContent: 'space-around',
   },
-  InfoOption: {
-    marginLeft: 4,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  InfoWrapper: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-  },
-  BigText: {
-    fontFamily: 'OpenSans-Bold',
-    fontSize: 17,
-  },
-  Info: {
-    fontSize: 11,
-    marginTop: 4,
-    color: faded,
-    fontFamily: 'OpenSans-Semibold',
-  },
-  InfoText: {
-    fontSize: 9,
-    marginTop: 0,
-    marginLeft: 4,
-  },
 })
 
 
-export default React.memo(WordContent)
+export default WordContent

@@ -6,6 +6,7 @@ import { darkBackgroundColor } from '../../../styles/colors'
 import TabOption from './TabOption'
 import TabBackground from './TabBackground'
 import { IconInterface } from '../../../interfaces'
+import { memoize } from '../../../utils'
 
 interface Props {
   tab: 'saved' | 'learned' | 'forgotten';
@@ -20,7 +21,7 @@ function TabWrapper({tab, setTab}: Props) {
 
   const learned = 138
   const forgotten = 154
-  
+
   return (
     <View
       style={s.Wrapper}
@@ -83,6 +84,7 @@ const s = StyleSheet.create({
     height: 35,
     borderRadius: 8,
     padding: 4,
+    position: 'relative',
   },
   TabBar: {
     display: 'flex',

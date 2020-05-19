@@ -88,4 +88,4 @@ const s = StyleSheet.create({
   }
 })
 
-export default React.memo(TabOption)
+export default TabOption

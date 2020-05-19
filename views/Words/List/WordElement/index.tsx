@@ -19,7 +19,6 @@ interface Props {
   cleanUp: () => void;
   showNextReviewDate: boolean;
   showLastReviewDate: boolean;
-  isMagicSelecting: {current: boolean};
   showCreationDate: boolean;
   affectMultiple: {current: ({target, key, translationX, isPositive}: {isPositive: boolean, target: number, key: string, translationX: number}) => void};
   transformProperty: 'translateX' | 'translateY';
@@ -117,9 +116,43 @@ const WordElement = forwardRef(({
     }).start(() => activate(toValue))
   }
 
-  useImperativeHandle(ref, () => ({cancelGesture, activate, pull, runFlipAnimation, runEnterAnimation, runLeaveAnimation, id}))
+/*   const onGestureEvent = evt => {
+    const y = evt.nativeEvent.y
 
+    if (y > 0 && y <= width && !activated.current)
+      touchX.current.setValue(evt.nativeEvent.translationX)
+    else if (!activated.current) {
+      activated.current = true
+      activate(evt.nativeEvent.translationX)
+    }
+      
+    if (affectMultiple.current) {
+      affectMultiple.current({
+        isPositive: y > 0,
+        target: Math.abs(Math.ceil(y / width) - 1),
+        key: id,
+        translationX: evt.nativeEvent.translationX,
+      })
+    }
+  } */
+  
   const onGestureEvent = Animated.event([{nativeEvent: {translationX: touchX.current}}], { useNativeDriver: true })
+
+  const onHandlerStateChange = evt => {
+    const state = evt.nativeEvent.state
+    
+    if (state === State.END) {
+      cleanUp()
+      if (!activated.current) {
+        activate(evt.nativeEvent.translationX)
+      }
+    } else if (state === State.BEGAN) {
+      activated.current = false
+      cleanUp()
+    }
+  }
+
+  useImperativeHandle(ref, () => ({cancelGesture, activate, pull, runFlipAnimation, runEnterAnimation, runLeaveAnimation, id}))
 
   return (
     <Animated.View
@@ -145,40 +178,10 @@ const WordElement = forwardRef(({
           <View>
             <PanGestureHandler
               maxPointers={1}
-              onGestureEvent={evt => {
-                const y = evt.nativeEvent.y
-
-                if (y > 0 && y <= width && !activated.current)
-                  touchX.current.setValue(evt.nativeEvent.translationX)
-                else if (!activated.current) {
-                  activated.current = true
-                  activate(evt.nativeEvent.translationX)
-                }
-                  
-                if (affectMultiple.current) {
-                  affectMultiple.current({
-                    isPositive: y > 0,
-                    target: Math.abs(Math.ceil(y / width) - 1),
-                    key: id,
-                    translationX: evt.nativeEvent.translationX,
-                  })
-                }
-              }}
+              onGestureEvent={onGestureEvent}
               minDist={10}
               activeOffsetX={activeOffsetX}
-              onHandlerStateChange={evt => {
-                const state = evt.nativeEvent.state
-                
-                if (state === State.END) {
-                  cleanUp()
-                  if (!activated.current) {
-                    activate(evt.nativeEvent.translationX)
-                  }
-                } else if (state === State.BEGAN) {
-                  activated.current = false
-                  cleanUp()
-                }
-              }}
+              onHandlerStateChange={onHandlerStateChange}
             >
               <Animated.View
                 style={[

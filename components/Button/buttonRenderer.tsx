@@ -15,6 +15,7 @@ import Icon from './../Icon'
 
 import {animateOnOff, animateProperty} from './../../animations/'
 import { primary } from '../../styles/colors'
+import { memoize } from '../../utils'
 
 interface Props {
   backgroundColor: string;
@@ -117,4 +118,4 @@ const s = StyleSheet.create({
   },
 })
 
-export default React.memo(ButtonRenderer)
+export default ButtonRenderer

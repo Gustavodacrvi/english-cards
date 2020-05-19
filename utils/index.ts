@@ -110,7 +110,7 @@ export const getNextReviewDate = memoize(({
   lastReview: string | null; // Y-M-D
   reviewNumber: null | number;
 }): string => {
-  
+
   if (!lastReview)
     return TOD.clone().add(1, 'days').format('Y-M-D')
 
@@ -146,3 +146,12 @@ export const getWordName = ({api, data}: WordInterface) => {
     }
   }
 }
+
+export const forgotWord = memoize(({
+  lastReview,
+  reviewNumber,
+}: WordInterface) => {
+  return mom(
+    getNextReviewDate({lastReview, reviewNumber}), 'Y-M-D'
+  ).isBefore(TOD, 'day')
+})

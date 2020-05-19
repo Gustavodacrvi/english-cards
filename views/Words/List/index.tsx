@@ -17,6 +17,7 @@ interface Props {
   showCreationDate: boolean;
   showNextReviewDate: boolean;
   showLastReviewDate: boolean;
+  activateAnimations: boolean;
   direction: 'vertical' | 'horizontal';
   width: number;
   selected: string[];
@@ -27,7 +28,7 @@ interface Props {
 
 const initalTransitionData = {toFlip: [], toAdd: [], toRemove: [], finalList: []}
 
-function List({list, direction, id, showCreationDate, showNextReviewDate, showLastReviewDate, leftAction, width, rightAction, onPress, selected = []}: Props) {
+function List({list, direction, id, activateAnimations, showCreationDate, showNextReviewDate, showLastReviewDate, leftAction, width, rightAction, onPress, selected = []}: Props) {
 
   const refs = useRef([])
   const isTransitioning = useRef(false)
@@ -69,6 +70,10 @@ function List({list, direction, id, showCreationDate, showNextReviewDate, showLa
   const affectMultiple = useRef(affectMultipleFunction)
 
   useEffect(() => {
+    if (!activateAnimations) {
+      setModel(list)
+      return;
+    }
 
     const toAdd = list.filter(old => !model.some(obj => old[id] === obj[id])).map(obj => obj[id])
     const toRemoveObjs = model.filter(old => !list.some(obj => old[id] === obj[id]))
@@ -128,6 +133,9 @@ function List({list, direction, id, showCreationDate, showNextReviewDate, showLa
   }, [list])
 
   useEffect(() => {
+    if (!activateAnimations)
+      return;
+    
     cleanUp.current()
     affectMultiple.current = affectMultipleFunction
     refs.current = refs.current.slice(0, model.length)
@@ -156,29 +164,6 @@ function List({list, direction, id, showCreationDate, showNextReviewDate, showLa
         marginTop: 30,
         position: 'relative',
       }}
-
-/*       onStartShouldSetResponder={() => true}
-      onStartShouldSetResponderCapture={() => true}
-      onMoveShouldSetResponder={() => true}
-      onMoveShouldSetResponderCapture={() => true}
-
-      onResponderGrant={() => {
-        // Called when the gesture starts
-        
-        // After a timeout (long press), save in state the day on which the user pressed
-      }}
-      onResponderMove={(evt) => {
-        // Called at each movement
-      
-        // Find the day on which the user's finger currently is
-        // Select all days between the first selected day (saved in state) and the current day
-        console.log(evt.nativeEvent.locationX)
-      }}
-      onResponderRelease={() => {
-        // Called when the gesture succeeds
-      
-        // Do something with the selected day(s) (API call)
-      }} */
     >
       <ListRenderer
         list={model}

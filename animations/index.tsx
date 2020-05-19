@@ -24,11 +24,16 @@ export const animateProperty = (value: string | number, useNativeDriver: boolean
   
   animation.setValue(0)
 
+  // Animated.timing(
+  //   animation,
+  //   duration: 150,
+  // )
   Animated.spring(
     animation,
     {
       toValue: 1,
       useNativeDriver,
+      restSpeedThreshold: 10,
       ...(springProperties || defaultSpringProperties),
     }
   ).start()
@@ -46,6 +51,7 @@ export const animateStyles = (style: ViewStyle | TextStyle, useNativeDriver: boo
 }
 
 import { ViewStyle } from 'react-native'
+import { duration } from 'moment-timezone'
 
 interface StyleOptions {
   on: ViewStyle | TextStyle;
