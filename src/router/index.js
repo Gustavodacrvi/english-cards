@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Privacy from '../views/Privacy.vue'
-import About from '../views/About.vue'
+import Mail from '../views/Mail.vue'
 import Therms from '../views/Therms.vue'
 import Dashboard from '../views/Dashboard.vue'
 import {storage} from '../services/storage'
@@ -31,9 +31,9 @@ const routes = [
     component: Dashboard
   },
   {
-    name: 'About',
-    component: About,
-    path: '/about'
+    name: 'Mail',
+    component: Mail,
+    path: '/mail'
   }
 ]
 

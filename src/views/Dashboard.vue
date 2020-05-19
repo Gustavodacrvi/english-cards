@@ -13,6 +13,11 @@ import InputVue from '../components/Form/Input.vue'
 import ButtonVue from '../components/Button.vue'
 import {mapState} from 'vuex'
 export default {
+  created(){
+    if(!this.user.verified) {
+      this.router.push('/mail')
+    }
+  },
   data(){
     return {
       word: ''

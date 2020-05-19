@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
 import ButtonVue from '../components/Button.vue'
 import MessagePopupVue from '../components/MessagePopup.vue'
 export default {
@@ -21,6 +22,12 @@ export default {
       popup: false,
       color: "#88E976"
     }
+  },
+  mounted() {
+    console.log(this.user)
+    //if(this.user.verified) {
+      //this.$router.push('/dashboard')
+    //}
   },
   components: {
     ButtonVue,
@@ -38,6 +45,9 @@ export default {
         }, 1000)
       })
     }
+  },
+  computed: {
+    ...mapState(['user'])
   }
 }
 </script>
