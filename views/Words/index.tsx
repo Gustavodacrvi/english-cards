@@ -1,16 +1,18 @@
 
 
 import React from 'react'
-import { View, StyleSheet, Keyboard, TouchableWithoutFeedback } from 'react-native'
+import { View, StyleSheet, Keyboard, TouchableWithoutFeedback, InteractionManager } from 'react-native'
 
 import TabWrapper from './Tab'
 import ActionButton from './ActionButton'
 import SelectedMenu from './SelectedMenu'
 import SearchBar from './SearchBar'
 import List from './List'
+import ListLoading from './ListLoading'
 import { WordInterface } from '../../interfaces'
 
 import mom from 'moment-timezone'
+import { getWordName, getNextReviewDate, forgotWord } from '../../utils'
 
 const emptyList = []
 
@@ -89,7 +91,8 @@ class WordsPage extends React.Component {
     sort: 'creation' as 'alphabetical' | 'creation' | 'reviews',
     selected: [],
     sorted: [],
-    num: 0,
+    activateAnimations: false,
+    showLoadingScreen: false,
   }
 
   constructor(props) {
@@ -99,47 +102,67 @@ class WordsPage extends React.Component {
   }
 
   componentDidUpdate() {
-    if (this.state.selected !== this.state.selected)
+/*     if (this.state.selected !== this.state.selected)
       this.setState({
         selected: emptyList,
-      })
+      }) */
   }
 
-/*   componentDidMount() {
-    setInterval(() => {
-      this.setState({
-        num: this.state.num + 1
-      })
-    }, 1000)
-  } */
 
-  sortList(sort: 'alphabetical' | 'creation' | 'reviews', currentTab: 'saved' | 'forgotten' | 'learned', list: WordInterface[], search: string) {
+  sortList(sort: 'alphabetical' | 'creation' | 'reviews', currentTab: 'saved' | 'forgotten' | 'learned', list: WordInterface[], search: string, forceTabChange?: boolean) {
 
-/*     let arr = !search ? list.slice() : list.filter(w => getWordName(w).toLowerCase().includes(search))
+    let arr = list.slice()
 
-    if (sort === 'alphabetical')
-      arr.sort((a, b) => getWordName(a).toLowerCase().localeCompare(getWordName(b).toLowerCase()))
-    else if (sort === 'creation') {
-      arr.sort((word1, word2) => {
-        const a = mom(word1.creationDate, 'Y-M-D')
-        const b = mom(word2.creationDate, 'Y-M-D')
+    if (forceTabChange || search !== this.state.search)
+      arr = !search ? list : list.filter(w => getWordName(w).toLowerCase().includes(search))
 
-        if (a.isSame(b, 'day')) return 0
-        if (a.isAfter(b, 'day')) return -1
-        if (b.isAfter(a, 'day')) return 1
-      })
-    } else {
-      arr.sort((word1, word2) => {
-        const a = mom(getNextReviewDate(word1), 'Y-M-D')
-        const b = mom(getNextReviewDate(word2), 'Y-M-D')
+    if (forceTabChange || currentTab !== this.state.currentTab)
+      switch (currentTab) {
+        case 'saved': {
+          arr = arr.filter(w => !w.lastReview)
+          break
+        }
+        case 'learned': {
+          arr = arr.filter(w => w.lastReview && !forgotWord(w))
+          break
+        }
+        case 'forgotten': {
+          arr = arr.filter(w => w.lastReview && forgotWord(w))
+          break
+        }
+      }
 
-        if (a.isSame(b, 'day')) return 0
-        if (a.isAfter(b, 'day')) return -1
-        if (b.isAfter(a, 'day')) return 1
-      })
-    } */
+    if (forceTabChange || sort !== this.state.sort)
+      switch (sort) {
+        case 'alphabetical': {
+          arr.sort((a, b) => getWordName(a).toLowerCase().localeCompare(getWordName(b).toLowerCase()))
+          break
+        }
+        case 'creation': {
+          arr.sort((word1, word2) => {
+            const a = mom(word1.creationDate, 'Y-M-D')
+            const b = mom(word2.creationDate, 'Y-M-D')
     
-    return list.slice()
+            if (a.isSame(b, 'day')) return 0
+            if (a.isAfter(b, 'day')) return -1
+            if (b.isAfter(a, 'day')) return 1
+          })
+          break
+        }
+        default: {
+          arr.sort((word1, word2) => {
+            const a = mom(getNextReviewDate(word1), 'Y-M-D')
+            const b = mom(getNextReviewDate(word2), 'Y-M-D')
+    
+            if (a.isSame(b, 'day')) return 0
+            if (a.isAfter(b, 'day')) return -1
+            if (b.isAfter(a, 'day')) return 1
+          })
+          break
+        }
+      }
+
+    return arr
   }
 
   selectWord = name => {
@@ -158,11 +181,24 @@ class WordsPage extends React.Component {
   }
 
   setTab = (tab: 'saved' | 'forgotten' | 'learned') => {
-    if (tab !== this.state.currentTab)
+    if (tab !== this.state.currentTab) {
       this.setState({
-        sorted: this.sortList(this.state.sort, tab, this.state.list, this.state.search),
         currentTab: tab,
+        activateAnimations: false,
+        showLoadingScreen: true,
       })
+      InteractionManager.runAfterInteractions(() => {
+        this.setState({
+          sorted: this.sortList(this.state.sort, tab, this.state.list, this.state.search, true),
+        })
+        InteractionManager.runAfterInteractions(() => {
+          this.setState({
+            activateAnimations: true,
+            showLoadingScreen: false,
+          })
+        })
+      })
+    }
   }
   setSearch = (search: string) => {
     this.setState({
@@ -199,36 +235,43 @@ class WordsPage extends React.Component {
           <View
             style={s.Page}
           >
-{/*           <View>
-            <Test num={this.state.num}/>
-            <Test num={this.state.num}/>
-          </View> */}
-    
-            <TabWrapper
-              tab={this.state.currentTab}
-              setTab={this.setTab}
-            />
-            <SearchBar
-              sort={this.state.sort}
-              setSearch={this.setSearch}
-              setSort={this.setSort}
-            />
-            <List
-              id="uid"
-              direction="vertical"
-              width={45}
-              activateAnimations={false}
-              
-              selected={this.state.selected}
-              leftAction={this.removeWord}
-              rightAction={this.selectWord}
-              onPress={this.onPress}
-              list={this.state.sorted}
+            <View>
 
-              showCreationDate={this.state.currentTab === 'saved'}
-              showNextReviewDate={this.state.currentTab !== 'saved'}
-              showLastReviewDate={this.state.currentTab === 'learned'}
-            />
+              <TabWrapper
+                tab={this.state.currentTab}
+                setTab={this.setTab}
+              />
+              <SearchBar
+                sort={this.state.sort}
+                setSearch={this.setSearch}
+                setSort={this.setSort}
+              />
+            </View>
+
+            <View
+              style={s.ContentWrapper}
+            >
+              {
+                this.state.showLoadingScreen ?
+                  <ListLoading/> :
+                <List
+                  id="uid"
+                  direction="vertical"
+                  width={45}
+                  activateAnimations={this.state.activateAnimations}
+                  
+                  selected={this.state.selected}
+                  leftAction={this.removeWord}
+                  rightAction={this.selectWord}
+                  onPress={this.onPress}
+                  list={this.state.sorted}
+
+                  showCreationDate={this.state.currentTab === 'saved'}
+                  showNextReviewDate={this.state.currentTab !== 'saved'}
+                  showLastReviewDate={this.state.currentTab === 'learned'}
+                />
+              }
+            </View>
             <ActionButton
               active={this.state.currentTab === 'saved' && this.state.selected.length === 0}
             />
@@ -246,8 +289,14 @@ class WordsPage extends React.Component {
 const s = StyleSheet.create({
   Page: {
     padding: 20,
+    paddingBottom: 0,
     height: '100%',
     position: 'relative',
+    display: 'flex',
+  },
+  ContentWrapper: {
+    flex: 1,
+    marginBottom: 73,
   },
 })
 

@@ -62,6 +62,7 @@ function WordContent({
               icon="book"
               width={9}
               animate={false}
+              color={active ? darkBackgroundColor : undefined}
             />
             <Text style={infoText}>
               {getHumanReadable(lastReview)}
@@ -74,6 +75,7 @@ function WordContent({
               icon="saved"
               width={9}
               animate={false}
+              color={active ? darkBackgroundColor : undefined}
             />
             <Text style={infoText}>
               {getHumanReadable(creationDate)}
@@ -86,6 +88,7 @@ function WordContent({
               icon="notification"
               width={9}
               animate={false}
+              color={active ? darkBackgroundColor : undefined}
             />
             <Text style={infoText}>
               {getHumanReadable(
@@ -109,6 +112,7 @@ const s = StyleSheet.create({
   },
   InfoOption: {
     marginLeft: 4,
+    marginRight: 4,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
@@ -135,4 +139,4 @@ const s = StyleSheet.create({
   },
 })
 
-export default WordContent
+export default React.memo(WordContent)

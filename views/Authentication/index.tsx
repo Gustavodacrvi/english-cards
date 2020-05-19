@@ -66,6 +66,7 @@ function Authentication({navigation}) {
         await signIn(email, password)
         success("Você entrou na sua conta com sucesso.")
         setLoading(false)
+        navigation.navigate('Words')
       } catch (err) {
         error(err)
         setLoading(false)

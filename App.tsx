@@ -146,6 +146,7 @@ function App() {
                   SlidesComp,
                   Auth,
                   Screens,
+                  userScreens,
                 ]
 
               if (isLoggedIn)
