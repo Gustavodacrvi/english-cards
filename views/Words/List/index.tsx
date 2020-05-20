@@ -33,7 +33,7 @@ function List({list, height, showCreationDate, showNextReviewDate, showLastRevie
           length: height, offset: height * index, index,
         })}
         initialNumToRender={20}
-        keyExtractor={(item) => item.uid}
+        keyExtractor={item => item.uid}
         renderItem={({item}) =>
           <WordElement
             leftAction={leftAction}
@@ -54,27 +54,5 @@ function List({list, height, showCreationDate, showNextReviewDate, showLastRevie
     </View>
   )
 }
-
-/*
-  <WordElement
-          leftAction={leftAction}
-          rightAction={rightAction}
-          onPress={onPress}
-          cleanUp={cleanUp}
-          width={width}
-          showNextReviewDate={showLastReviewDate}
-          showLastReviewDate={showNextReviewDate}
-          affectMultiple={affectMultiple}
-          showCreationDate={showCreationDate}
-          active={selected.includes(obj[id])}
-          ref={(el => refs.current[i] = el)}
-          transformProperty={transformProperty}
-        
-          key={obj[id]}
-          id={obj[id]}
-          willEnter={isTransitioning.current && transitionData.current.toAdd.includes(obj[id])}
-          {...obj}
-        />
-*/
 
 export default React.memo(List)

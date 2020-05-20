@@ -88,27 +88,6 @@ class WordsPage extends React.Component {
     this.state.sorted = this.sortList(this.state.sort, this.state.currentTab, this.state.list, this.state.search)
   }
 
-  componentDidMount() {
-    setTimeout(() => {
-      const newArr = this.state.list.slice()
-      
-      newArr.splice(3, 0, {
-        uid: 'e',
-        lastReview: null,
-        reviewNumber: null,
-        creationDate: '2020-05-16',
-        api: 'simple',
-        data: {
-          term: 'Chair',
-          translation: 'Cadeira',
-        },
-      })
-      this.setState({
-        sorted: newArr,
-      })
-    }, 10000)
-  }
-
   componentDidUpdate() {
 /*     if (this.state.selected !== this.state.selected)
       this.setState({
@@ -125,6 +104,7 @@ class WordsPage extends React.Component {
 
 
   sortList(sort: 'alphabetical' | 'creation' | 'reviews', currentTab: 'saved' | 'forgotten' | 'learned', list: WordInterface[], search: string, forceTabChange?: boolean) {
+    return []
 
     let arr = list.slice()
 
@@ -261,6 +241,7 @@ class WordsPage extends React.Component {
 
             <Intercept
               showLoadingScreen={this.state.showLoadingScreen}
+              tab={this.state.currentTab}
               height={45}
               
               selected={this.state.selected}

@@ -3,13 +3,14 @@
 import React from 'react'
 import { animateProperty } from '../../animations'
 import List from './List'
-import { View, StyleSheet, Animated } from 'react-native'
-import { backgroundColor } from '../../styles/colors'
+import { View, StyleSheet, Animated, Text } from 'react-native'
+import { backgroundColor, darkBackgroundColor } from '../../styles/colors'
 import Icon from '../../components/Icon'
 
 import {ListRenderingProps} from './List/'
+import InterceptEmptyList from './InterceptEmptyList'
 
-function Intercept(props: ListRenderingProps & {showLoadingScreen: boolean}) {
+function Intercept(props: ListRenderingProps & {showLoadingScreen: boolean, tab: string}) {
 
   return (
     <View
@@ -32,6 +33,10 @@ function Intercept(props: ListRenderingProps & {showLoadingScreen: boolean}) {
           rotate={true}
         />
       </Animated.View>
+      <InterceptEmptyList
+        tab={props.tab}
+        show={!props.list.length}
+      />
       
     </View>
   )
