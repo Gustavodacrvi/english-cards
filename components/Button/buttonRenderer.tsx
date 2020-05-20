@@ -15,6 +15,7 @@ import Icon from './../Icon'
 
 import {animateOnOff, animateProperty} from './../../animations/'
 import { primary } from '../../styles/colors'
+import { memoize } from '../../utils'
 
 interface Props {
   backgroundColor: string;
@@ -41,51 +42,58 @@ const ButtonRenderer = forwardRef(({
   const [isTouching, setTouch] = useState(false)
 
   return (
-    <TouchableNativeFeedback
-      ref={ref}
-      useForeground={true}
-
-      background={TouchableNativeFeedback.Ripple(primary, false)}
-      onPress={click}
-      delayPressIn={0}
-      delayPressOut={0}
-      onPressIn={() => setTouch(true)}
-      onPressOut={() => setTouch(false)}
+    <Animated.View
+      style={{
+        borderRadius: 8,
+        overflow: 'hidden',
+        backgroundColor: 'red',
+        transform: [
+          {
+            scale: animateProperty(isTouching ? .95 : 1, true)
+          }
+        ]
+      }}
     >
-      <Animated.View
-        style={[s.Wrapper,{
-          backgroundColor,
-          borderRadius: 8,
-          borderWidth: 3,
-          borderColor,
-        }, {
-          transform: [
-            {
-              scale: animateProperty(isTouching ? .95 : 1, true)
-            }
-          ]
-        }]}
+      <TouchableNativeFeedback
+        ref={ref}
+        useForeground={true}
+
+        background={TouchableNativeFeedback.Ripple(primary, false)}
+        onPress={click}
+        delayPressIn={0}
+        delayPressOut={0}
+        onPressIn={() => setTouch(true)}
+        onPressOut={() => setTouch(false)}
       >
-        <View style={s.Button}>
-          <Text style={[s.Text, {
-            color: textColor,
-          }]}> {name} </Text>
-          {!disableIconTransition ? animateOnOff({
-            off: {
-              width: 0,
-              opacity: 0,
-            },
-            on: {
-              width: iconWidth,
-              opacity: 1,
-            },
-          }, icon ? iconNode : null, {}, {
-            bounciness: 0,
-            speed: 12,
-          } as any) : iconNode}
-        </View>
-      </Animated.View>
-    </TouchableNativeFeedback>
+        <Animated.View
+          style={[s.Wrapper,{
+            backgroundColor,
+            borderRadius: 8,
+            borderWidth: 3,
+            borderColor,
+          }]}
+        >
+          <View style={s.Button}>
+            <Text style={[s.Text, {
+              color: textColor,
+            }]}> {name} </Text>
+            {!disableIconTransition ? animateOnOff({
+              off: {
+                width: 0,
+                opacity: 0,
+              },
+              on: {
+                width: iconWidth,
+                opacity: 1,
+              },
+            }, icon ? iconNode : null, {}, {
+              bounciness: 0,
+              speed: 12,
+            } as any) : iconNode}
+          </View>
+        </Animated.View>
+      </TouchableNativeFeedback>
+    </Animated.View>
   )
 })
 
@@ -94,9 +102,13 @@ const s = StyleSheet.create({
     alignItems: 'center',
   },
   Button: {
-    borderRadius: 8,
+    transform: [
+      {
+        translateY: -.5,
+      }
+    ],
     height: 42,
-    translateY: -.5,
+    borderRadius: 8,
     alignItems: 'center',
     flexDirection: 'row',
   },
@@ -106,4 +118,4 @@ const s = StyleSheet.create({
   },
 })
 
-export default React.memo(ButtonRenderer)
+export default ButtonRenderer

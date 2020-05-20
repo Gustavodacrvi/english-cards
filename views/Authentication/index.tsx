@@ -24,11 +24,8 @@ function Authentication({navigation}) {
   const [isLogin, setLogin] = useState(true)
 
   const {data, user, signIn, signUp} = useContext(AuthContext)
-  const {pushToast, error, success} = useContext(ToastContext)
+  const {error, success} = useContext(ToastContext)
 
-/*   console.log('data', data)
-  console.log('user', user) */
-  
   useEffect(() => {
     Keyboard.dismiss()
 
@@ -69,6 +66,7 @@ function Authentication({navigation}) {
         await signIn(email, password)
         success("Você entrou na sua conta com sucesso.")
         setLoading(false)
+        navigation.navigate('Words')
       } catch (err) {
         error(err)
         setLoading(false)

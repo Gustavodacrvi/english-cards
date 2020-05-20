@@ -29,22 +29,22 @@ const icons = {
   notification, plus, saved,
   search, sort, trash,
   user, wifi, arrow,
-  'notification-trash': notificationTrash,
+  'notification-dash': notificationTrash,
   'sort-by-name': sortByName,
 }
 
 import React, { forwardRef } from 'react'
 
 import { animateRotation } from '../../animations'
+import { memoize } from '../../utils'
 
 interface Props {
-  width: string;
+  width: number;
   icon: string;
   rotate: boolean;
   primaryColor: string;
   secondaryColor: string;
 }
-
 
 const IconRenderer = forwardRef(({
   primaryColor, icon, secondaryColor, width, rotate
@@ -52,6 +52,7 @@ const IconRenderer = forwardRef(({
     
   return (
     <Animated.View
+      ref={ref}
       style={{
         transform: [{rotate: rotate ? animateRotation() : '0deg'}],
       }}
@@ -66,4 +67,4 @@ const IconRenderer = forwardRef(({
   )
 })
 
-export default React.memo(IconRenderer)
+export default IconRenderer

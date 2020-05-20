@@ -6,6 +6,8 @@ import { StyleSheet, StyleProp, TextStyle, Keyboard, View } from 'react-native'
 
 import { faded, primary } from './../../styles/colors'
 
+import { inputHandler } from '../../utils'
+
 interface Props {
   placeholder?: string;
   value?: string;
@@ -26,17 +28,7 @@ function Input({
 
   const input = useRef(null)
 
-  const blur = () => {
-    if (input.current)
-      input.current.blur()
-  }
-
-  Keyboard.addListener('keyboardDidHide', blur)
-
-  useEffect(() => {
-    Keyboard.addListener('keyboardDidHide', blur)
-    return () => Keyboard.removeListener('keyboardDidHide', blur)
-  }, [])
+  inputHandler(input)
 
   return (
     <View style={[s.Wrapper, style]}>
@@ -71,6 +63,7 @@ const s = StyleSheet.create({
     color: '#fff',
     height: '100%',
     fontSize: 15,
+    fontFamily: 'OpenSans-Semibold',
   },
 })
 

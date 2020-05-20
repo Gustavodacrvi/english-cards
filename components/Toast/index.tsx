@@ -27,8 +27,6 @@ function Toast() {
     if (toastTimeout)
       clearTimeout(toastTimeout)
     
-    console.log((toast && toast.msg) || null)
-    
     if (toast)
       pushToast(null)
   }
@@ -41,10 +39,18 @@ function Toast() {
     >
       {animateOnOff({
         off: {
-          translateX: 500,
+          transform: [
+            {
+              translateX: 500,
+            },
+          ],
         },
         on: {
-          translateX: 0,
+          transform: [
+            {
+              translateX: 0,
+            },
+          ],
         },
       }, toast ? (
         <View

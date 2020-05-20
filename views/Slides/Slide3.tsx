@@ -20,9 +20,9 @@ function Slide2({slide}: {slide: 0 | 1 | 2}) {
         style={{
           transform: [
             {
-              translateX: animateProperty(slide === 2 ? -160 : 220),
+              translateX: animateProperty(slide === 2 ? -160 : 220, true),
             },{
-              translateY: animateProperty(slide === 2 ? 0 : -150),
+              translateY: animateProperty(slide === 2 ? 0 : -150, true),
             }
           ]
         }}
@@ -40,7 +40,7 @@ function Slide2({slide}: {slide: 0 | 1 | 2}) {
           {
             transform: [
               {
-                translateY: animateProperty(active ? 0 : -75),
+                translateY: animateProperty(active ? 0 : -75, true),
               }
             ]
           }
@@ -55,7 +55,7 @@ function Slide2({slide}: {slide: 0 | 1 | 2}) {
           {
             transform: [
               {
-                translateX: animateProperty(active ? 0 : 330),
+                translateX: animateProperty(active ? 0 : 330, true),
               },
             ]
           }
@@ -75,7 +75,7 @@ function Slide2({slide}: {slide: 0 | 1 | 2}) {
             {
               transform: [
                 {
-                  translateX: animateProperty(active ? 0 : 330, 400, true),
+                  translateX: animateProperty(active ? 0 : 330, true),
                 },
               ]
             }

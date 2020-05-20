@@ -1,40 +1,56 @@
 
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { View, StyleSheet, Dimensions } from 'react-native'
 import { backgroundColor } from '../../styles/colors'
 
 import NavOption from './NavOption'
+import { StackHeaderProps } from '@react-navigation/stack'
+import { IconInterface } from '../../interfaces'
 
-import { NavigationStackProp } from 'react-navigation-stack'
+function Header(props: StackHeaderProps) {
 
-function Header({navigation}: {navigation: NavigationStackProp}) {
+  const tabHeight = useRef(73)
+  
+  const [height, setHeight] = useState(Dimensions.get('window').height - tabHeight.current)
+
+  const home = useRef({icon: 'home'} as IconInterface)
+  const words = useRef({icon: 'words'} as IconInterface)
+  const user = useRef({icon: 'user'} as IconInterface)
 
   return (
     <View
-      style={s.Header}
+      style={[
+        s.Header,
+        {
+          top: height,
+        },
+      ]}
+      onLayout={evt => {
+        setHeight(Dimensions.get('window').height - tabHeight.current)
+      }}
     >
       <View
         style={s.Wrapper}
       >
 
         <NavOption
-          active={navigation.state.routeName === "Home"}
+          active={props.scene.route.name === "Home"}
           displayName="Início"
           textWidth={58}
-          icon={{icon: 'home'}}
+          icon={home.current}
           />
         <NavOption
-          active={navigation.state.routeName === "Words"}
+          active={props.scene.route.name === "Words"}
           displayName="Palavras"
           textWidth={88}
-          icon={{icon: 'words'}}
+          icon={words.current}
           />
         <NavOption
-          active={navigation.state.routeName === "Profile"}
+          active={props.scene.route.name === "Profile"}
           displayName="Perfil"
           textWidth={58}
-          icon={{icon: 'user'}}
+          icon={user.current}
         />
         
       </View>
@@ -42,14 +58,11 @@ function Header({navigation}: {navigation: NavigationStackProp}) {
   )
 }
 
-const height = 73
-
 const s = StyleSheet.create({
   Header: {
     position: 'absolute',
     width: '100%',
-    height,
-    top: Dimensions.get('window').height - height,
+    height: 73,
     backgroundColor,
   },
   Wrapper: {

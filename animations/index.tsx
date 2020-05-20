@@ -14,18 +14,14 @@ export const animateProperty = (value: string | number, useNativeDriver: boolean
   
   const animation = new Animated.Value(0)
   
-  const getConfig = animation.interpolate(
+  const config = animation.interpolate(
     {
       inputRange: [0, 1],
       outputRange: [oldValue.current as any, value as any],
     })
 
-  const config = useRef(getConfig)
-
-  config.current = getConfig
-  
   oldValue.current = value
-
+  
   animation.setValue(0)
 
   Animated.spring(
@@ -33,11 +29,12 @@ export const animateProperty = (value: string | number, useNativeDriver: boolean
     {
       toValue: 1,
       useNativeDriver,
+      restSpeedThreshold: 200,
       ...(springProperties || defaultSpringProperties),
     }
   ).start()
 
-  return config.current
+  return config
 }
 
 export const animateStyles = (style: ViewStyle | TextStyle, useNativeDriver: boolean = false, springProperties?: Animated.SpringAnimationConfig): {[key: string]: Animated.AnimatedInterpolation} => {
@@ -50,6 +47,7 @@ export const animateStyles = (style: ViewStyle | TextStyle, useNativeDriver: boo
 }
 
 import { ViewStyle } from 'react-native'
+import { duration } from 'moment-timezone'
 
 interface StyleOptions {
   on: ViewStyle | TextStyle;
@@ -73,15 +71,33 @@ export const animateOnOff = ({
   
   const [animation] = useState(new Animated.Value(0))
   const node = useRef(reactNode)
+
+  const getInterpolation = (offKey, onKey) => {
+    return animation.interpolate({
+      inputRange: [0, 1],
+      outputRange: render ? [offKey, onKey] : [onKey, offKey]
+    }) 
+  }
+  
+  const interpolateArray = (onKey: Array<ViewStyle | TextStyle>, offKey: Array<ViewStyle | TextStyle>) => {
+    // onKey : [{translateX: 50}]
+    const arr = []
+    for (let i = 0;i < onKey.length; i++) {
+      arr.push(
+        Object.keys(offKey[i]).reduce((obj, key) => ({
+          ...obj,
+          [key]: getInterpolation(offKey[i][key], onKey[i][key]),
+        }), {})
+      )
+    }
+    return arr
+  }
   
   const animatedStyle = {
     ...Object.keys(off).reduce((obj, key) => {
       return {
         ...obj,
-        [key]: animation.interpolate({
-          inputRange: [0, 1],
-          outputRange: render ? [off[key], on[key]] : [on[key], off[key]]
-        })
+        [key]: !Array.isArray(off[key]) ? getInterpolation(off[key], on[key]) : interpolateArray(on[key], off[key])
       }
     }, {})
   }
@@ -114,15 +130,13 @@ export const animateOnOff = ({
   })
 
   return (reactNode || node.current) ? (
-    <Animated.View style={[
-      animatedStyle,
-    ]}>
+    <Animated.View style={animatedStyle}>
       { reactNode || node.current }
     </Animated.View>
   ) : undefined
 }
 
-export const animateRotation = (duration: number = 500, invertDirection: boolean = false): Animated.AnimatedInterpolation => {
+export const animateRotation = (duration: number = 700, invertDirection: boolean = false): Animated.AnimatedInterpolation => {
   
   const [spinValue] = useState(new Animated.Value(0))
 
