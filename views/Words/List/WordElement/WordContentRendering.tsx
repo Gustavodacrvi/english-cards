@@ -139,4 +139,4 @@ const s = StyleSheet.create({
   },
 })
 
-export default React.memo(WordContent)
+export default memoize(WordContent)

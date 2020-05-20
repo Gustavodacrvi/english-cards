@@ -7,14 +7,11 @@ import TabWrapper from './Tab'
 import ActionButton from './ActionButton'
 import SelectedMenu from './SelectedMenu'
 import SearchBar from './SearchBar'
-import List from './List'
-import ListLoading from './ListLoading'
 import { WordInterface } from '../../interfaces'
 
 import mom from 'moment-timezone'
 import { getWordName, getNextReviewDate, forgotWord } from '../../utils'
-
-const emptyList = []
+import Intercept from './Intercept'
 
 class WordsPage extends React.Component {
   state = {
@@ -65,18 +62,7 @@ class WordsPage extends React.Component {
         },
       },
       {
-        uid: 'e',
-        lastReview: null,
-        reviewNumber: null,
-        creationDate: '2020-05-16',
-        api: 'simple',
-        data: {
-          term: 'Chair',
-          translation: 'Cadeira',
-        },
-      },
-      {
-        uid: 'f',
+        uid: 'k',
         lastReview: null,
         reviewNumber: null,
         creationDate: '2020-05-16',
@@ -93,6 +79,7 @@ class WordsPage extends React.Component {
     sorted: [],
     activateAnimations: false,
     showLoadingScreen: false,
+    removeLoadingScreen: false,
   }
 
   constructor(props) {
@@ -101,11 +88,39 @@ class WordsPage extends React.Component {
     this.state.sorted = this.sortList(this.state.sort, this.state.currentTab, this.state.list, this.state.search)
   }
 
+  componentDidMount() {
+    setTimeout(() => {
+      const newArr = this.state.list.slice()
+      
+      newArr.splice(3, 0, {
+        uid: 'e',
+        lastReview: null,
+        reviewNumber: null,
+        creationDate: '2020-05-16',
+        api: 'simple',
+        data: {
+          term: 'Chair',
+          translation: 'Cadeira',
+        },
+      })
+      this.setState({
+        sorted: newArr,
+      })
+    }, 10000)
+  }
+
   componentDidUpdate() {
 /*     if (this.state.selected !== this.state.selected)
       this.setState({
         selected: emptyList,
       }) */
+    if (this.state.removeLoadingScreen) {
+      this.setState({
+        activateAnimations: true,
+        showLoadingScreen: false,
+        removeLoadingScreen: false,
+      })
+    }
   }
 
 
@@ -190,12 +205,7 @@ class WordsPage extends React.Component {
       InteractionManager.runAfterInteractions(() => {
         this.setState({
           sorted: this.sortList(this.state.sort, tab, this.state.list, this.state.search, true),
-        })
-        InteractionManager.runAfterInteractions(() => {
-          this.setState({
-            activateAnimations: true,
-            showLoadingScreen: false,
-          })
+          removeLoadingScreen: true,
         })
       })
     }
@@ -235,8 +245,9 @@ class WordsPage extends React.Component {
           <View
             style={s.Page}
           >
-            <View>
-
+            <View
+              style={s.Tab}
+            >
               <TabWrapper
                 tab={this.state.currentTab}
                 setTab={this.setTab}
@@ -248,30 +259,20 @@ class WordsPage extends React.Component {
               />
             </View>
 
-            <View
-              style={s.ContentWrapper}
-            >
-              {
-                this.state.showLoadingScreen ?
-                  <ListLoading/> :
-                <List
-                  id="uid"
-                  direction="vertical"
-                  width={45}
-                  activateAnimations={this.state.activateAnimations}
-                  
-                  selected={this.state.selected}
-                  leftAction={this.removeWord}
-                  rightAction={this.selectWord}
-                  onPress={this.onPress}
-                  list={this.state.sorted}
+            <Intercept
+              showLoadingScreen={this.state.showLoadingScreen}
+              height={45}
+              
+              selected={this.state.selected}
+              leftAction={this.removeWord}
+              rightAction={this.selectWord}
+              onPress={this.onPress}
+              list={this.state.sorted}
 
-                  showCreationDate={this.state.currentTab === 'saved'}
-                  showNextReviewDate={this.state.currentTab !== 'saved'}
-                  showLastReviewDate={this.state.currentTab === 'learned'}
-                />
-              }
-            </View>
+              showCreationDate={this.state.currentTab === 'saved'}
+              showNextReviewDate={this.state.currentTab !== 'saved'}
+              showLastReviewDate={this.state.currentTab === 'learned'}
+            />
             <ActionButton
               active={this.state.currentTab === 'saved' && this.state.selected.length === 0}
             />
@@ -288,15 +289,13 @@ class WordsPage extends React.Component {
 
 const s = StyleSheet.create({
   Page: {
-    padding: 20,
-    paddingBottom: 0,
     height: '100%',
     position: 'relative',
     display: 'flex',
   },
-  ContentWrapper: {
-    flex: 1,
-    marginBottom: 73,
+  Tab: {
+    padding: 20,
+    paddingBottom: 0,
   },
 })
 

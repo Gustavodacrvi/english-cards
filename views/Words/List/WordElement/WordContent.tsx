@@ -10,7 +10,6 @@ import WordContentRendering from './WordContentRendering'
 
 interface Props {
   touchX: Animated.Value;
-  deleteValue: Animated.Value;
   active: boolean;
   showCreationDate: boolean;
   showNextReviewDate: boolean;
@@ -24,7 +23,6 @@ interface Props {
 
 function WordContent({
   touchX,
-  deleteValue,
   active,
   showCreationDate,
   api,
@@ -70,15 +68,7 @@ function WordContent({
 
         </Animated.View>
         <Animated.View
-          style={[
-            s.Content,
-            {
-              opacity: deleteValue.interpolate({
-                inputRange: [0, 1],
-                outputRange: [1, 0],
-              })
-            }
-          ]}
+          style={s.Content}
         >
           <WordContentRendering
             name={name}

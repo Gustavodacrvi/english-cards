@@ -71,7 +71,7 @@ const s = StyleSheet.create({
   SelectedMenu: {
     position: 'absolute',
     bottom: 73,
-    height: 80,
+    height: 82,
     left: 0,
     width: '100%',
     display: 'flex',
@@ -84,6 +84,8 @@ const s = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 8,
     backgroundColor,
+    display: 'flex',
+    justifyContent: 'center',
     overflow: 'hidden',
   },
   Option: {
@@ -91,7 +93,7 @@ const s = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    height: 38,
+    height: 35,
   },
   Text: {
     fontFamily: 'OpenSans-Bold',
