@@ -47,7 +47,6 @@ export default {
 <style scoped>
 .dashboard {
   width: 100%;
-  height: 100vh;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);

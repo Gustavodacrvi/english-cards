@@ -1,13 +1,18 @@
 <template>
   <div class="email">
     <h1>Erro! Email precisa ser confirmado</h1>
-		<div class="span">
-			<span>Se você recebeu essa mensagem significa que você não confirmou seu email. Por favor confirme seu email ou aperte nesse botão para enviarmos um link de confirmação</span>
-		</div>
-    <button-vue text="Confirmar Email" @click.native="confirmEmail" :color="{'back': '#FFF', 'text': '#525A79'}" :border="true" class="button" />
-      <transition name="popup" >
-        <message-popup-vue v-if="popup" :message="message" :color="color"/>
-      </transition>
+    <div class="mail">
+      <div class="wrapper">
+        <div class="span">
+          <span>Se você recebeu essa mensagem significa que você não confirmou seu email. Por favor confirme seu email ou aperte nesse botão para enviarmos um link de confirmação</span>
+        </div>
+        <button-vue text="Confirmar Email" @click.native="confirmEmail" :color="{'back': '#FFF', 'text': '#525A79'}" :border="true" class="button" />
+          <transition name="popup" >
+          <message-popup-vue v-if="popup" :message="message" :color="color"/>
+          </transition>
+      </div>
+
+    </div>
   </div>
 </template>
 
@@ -26,7 +31,7 @@ export default {
   mounted() {
     console.log(this.user)
     //if(this.user.verified) {
-      //this.$router.push('/dashboard')
+    //this.$router.push('/dashboard')
     //}
   },
   components: {
@@ -54,17 +59,23 @@ export default {
 
 <style scoped>
 .mail {
-	position: absolute;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.wrapper {
+  flex-direction: column;
 }
 .span {
-	background: #00F;
-	width: 300px;
+  width: 300px;
+  display: flex;
 }
-.button {
-  width: 216px;
+span {
+  text-align: justify;
+  justify-self: flex-start;
 }
 .popup-enter {
   transform: translateY(100%);
