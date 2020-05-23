@@ -74,8 +74,9 @@ export interface WordData extends WordInterface {
   name: string;
 }
 
-export interface ShortTerm extends FireData {
+export interface ShortTerm {
   uid: string; // FireData.uid
+  user: FireData;
   input: {
     [key: string]: {
       [key: string]: Date; // Creation date

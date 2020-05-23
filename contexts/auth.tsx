@@ -3,7 +3,7 @@ import { AsyncStorage } from 'react-native'
 
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth'
 import fire from '@react-native-firebase/firestore'
-import { FireData } from '../interfaces'
+import { FireData, ShortTerm, LongTerm, WordInterface } from '../interfaces'
 
 export const AuthContext = createContext(undefined as Props)
 
@@ -49,9 +49,10 @@ class AuthContextProvider extends Component {
         unsubscribe()
       
       if (user) {
-        unsubscribe = fire().collection('users').doc(user.uid).onSnapshot(res => {
+        unsubscribe = fire().collection('users').doc(user.uid).collection('short').doc('short').onSnapshot(res => {
+          const data: ShortTerm = res.data() as ShortTerm
           this.setState({
-            data: res.data() || null,
+            data: (data && data.user) || null,
           })
         })
       } else {
@@ -74,10 +75,22 @@ class AuthContextProvider extends Component {
   async signUp(email: string, password: string, username: string) {
     try {
       const res = await auth().createUserWithEmailAndPassword(email, password)
-      await fire().collection('users').doc(res.user.uid).set({
+      const user = fire().collection('users').doc(res.user.uid)
+      const userData = {
         uid: res.user.uid,
         username, email,
-      })
+      }
+      await user.set(userData as FireData)
+      await user.collection('short').doc('short').set({
+        user: userData,
+        uid: res.user.uid,
+        input: {},
+        output: {},
+      } as ShortTerm)
+      await user.collection('long').doc('long').set({
+        uid: res.user.uid,
+        output: {},
+      } as LongTerm)
       AsyncStorage.setItem('FlashTranslator.isLoggedIn', 'true')
     } catch (err) {
       if (auth().currentUser)
@@ -102,6 +115,25 @@ class AuthContextProvider extends Component {
     } catch (err) {
       throw "Houve algum erro ao tentar mandar uma e-mail de mudança de senha."
     }
+  }
+
+  async getTranslation(term: string, api: 'linguee') {
+/*     try {
+      switch (api) {
+        case 'linguee': {
+          const res = await Linguee.translate(term, {from: 'eng', to: 'por'})
+          console.log(res)
+        }
+      }
+    } catch (err) {
+      throw "Essa tradução não existe ou você está com erros na conexão.";
+    } */
+  }
+  async addWord(word: WordInterface) {
+
+  }
+  async removeWordByUid(uid: string) {
+
   }
 
   render() {

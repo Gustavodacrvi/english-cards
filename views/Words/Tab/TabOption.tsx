@@ -11,12 +11,11 @@ interface Props {
   active: boolean;
   name: string;
   tabName: 'saved' | 'forgotten' | 'learned';
-  textWidth: number;
   icon: IconInterface;
   setTab: (name: 'saved' | 'forgotten' | 'learned') => void;
 }
 
-function TabOption({active, name, icon, textWidth, tabName, setTab}: Props) {
+function TabOption({active, name, icon, tabName, setTab}: Props) {
 
   return (
     <View
@@ -24,50 +23,52 @@ function TabOption({active, name, icon, textWidth, tabName, setTab}: Props) {
         s.Wrapper,
       ]}
     >
-      <Animated.Text
-        numberOfLines={1}
-        ellipsizeMode="clip"
-        style={[
-          s.Text,
-          {
-            width: animateProperty(active ? textWidth : 0, false, {
-              bounciness: 0,
-              speed: 16,
-            } as any),
-          },
-        ]}
-      >
-        {name}
-      </Animated.Text>
-      <View
-        style={{
-          borderRadius: 8,
-          overflow: 'hidden',
-        }}
-      >
-        <TouchableNativeFeedback
-          background={TouchableNativeFeedback.Ripple(primary, false)}
-          useForeground={!active}
+      <TouchableNativeFeedback
+        background={TouchableNativeFeedback.Ripple(primary, false)}
+        useForeground={!active}
 
-          onPress={() => setTab(tabName)}
-        >
+        onPress={() => setTab(tabName)}
+      >
+        <View style={s.Content}>
+          <Animated.View
+            style={[
+              s.Background,
+              {
+                backgroundColor: primary,
+                opacity: animateProperty(active ? 1 : 0, true),
+              }
+            ]}
+          ></Animated.View>
+
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="clip"
+            style={[
+              s.Text,
+              {
+                color: active ? darkBackgroundColor : 'white'
+              },
+            ]}
+          >
+            {name}
+          </Text>
           <View
             style={{
               paddingTop: 4,
               paddingBottom: 4,
-              paddingRight: 8,
+              paddingRight: 10,
               paddingLeft: 8,
             }}
           >
             <Icon
               {...icon}
-              width={18}
+              width={16}
               color={active ? darkBackgroundColor : null}
               animate={false}
             />
           </View>
-        </TouchableNativeFeedback>
-      </View>
+        </View>
+      </TouchableNativeFeedback>
     </View>
   )
 }
@@ -75,16 +76,30 @@ function TabOption({active, name, icon, textWidth, tabName, setTab}: Props) {
 const s = StyleSheet.create({
   Wrapper: {
     height: '100%',
+    position: 'relative',
+    overflow: 'hidden',
+    borderRadius: 8,
+  },
+  Content: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    height: '100%',
   },
   Text: {
     fontFamily: 'OpenSans-Bold',
-    fontSize: 16,
+    fontSize: 13,
     overflow: 'hidden',
+    marginLeft: 12,
     color: darkBackgroundColor,
+  },
+  Background: {
+    backgroundColor: primary,
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    borderRadius: 8,
   }
 })
 

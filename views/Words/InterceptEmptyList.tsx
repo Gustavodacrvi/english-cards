@@ -44,7 +44,7 @@ function InterceptEmptyList({
             {{
               saved: "Você pode adicionar palavras pela extensão do Google Chrome ou manualmente pelo botão.",
               learned: "As suas palavras aprendidas estarão aqui.",
-              forgotten: "As suas palavras esquecidas.",
+              forgotten: "As palavras que não foram feitas revisões aparecerão aqui.",
             }[tab]}
           </Text>
         </View>

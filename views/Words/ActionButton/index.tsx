@@ -9,14 +9,11 @@ import { animateProperty } from '../../../animations'
 
 interface Props {
   active: boolean;
+  onClick: () => void;
 }
 
-function ActionButton({active}: Props) {
+function ActionButton({active, onClick}: Props) {
   const [pressing, setPress] = useState(false)
-
-  const onPress = () => {
-
-  }
 
   return (
     <View
@@ -52,7 +49,7 @@ function ActionButton({active}: Props) {
             delayPressIn={0}
             delayPressOut={0}
 
-            onPress={onPress}
+            onPress={onClick}
             onPressIn={() => setPress(true)}
             onPressOut={() => setPress(false)}
           >

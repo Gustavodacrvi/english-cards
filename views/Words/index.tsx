@@ -7,11 +7,13 @@ import TabWrapper from './Tab'
 import ActionButton from './ActionButton'
 import SelectedMenu from './SelectedMenu'
 import SearchBar from './SearchBar'
+import AddWord from './AddWord'
 import { WordInterface } from '../../interfaces'
 
 import mom from 'moment-timezone'
 import { getWordName, getNextReviewDate, forgotWord } from '../../utils'
 import Intercept from './Intercept'
+import { PopupContext } from '../../contexts/popup'
 
 class WordsPage extends React.Component {
   state = {
@@ -77,9 +79,7 @@ class WordsPage extends React.Component {
     sort: 'creation' as 'alphabetical' | 'creation' | 'reviews',
     selected: [],
     sorted: [],
-    activateAnimations: false,
     showLoadingScreen: false,
-    removeLoadingScreen: false,
   }
 
   constructor(props) {
@@ -88,23 +88,7 @@ class WordsPage extends React.Component {
     this.state.sorted = this.sortList(this.state.sort, this.state.currentTab, this.state.list, this.state.search)
   }
 
-  componentDidUpdate() {
-/*     if (this.state.selected !== this.state.selected)
-      this.setState({
-        selected: emptyList,
-      }) */
-    if (this.state.removeLoadingScreen) {
-      this.setState({
-        activateAnimations: true,
-        showLoadingScreen: false,
-        removeLoadingScreen: false,
-      })
-    }
-  }
-
-
   sortList(sort: 'alphabetical' | 'creation' | 'reviews', currentTab: 'saved' | 'forgotten' | 'learned', list: WordInterface[], search: string, forceTabChange?: boolean) {
-    return []
 
     let arr = list.slice()
 
@@ -179,13 +163,12 @@ class WordsPage extends React.Component {
     if (tab !== this.state.currentTab) {
       this.setState({
         currentTab: tab,
-        activateAnimations: false,
         showLoadingScreen: true,
       })
-      InteractionManager.runAfterInteractions(() => {
+      setTimeout(() => {
         this.setState({
-          sorted: this.sortList(this.state.sort, tab, this.state.list, this.state.search, true),
-          removeLoadingScreen: true,
+          showLoadingScreen: false,
+          sorted: this.sortList(this.state.sort, this.state.currentTab, this.state.list, this.state.search, true),
         })
       })
     }
@@ -207,6 +190,9 @@ class WordsPage extends React.Component {
 /*     this.setState({
       list: this.state.list.filter(el => el.name !== name)
     }) */
+  }
+  actionButtonClick = () => {
+    this.context.pushPopup(() => <AddWord/>)
   }
 
   render() {
@@ -256,6 +242,7 @@ class WordsPage extends React.Component {
             />
             <ActionButton
               active={this.state.currentTab === 'saved' && this.state.selected.length === 0}
+              onClick={this.actionButtonClick}
             />
             
           </View>
@@ -279,5 +266,7 @@ const s = StyleSheet.create({
     paddingBottom: 0,
   },
 })
+
+WordsPage.contextType = PopupContext
 
 export default WordsPage
