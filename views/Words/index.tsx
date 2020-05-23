@@ -1,7 +1,7 @@
 
 
 import React from 'react'
-import { View, StyleSheet, Keyboard, TouchableWithoutFeedback, InteractionManager } from 'react-native'
+import { View, StyleSheet, Keyboard, TouchableWithoutFeedback } from 'react-native'
 
 import TabWrapper from './Tab'
 import ActionButton from './ActionButton'
@@ -23,7 +23,7 @@ class WordsPage extends React.Component {
         uid: 'a',
         lastReview: null,
         reviewNumber: null,
-        creationDate: '2020-05-16',
+        creationDate: '2020-05-16 05',
         api: 'simple',
         data: {
           term: 'Notification',
@@ -34,7 +34,7 @@ class WordsPage extends React.Component {
         uid: 'b',
         lastReview: null,
         reviewNumber: null,
-        creationDate: '2020-05-15',
+        creationDate: '2020-05-15 05',
         api: 'simple',
         data: {
           term: 'Car',
@@ -45,7 +45,7 @@ class WordsPage extends React.Component {
         uid: 'c',
         lastReview: '2020-05-16',
         reviewNumber: 7,
-        creationDate: '2020-05-16',
+        creationDate: '2020-05-16 05',
         api: 'simple',
         data: {
           term: 'Random',
@@ -56,7 +56,7 @@ class WordsPage extends React.Component {
         uid: 'd',
         lastReview: null,
         reviewNumber: null,
-        creationDate: '2020-05-16',
+        creationDate: '2020-05-16 05',
         api: 'simple',
         data: {
           term: 'Computer',
@@ -67,7 +67,7 @@ class WordsPage extends React.Component {
         uid: 'k',
         lastReview: null,
         reviewNumber: null,
-        creationDate: '2020-05-16',
+        creationDate: '2020-05-16 05',
         api: 'simple',
         data: {
           term: 'Hand',
@@ -119,8 +119,8 @@ class WordsPage extends React.Component {
         }
         case 'creation': {
           arr.sort((word1, word2) => {
-            const a = mom(word1.creationDate, 'Y-M-D')
-            const b = mom(word2.creationDate, 'Y-M-D')
+            const a = mom(word1.creationDate, 'Y-M-D mm')
+            const b = mom(word2.creationDate, 'Y-M-D mm')
     
             if (a.isSame(b, 'day')) return 0
             if (a.isAfter(b, 'day')) return -1
@@ -130,8 +130,8 @@ class WordsPage extends React.Component {
         }
         default: {
           arr.sort((word1, word2) => {
-            const a = mom(getNextReviewDate(word1), 'Y-M-D')
-            const b = mom(getNextReviewDate(word2), 'Y-M-D')
+            const a = mom(getNextReviewDate(word1), 'Y-M-D mm')
+            const b = mom(getNextReviewDate(word2), 'Y-M-D mm')
     
             if (a.isSame(b, 'day')) return 0
             if (a.isAfter(b, 'day')) return -1

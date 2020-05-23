@@ -89,7 +89,7 @@ const s = StyleSheet.create({
   },
   Text: {
     fontFamily: 'OpenSans-Bold',
-    fontSize: 13,
+    fontSize: 12,
     overflow: 'hidden',
     marginLeft: 12,
     color: darkBackgroundColor,

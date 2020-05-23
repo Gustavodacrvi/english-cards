@@ -2,9 +2,10 @@ import { Keyboard } from "react-native"
 import { useEffect } from "react"
 import mom from 'moment-timezone'
 import { LingueTranslationInterface, SimpleTranslationData, WordInterface } from "../interfaces"
+import fire from '@react-native-firebase/firestore'
 
 const TOD = mom().startOf('day')
-const TOD_STR = mom().format('Y-M-D')
+const TOD_STR = mom().format('Y-M-D mm')
 
 export const memoize = <T extends Function>(func: T): T => {
   const cache = {}
@@ -39,10 +40,10 @@ export const inputHandler = input => {
 
 export const getHumanReadable = memoize((date: string): string => {
 
-  const m = mom(date, 'Y-M-D', true).startOf('day')
+  const m = mom(date, 'Y-M-D mm', true).startOf('day')
 
   if (!m.isValid())
-    throw `"date" is not on the format "Y-M-D", utils/index.ts, getHumanReadable: date: ${date}`
+    throw `"date" is not on the format "Y-M-D mm", utils/index.ts, getHumanReadable: date: ${date}`
 
   if (m.isSame(TOD, 'day'))
     return 'Hoje'
@@ -107,14 +108,14 @@ export const getNextReviewDate = memoize(({
   lastReview,
   reviewNumber,
 }: {
-  lastReview: string | null; // Y-M-D
+  lastReview: string | null; // Y-M-D mm
   reviewNumber: null | number;
 }): string => {
 
   if (!lastReview)
-    return TOD.clone().add(1, 'days').format('Y-M-D')
+    return TOD.clone().add(1, 'days').format('Y-M-D mm')
 
-  const last = mom(lastReview, 'Y-M-D', true)
+  const last = mom(lastReview, 'Y-M-D mm', true)
 
   if (!last.isValid())
     throw `"lastReview" property isn't valid, the data might be corrupted; lastReview: "${lastReview}"`
@@ -133,7 +134,7 @@ export const getNextReviewDate = memoize(({
     6: 250,
     7: 364,
     
-  }[reviewNumber] || 364, 'days').format('Y-M-D')
+  }[reviewNumber] || 364, 'days').format('Y-M-D mm')
 })
 
 export const getWordName = ({api, data}: WordInterface) => {
@@ -152,6 +153,9 @@ export const forgotWord = memoize(({
   reviewNumber,
 }: WordInterface) => {
   return mom(
-    getNextReviewDate({lastReview, reviewNumber}), 'Y-M-D'
+    getNextReviewDate({lastReview, reviewNumber}), 'Y-M-D mm'
   ).isBefore(TOD, 'day')
 })
+
+export const uid = (): string => fire().collection('random').doc().id
+

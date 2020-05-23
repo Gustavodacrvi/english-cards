@@ -6,7 +6,7 @@ import { IconInterface } from '../../../interfaces'
 import { View, Text, StyleSheet } from 'react-native'
 import Icon from '../../../components/Icon'
 
-interface AnimationProps {
+export interface AnimationProps {
   icon: IconInterface;
   text: string;
 }

@@ -15,6 +15,7 @@ interface AnimationOptions {
 
 function AddWord() {
 
+  const timeout = useRef(null)
   const animationOptions = useRef({
     noNet: {
       icon: {
@@ -44,15 +45,12 @@ function AddWord() {
     error: {
       icon: {
         icon: 'alert',
-        rotate: true,
       },
       text: 'Houve algum erro ao traduzir, a palavra pode não existir...',
     },
   } as AnimationOptions)
   const input = useRef()
   inputHandler(input)
-
-  const setSearch = () => {}
 
   const [isBlocked, setBlock] = useState(true)
   const [type, setType] = useState('empty' as 'empty' | 'waiting' | 'translating' | 'error')
@@ -61,6 +59,28 @@ function AddWord() {
   useEffect(() => {
     NetInfo.addEventListener(net => setConnect(net.isConnected))
   })
+
+  const setSearch = str => {
+    if (timeout.current) {
+      clearTimeout(timeout.current)
+      timeout.current = null
+    }
+
+    if (str.length) {
+
+      timeout.current = setTimeout(() => {
+
+        setType('translating')
+        setTimeout(() => {
+          setType('error')
+        }, 5000)
+
+      }, 500)
+      
+    } else {
+      setType('empty')
+    }
+  }
   
   return (
     <View style={s.AddWord}>
@@ -94,6 +114,7 @@ function AddWord() {
       <ButtonComp
         name="Salvar palavra"
         type={isBlocked ? 'blocked' : 'default'}
+        blocked={isBlocked}
       />
         
     </View>
