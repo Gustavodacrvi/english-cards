@@ -19,9 +19,6 @@ function TabWrapper({tab, setTab}: Props) {
   const notification = useRef({icon: 'notification-dash'} as IconInterface)
   const [width, setWidth] = useState(0)
 
-  const learned = 138
-  const forgotten = 154
-
   return (
     <View
       style={s.Wrapper}
@@ -33,23 +30,9 @@ function TabWrapper({tab, setTab}: Props) {
         }}
       >
 
-        <TabBackground
-          left={{
-            saved: 0,
-            learned: (width / 2) - (learned / 2) -4,
-            forgotten: width - forgotten,
-          }[tab]}
-          width={{
-            saved: 108,
-            learned,
-            forgotten,
-          }[tab]}
-        />
-
         <TabOption
           active={tab === "saved"}
           name="Salvas"
-          textWidth={50}
           setTab={setTab}
           tabName='saved'
           icon={saved.current}
@@ -57,7 +40,6 @@ function TabWrapper({tab, setTab}: Props) {
         <TabOption
           active={tab === "learned"}
           name="Aprendidas"
-          textWidth={83}
           setTab={setTab}
           tabName='learned'
           icon={book.current}
@@ -65,7 +47,6 @@ function TabWrapper({tab, setTab}: Props) {
         <TabOption
           active={tab === "forgotten"}
           name="Esquecidas"
-          textWidth={86}
           setTab={setTab}
           tabName='forgotten'
           icon={notification.current}
@@ -91,8 +72,6 @@ const s = StyleSheet.create({
     flexDirection: 'row',
     position: 'relative',
     justifyContent: 'space-between',
-    paddingLeft: 15,
-    paddingRight: 15,
     width: '100%',
     height: '100%',
   },

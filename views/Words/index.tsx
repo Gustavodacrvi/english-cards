@@ -1,17 +1,19 @@
 
 
 import React from 'react'
-import { View, StyleSheet, Keyboard, TouchableWithoutFeedback, InteractionManager } from 'react-native'
+import { View, StyleSheet, Keyboard, TouchableWithoutFeedback } from 'react-native'
 
 import TabWrapper from './Tab'
 import ActionButton from './ActionButton'
 import SelectedMenu from './SelectedMenu'
 import SearchBar from './SearchBar'
+import AddWord from './AddWord'
 import { WordInterface } from '../../interfaces'
 
 import mom from 'moment-timezone'
 import { getWordName, getNextReviewDate, forgotWord } from '../../utils'
 import Intercept from './Intercept'
+import { PopupContext } from '../../contexts/popup'
 
 class WordsPage extends React.Component {
   state = {
@@ -21,7 +23,7 @@ class WordsPage extends React.Component {
         uid: 'a',
         lastReview: null,
         reviewNumber: null,
-        creationDate: '2020-05-16',
+        creationDate: '2020-05-16 05',
         api: 'simple',
         data: {
           term: 'Notification',
@@ -32,7 +34,7 @@ class WordsPage extends React.Component {
         uid: 'b',
         lastReview: null,
         reviewNumber: null,
-        creationDate: '2020-05-15',
+        creationDate: '2020-05-15 05',
         api: 'simple',
         data: {
           term: 'Car',
@@ -43,7 +45,7 @@ class WordsPage extends React.Component {
         uid: 'c',
         lastReview: '2020-05-16',
         reviewNumber: 7,
-        creationDate: '2020-05-16',
+        creationDate: '2020-05-16 05',
         api: 'simple',
         data: {
           term: 'Random',
@@ -54,7 +56,7 @@ class WordsPage extends React.Component {
         uid: 'd',
         lastReview: null,
         reviewNumber: null,
-        creationDate: '2020-05-16',
+        creationDate: '2020-05-16 05',
         api: 'simple',
         data: {
           term: 'Computer',
@@ -65,7 +67,7 @@ class WordsPage extends React.Component {
         uid: 'k',
         lastReview: null,
         reviewNumber: null,
-        creationDate: '2020-05-16',
+        creationDate: '2020-05-16 05',
         api: 'simple',
         data: {
           term: 'Hand',
@@ -77,9 +79,7 @@ class WordsPage extends React.Component {
     sort: 'creation' as 'alphabetical' | 'creation' | 'reviews',
     selected: [],
     sorted: [],
-    activateAnimations: false,
     showLoadingScreen: false,
-    removeLoadingScreen: false,
   }
 
   constructor(props) {
@@ -87,42 +87,6 @@ class WordsPage extends React.Component {
 
     this.state.sorted = this.sortList(this.state.sort, this.state.currentTab, this.state.list, this.state.search)
   }
-
-  componentDidMount() {
-    setTimeout(() => {
-      const newArr = this.state.list.slice()
-      
-      newArr.splice(3, 0, {
-        uid: 'e',
-        lastReview: null,
-        reviewNumber: null,
-        creationDate: '2020-05-16',
-        api: 'simple',
-        data: {
-          term: 'Chair',
-          translation: 'Cadeira',
-        },
-      })
-      this.setState({
-        sorted: newArr,
-      })
-    }, 10000)
-  }
-
-  componentDidUpdate() {
-/*     if (this.state.selected !== this.state.selected)
-      this.setState({
-        selected: emptyList,
-      }) */
-    if (this.state.removeLoadingScreen) {
-      this.setState({
-        activateAnimations: true,
-        showLoadingScreen: false,
-        removeLoadingScreen: false,
-      })
-    }
-  }
-
 
   sortList(sort: 'alphabetical' | 'creation' | 'reviews', currentTab: 'saved' | 'forgotten' | 'learned', list: WordInterface[], search: string, forceTabChange?: boolean) {
 
@@ -155,8 +119,8 @@ class WordsPage extends React.Component {
         }
         case 'creation': {
           arr.sort((word1, word2) => {
-            const a = mom(word1.creationDate, 'Y-M-D')
-            const b = mom(word2.creationDate, 'Y-M-D')
+            const a = mom(word1.creationDate, 'Y-M-D mm')
+            const b = mom(word2.creationDate, 'Y-M-D mm')
     
             if (a.isSame(b, 'day')) return 0
             if (a.isAfter(b, 'day')) return -1
@@ -166,8 +130,8 @@ class WordsPage extends React.Component {
         }
         default: {
           arr.sort((word1, word2) => {
-            const a = mom(getNextReviewDate(word1), 'Y-M-D')
-            const b = mom(getNextReviewDate(word2), 'Y-M-D')
+            const a = mom(getNextReviewDate(word1), 'Y-M-D mm')
+            const b = mom(getNextReviewDate(word2), 'Y-M-D mm')
     
             if (a.isSame(b, 'day')) return 0
             if (a.isAfter(b, 'day')) return -1
@@ -199,13 +163,12 @@ class WordsPage extends React.Component {
     if (tab !== this.state.currentTab) {
       this.setState({
         currentTab: tab,
-        activateAnimations: false,
         showLoadingScreen: true,
       })
-      InteractionManager.runAfterInteractions(() => {
+      setTimeout(() => {
         this.setState({
-          sorted: this.sortList(this.state.sort, tab, this.state.list, this.state.search, true),
-          removeLoadingScreen: true,
+          showLoadingScreen: false,
+          sorted: this.sortList(this.state.sort, this.state.currentTab, this.state.list, this.state.search, true),
         })
       })
     }
@@ -227,6 +190,9 @@ class WordsPage extends React.Component {
 /*     this.setState({
       list: this.state.list.filter(el => el.name !== name)
     }) */
+  }
+  actionButtonClick = () => {
+    this.context.pushPopup(() => <AddWord/>)
   }
 
   render() {
@@ -261,6 +227,7 @@ class WordsPage extends React.Component {
 
             <Intercept
               showLoadingScreen={this.state.showLoadingScreen}
+              tab={this.state.currentTab}
               height={45}
               
               selected={this.state.selected}
@@ -275,6 +242,7 @@ class WordsPage extends React.Component {
             />
             <ActionButton
               active={this.state.currentTab === 'saved' && this.state.selected.length === 0}
+              onClick={this.actionButtonClick}
             />
             
           </View>
@@ -298,5 +266,7 @@ const s = StyleSheet.create({
     paddingBottom: 0,
   },
 })
+
+WordsPage.contextType = PopupContext
 
 export default WordsPage

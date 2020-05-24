@@ -1,3 +1,4 @@
+import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 
 
 export interface IconInterface {
@@ -61,10 +62,19 @@ export interface SimpleTranslationData {
   translation: string;
 }
 
+export interface SavedWordInterface {
+  uid?: string;
+  creationDate?: Date; // 'Y-M-D mm'
+  lastReview?: null | Date; // 'Y-M-D mm'
+  reviewNumber?: number | null | FirebaseFirestoreTypes.FieldValue;
+  api?: 'linguee' | 'simple';
+  data?: LingueTranslationInterface | SimpleTranslationData;
+}
+
 export interface WordInterface {
   uid: string;
-  creationDate: string; // 'Y-M-D'
-  lastReview: null | string; // 'Y-M-D'
+  creationDate: string; // 'Y-M-D mm'
+  lastReview: null | string; // 'Y-M-D mm'
   reviewNumber: number | null;
   api: 'linguee' | 'simple';
   data: LingueTranslationInterface | SimpleTranslationData;
@@ -74,8 +84,24 @@ export interface WordData extends WordInterface {
   name: string;
 }
 
-export interface ShortTerm extends FireData {
+export interface ShortTermAdd {
+  input: {
+    [key: string]: {
+      [key: string]: Date; // Creation date
+    }; // lang key
+  } | null;
+  output: {
+    [key: string]: {
+      [key: string]: {
+        [key: string]: WordInterface;
+      }; // target translation key
+    }; // lang key
+  } | null;
+}
+
+export interface ShortTerm {
   uid: string; // FireData.uid
+  user: FireData;
   input: {
     [key: string]: {
       [key: string]: Date; // Creation date
@@ -96,6 +122,34 @@ export interface LongTerm {
     [key: string]: {
       [key: string]: {
         [key: string]: WordInterface;
+      }; // target translation key
+    }; // lang key
+  } | null;
+}
+
+export interface SavedShortTerm {
+  uid: string; // FireData.uid
+  user: FireData;
+  input: {
+    [key: string]: {
+      [key: string]: Date; // Creation date
+    }; // lang key
+  } | null;
+  output: {
+    [key: string]: {
+      [key: string]: {
+        [key: string]: SavedWordInterface;
+      }; // target translation key
+    }; // lang key
+  } | null;
+}
+
+export interface SavedLongTerm {
+  uid: string; // FireData.uid
+  output: {
+    [key: string]: {
+      [key: string]: {
+        [key: string]: SavedWordInterface;
       }; // target translation key
     }; // lang key
   } | null;
