@@ -97,11 +97,6 @@ const s = StyleSheet.create({
   SpecialIcon: {
     backgroundColor: darkBackgroundColor,
     position: 'absolute',
-    transform: [
-      {
-        rotate: '90deg',
-      }
-    ],
     left: 0,
     top: 0,
   },

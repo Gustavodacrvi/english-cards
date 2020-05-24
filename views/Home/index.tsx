@@ -9,6 +9,7 @@ import { darkBackgroundColor } from '../../styles/colors'
 function Home() {
 
   const [isMenuOpened, setMenu] = useState(false)
+  const [tab, setTab] = useState('saved' as 'saved' | 'review' | 'forgotten')
 
   const toggleMenu = useCallback(() => {
     setMenu(!isMenuOpened)
@@ -23,6 +24,8 @@ function Home() {
       <Header
         toggleMenu={toggleMenu}
         isMenuOpened={isMenuOpened}
+        tab={tab}
+        setTab={setTab}
       />
       
     </View>

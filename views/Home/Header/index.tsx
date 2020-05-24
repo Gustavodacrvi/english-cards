@@ -10,8 +10,12 @@ import HeaderContent from './HeaderContent'
 
 function Header({
   toggleMenu,
+  tab,
+  setTab,
   isMenuOpened,
 } : {
+  tab: 'saved' | 'review' | 'forgotten';
+  setTab: (tab: 'saved' | 'review' | 'forgotten') => void;
   toggleMenu: () => void;
   isMenuOpened: boolean;
 }) {
@@ -27,6 +31,8 @@ function Header({
 
       <HeaderContent
         isMenuOpened={isMenuOpened}
+        tab={tab}
+        setTab={setTab}
       />
 
     </View>

@@ -54,6 +54,7 @@ const s = StyleSheet.create({
   Content: {
     top: 10,
     position: 'absolute',
+    width: '100%',
   },
   Wrapper: {
     height: 33,
