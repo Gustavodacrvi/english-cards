@@ -22,6 +22,7 @@ function Home() {
 
       <Header
         toggleMenu={toggleMenu}
+        isMenuOpened={isMenuOpened}
       />
       
     </View>

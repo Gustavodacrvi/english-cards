@@ -34,7 +34,7 @@ function SvgHomeBackground() {
           </svg>
         `}
       
-        width={800}
+        width={750}
       />
     </View>
   )
@@ -46,6 +46,8 @@ const s = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     flexDirection: 'row',
+    height: 300,
+    marginTop: -4,
     width: '100%',
     top: 0,
   },

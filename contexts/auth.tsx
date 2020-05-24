@@ -13,7 +13,7 @@ let unsubscribeShort
 let unsubscribeLong
 
 interface Props {
-  user: FirebaseAuthTypes.User | null;
+  user: FireData | null;
   data: ShortTerm | null;
   long: ShortTerm | null;
   short: ShortTerm | null;
@@ -75,7 +75,6 @@ class AuthContextProvider extends Component {
           const long = this.convertSavedWords(res.data() as SavedShortTerm)
 
           this.setState({
-            user: (long && long.user) || null,
             data: (this.state.short && this.mergeData(this.state.short, long)) || null,
             long,
           })

@@ -1,19 +1,20 @@
 
 
 import React, { useEffect, useState, useContext, useRef } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, Animated } from 'react-native'
 import { IconInterface } from '../../../interfaces'
+import { animateProperty } from '../../../animations'
 import { TouchableNativeFeedback } from 'react-native-gesture-handler'
 import NetInfo from '@react-native-community/netinfo'
-import { red, primary } from '../../../styles/colors'
+import { red, primary, darkBackgroundColor } from '../../../styles/colors'
 import Icon from '../../../components/Icon'
 import { ToastContext } from '../../../contexts/toast'
 
 function HeaderIcons({
-  isOpened,
+  isMenuOpened,
   toggleMenu,
 }: {
-  isOpened: boolean;
+  isMenuOpened: boolean;
   toggleMenu: () => void;
 }) {
 
@@ -52,16 +53,23 @@ function HeaderIcons({
       </TouchableNativeFeedback>
     </View>
   )
-  
+
   return (
     <View
       style={s.HeaderIcons}
     >
       <View>
-        {
-          (!isOpened && GetIcon({icon: 'user'}, toggleMenu))
-          || GetIcon({icon: 'plus'}, () => {})
-        }
+        {GetIcon({icon: 'user'}, toggleMenu)}
+        <Animated.View
+            style={[
+              s.SpecialIcon,
+              {
+                opacity: animateProperty(isMenuOpened ? 1 : 0, true),
+              },
+            ]}
+          >
+          {GetIcon({icon: 'plus'}, toggleMenu)}
+        </Animated.View>
       </View>
       <View
         style={s.WifiWrapper}
@@ -84,6 +92,18 @@ const s = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    position: 'relative',
+  },
+  SpecialIcon: {
+    backgroundColor: darkBackgroundColor,
+    position: 'absolute',
+    transform: [
+      {
+        rotate: '90deg',
+      }
+    ],
+    left: 0,
+    top: 0,
   },
   WifiWrapper: {
     display: 'flex',
