@@ -15,6 +15,7 @@ interface Props {
   icon: IconInterface;
   displayName: string;
   textWidth: number;
+  onPress: () => void;
 }
 
 function NavOption({
@@ -22,9 +23,10 @@ function NavOption({
   icon,
   displayName,
   textWidth,
+  onPress,
 }: Props) {
   return (
-    <Animated.View
+    <View
       style={{
         borderRadius: 8,
         overflow: 'hidden',
@@ -34,27 +36,25 @@ function NavOption({
         style={[
           s.NavOption,
           {
-            borderColor: animateProperty(active ? 'white' : 'transparent'),
+            borderColor: active ? 'white' : 'transparent',
           },
         ] as any}
         useForeground={true}
+        onPress={onPress}
         background={TouchableNativeFeedback.Ripple(primary, false)}
       >
 
         <Icon {...icon} width={28}/>
-        <Animated.View
+        <View
           style={[
             s.TextWrapper,
-            animateStyles(active ? {
+            active ? {
               opacity: 1,
               width: textWidth,
             } : {
               opacity: 0,
               width: 0,
-            }, false, {
-              bounciness: 0,
-              speed: 25,
-            } as any)
+            }
           ]}
         >
           <Text
@@ -62,10 +62,10 @@ function NavOption({
             ellipsizeMode="clip"
             numberOfLines={1}
           > {displayName} </Text>
-        </Animated.View>
+        </View>
       
       </TouchableNativeFeedback>
-    </Animated.View>
+    </View>
   )
 }
 

@@ -1,7 +1,7 @@
 
 
 import React from 'react'
-import { View, StyleSheet, Keyboard, TouchableWithoutFeedback } from 'react-native'
+import { View, StyleSheet, Keyboard, TouchableWithoutFeedback, StatusBar } from 'react-native'
 
 import TabWrapper from './Tab'
 import ActionButton from './ActionButton'
@@ -14,6 +14,7 @@ import mom from 'moment-timezone'
 import { getWordName, getNextReviewDate, forgotWord } from '../../utils'
 import Intercept from './Intercept'
 import { PopupContext } from '../../contexts/popup'
+import { backgroundColor } from '../../styles/colors'
 
 class WordsPage extends React.Component {
   state = {
@@ -43,7 +44,7 @@ class WordsPage extends React.Component {
       },
       {
         uid: 'c',
-        lastReview: '2020-05-16',
+        lastReview: '2020-05-16 05',
         reviewNumber: 7,
         creationDate: '2020-05-16 05',
         api: 'simple',
@@ -79,13 +80,21 @@ class WordsPage extends React.Component {
     sort: 'creation' as 'alphabetical' | 'creation' | 'reviews',
     selected: [],
     sorted: [],
-    showLoadingScreen: false,
+    showLoadingScreen: true,
   }
 
   constructor(props) {
     super(props)
 
     this.state.sorted = this.sortList(this.state.sort, this.state.currentTab, this.state.list, this.state.search)
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({
+        showLoadingScreen: false,
+      })
+    })
   }
 
   sortList(sort: 'alphabetical' | 'creation' | 'reviews', currentTab: 'saved' | 'forgotten' | 'learned', list: WordInterface[], search: string, forceTabChange?: boolean) {
@@ -208,6 +217,8 @@ class WordsPage extends React.Component {
         }}
         >
         <View>
+          <StatusBar barStyle="light-content" backgroundColor={backgroundColor}/>
+
           <View
             style={s.Page}
           >

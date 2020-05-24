@@ -61,27 +61,29 @@ function Authentication({navigation}) {
     Keyboard.dismiss()
     setLoading(true)
 
-    if (isLogin) {
-      try {
-        await signIn(email, password)
-        success("Você entrou na sua conta com sucesso.")
-        setLoading(false)
-        navigation.navigate('Words')
-      } catch (err) {
-        error(err)
-        setLoading(false)
+    setTimeout(async () => {
+      if (isLogin) {
+        try {
+          await signIn(email, password)
+          success("Você entrou na sua conta com sucesso.")
+          setLoading(false)
+          navigation.navigate('Home')
+        } catch (err) {
+          error(err)
+          setLoading(false)
+        }
+      } else {
+        try {
+          await signUp(email, password, username)
+          success("Você criou uma conta com sucesso!")
+          setLoading(false)
+          setLogin(true)
+        } catch (err) {
+          error(err)
+          setLoading(false)
+        }
       }
-    } else {
-      try {
-        await signUp(email, password, username)
-        success("Você criou uma conta com sucesso!")
-        setLoading(false)
-        setLogin(true)
-      } catch (err) {
-        error(err)
-        setLoading(false)
-      }
-    }
+    })
   }
 
   return (

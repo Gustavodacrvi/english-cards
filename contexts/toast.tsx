@@ -15,8 +15,8 @@ interface pushToast {
 
 interface Props {
   pushToast: pushToast;
-  success: (msg: string) => void;
-  error: (msg: string) => void;
+  success: (msg: string, duration?: number) => void;
+  error: (msg: string, duration?: number) => void;
   toast: Toast | null;
 }
 
@@ -40,17 +40,17 @@ class ToastContextProvider extends Component {
   pushToast: pushToast = (toast) => {
     this.setState({toast})
   }
-  error = (msg: string) => {
+  error = (msg: string, duration: number = 4500) => {
     this.pushToast({
       msg,
-      duration: 4500,
+      duration,
       type: 'error',
     })
   }
-  success = (msg: string) => {
+  success = (msg: string, duration: number = 4500) => {
     this.pushToast({
       msg,
-      duration: 4500,
+      duration,
       type: 'success',
     }) 
   }

@@ -21,6 +21,7 @@ import SplashScreen from './views/SplashScreen'
 import WordsPage from './views/Words'
 import Header from './components/Header/'
 import PopupContextProvider from './contexts/popup'
+import Home from './views/Home'
 
 const Stack = createStackNavigator()
 
@@ -109,11 +110,19 @@ function App() {
   const userScreens = (
     <>
       <Stack.Screen
+        name='Home'
+        component={Home}
+        options={{
+          header: Header,
+          ...TransitionPresets.SlideFromRightIOS,
+        }}
+      />
+      <Stack.Screen
         name='Words'
         component={WordsPage}
         options={{
           header: Header,
-          ...TransitionPresets.DefaultTransition,
+          ...TransitionPresets.SlideFromRightIOS,
         }}
       />
     </>

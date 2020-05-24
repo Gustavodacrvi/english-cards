@@ -1,6 +1,6 @@
 
 
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { View, StyleSheet, Dimensions } from 'react-native'
 import { backgroundColor } from '../../styles/colors'
 
@@ -16,7 +16,11 @@ function Header(props: StackHeaderProps) {
 
   const home = useRef({icon: 'home'} as IconInterface)
   const words = useRef({icon: 'words'} as IconInterface)
-  const user = useRef({icon: 'user'} as IconInterface)
+  const user = useRef({icon: 'archive'} as IconInterface)
+
+  const GoToHome = useRef(() => props.navigation.navigate('Home')) 
+  const GoToWords = useRef(() => props.navigation.navigate('Words')) 
+  const GoToArchived = useRef(() => props.navigation.navigate('Archived')) 
 
   return (
     <View
@@ -39,19 +43,22 @@ function Header(props: StackHeaderProps) {
           displayName="Início"
           textWidth={58}
           icon={home.current}
+          onPress={GoToHome.current}
           />
         <NavOption
           active={props.scene.route.name === "Words"}
           displayName="Palavras"
           textWidth={88}
           icon={words.current}
+          onPress={GoToWords.current}
           />
         <NavOption
-          active={props.scene.route.name === "Profile"}
-          displayName="Perfil"
-          textWidth={58}
+          active={props.scene.route.name === "Archived"}
+          displayName="Guardadas"
+          textWidth={88}
           icon={user.current}
-        />
+          onPress={GoToArchived.current}
+          />
         
       </View>
     </View>

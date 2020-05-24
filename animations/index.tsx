@@ -29,7 +29,7 @@ export const animateProperty = (value: string | number, useNativeDriver: boolean
     {
       toValue: 1,
       useNativeDriver,
-      restSpeedThreshold: 100,
+      restSpeedThreshold: 10,
       ...(springProperties || defaultSpringProperties),
     }
   ).start()

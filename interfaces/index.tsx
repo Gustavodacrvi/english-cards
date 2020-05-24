@@ -10,7 +10,7 @@ export interface IconInterface {
   icon:
     'home' | 'alert' | 'book' | 'words' | 'cards' | 'loading' |
     'notification-dash' | 'notification' | 'plus' | 'saved' | 'search' |
-    'sort-by-name' | 'sort' | 'trash' | 'user' | 'wifi' | 'arrow'
+    'sort-by-name' | 'sort' | 'trash' | 'user' | 'wifi' | 'arrow' | 'archive'
   ;
 }
 
