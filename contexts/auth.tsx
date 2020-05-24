@@ -289,7 +289,7 @@ class AuthContextProvider extends Component {
     
     this.setWord(target.wordName, target.lang, target.target, word)
   }
-  async updateWord(uid: string) {
+  async studyWord(uid: string) {
     const res = this.getWordByUid(uid)
     if (!res)
       throw `Target word not found, the word does not exist on output or the logic is flawed.`
