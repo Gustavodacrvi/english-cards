@@ -13,8 +13,10 @@ function Circle({
   setTab,
   icon,
   isMiddle,
+  number,
 } : {
   active: boolean;
+  number?: number;
   isMiddle?: boolean;
   icon: IconInterface;
   setTab: (tab: 'saved' | 'review' | 'forgotten') => void;
@@ -81,16 +83,40 @@ function Circle({
             ]}
           ></Animated.View>
           <Animated.View
-            style={s.TextWrapper}
+            style={[
+              s.TextWrapper,
+              {
+                opacity: animateProperty(number ? 1 : 0, true),
+              },
+            ]}
           >
-            <Text></Text>
+            <Text
+              style={[
+                s.CircleText,
+                {
+                  color: active ? darkBackgroundColor : 'white',
+                },
+              ]}
+            >
+              {number}
+            </Text>
           </Animated.View>
-          <Icon
-            {...icon}
-            width={24}
-            color={active && darkBackgroundColor}
-            animate={false}
-          />
+          <Animated.View
+            style={{
+              transform: [
+                {
+                  translateY: animateProperty((number && 10) || 0, true),
+                },
+              ],
+            }}
+          >
+            <Icon
+              {...icon}
+              width={24}
+              color={active && darkBackgroundColor}
+              animate={false}
+            />
+          </Animated.View>
         </View>
       </TouchableNativeFeedback>
     </Animated.View>
@@ -125,6 +151,10 @@ const s = StyleSheet.create({
   },
   TextWrapper: {
     position: 'absolute',
+    top: 3,
+  },
+  CircleText: {
+    fontSize: 18,
   },
 })
 

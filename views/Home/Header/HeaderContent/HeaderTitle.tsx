@@ -27,7 +27,7 @@ const s = StyleSheet.create({
     color: primary,
     textAlign: 'center',
     fontFamily: 'OpenSans-Bold',
-    fontSize: 18,
+    fontSize: 20,
   },
 })
 

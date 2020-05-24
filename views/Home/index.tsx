@@ -5,6 +5,7 @@ import { View, StyleSheet, StatusBar, Text } from 'react-native'
 
 import Header from './Header'
 import { darkBackgroundColor } from '../../styles/colors'
+import HomeCard from './HomeCard'
 
 function Home() {
 
@@ -27,6 +28,8 @@ function Home() {
         tab={tab}
         setTab={setTab}
       />
+
+      <HomeCard tab={tab}/>
       
     </View>
   )

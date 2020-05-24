@@ -24,6 +24,7 @@ function ContentButtons({
           icon={{icon: 'saved'}}
           setTab={setTab}
           active={tab === 'saved'}
+          number={4}
         />
         <Circle
           icon={{icon: 'notification'}}
