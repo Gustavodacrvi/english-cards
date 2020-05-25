@@ -54,8 +54,8 @@ function Header(props: StackHeaderProps) {
           />
         <NavOption
           active={props.scene.route.name === "Archived"}
-          displayName="Guardadas"
-          textWidth={88}
+          displayName="Arquivadas"
+          textWidth={108}
           icon={user.current}
           onPress={GoToArchived.current}
           />
@@ -73,8 +73,8 @@ const s = StyleSheet.create({
     backgroundColor,
   },
   Wrapper: {
-    paddingLeft: 37,
-    paddingRight: 37,
+    paddingLeft: 30,
+    paddingRight: 30,
     display: 'flex',
     width: '100%',
     justifyContent: 'space-between',

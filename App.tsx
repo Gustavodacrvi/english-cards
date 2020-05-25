@@ -22,6 +22,8 @@ import WordsPage from './views/Words'
 import Header from './components/Header/'
 import PopupContextProvider from './contexts/popup'
 import Home from './views/Home'
+import Archived from './views/Archived'
+import ChangeEmail from './views/ChangeEmail'
 
 const Stack = createStackNavigator()
 
@@ -124,6 +126,24 @@ function App() {
           header: Header,
           ...TransitionPresets.SlideFromRightIOS,
         }}
+      />
+      <Stack.Screen
+        name='Archived'
+        component={Archived}
+        options={{
+          header: Header,
+          ...TransitionPresets.SlideFromRightIOS,
+        }}
+      />
+      <Stack.Screen
+        name='SignIn'
+        component={Authentication}
+        options={fullScreenModal}
+      />
+      <Stack.Screen
+        name='ChangeEmail'
+        component={ChangeEmail}
+        options={fullScreenModal}
       />
     </>
   )

@@ -9,9 +9,9 @@ import WordContent from './WordContent'
 import { WordInterface } from '../../../../interfaces'
 
 interface Props {
-  leftAction: (id: string) => void;
-  rightAction: (id: string) => void;
-  onPress: (id: string) => void;
+  leftAction: (id: string) => void | null;
+  rightAction: (id: string) => void | null;
+  onPress: (id: string) => void | null;
   uid: string;
   height: number;
   active: boolean;
@@ -70,12 +70,6 @@ const WordElement = forwardRef(({
     }
   }
 
-  setTimeout(() => {
-    if (uid === 'k') {
-
-    }
-  }, 5000)
-
   return (
     <View
       style={s.WordElement}
@@ -91,7 +85,7 @@ const WordElement = forwardRef(({
         <View>
           <PanGestureHandler
             maxPointers={1}
-            onGestureEvent={Animated.event([{nativeEvent: {translationX: touchX.current}}], { useNativeDriver: true })}
+            onGestureEvent={leftAction && Animated.event([{nativeEvent: {translationX: touchX.current}}], { useNativeDriver: true }) || (() => {})}
             activeOffsetX={activeOffsetX}
             minDist={25}
             onHandlerStateChange={onHandlerStateChange}

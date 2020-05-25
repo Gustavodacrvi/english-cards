@@ -10,9 +10,11 @@ import ContentButtons from './ContentButtons'
 function isMenuOpened({
   isMenuOpened,
   tab,
+  navigation,
   setTab,
 }: {
   isMenuOpened: boolean;
+  navigation: any;
   tab: 'saved' | 'review' | 'forgotten';
   setTab: (tab: 'saved' | 'review' | 'forgotten') => void;
 }) {
@@ -32,6 +34,7 @@ function isMenuOpened({
           setTab={setTab}
         />
         <ContentLinks
+          navigation={navigation}
           isMenuOpened={isMenuOpened}
         />
       </View>

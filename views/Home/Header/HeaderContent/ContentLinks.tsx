@@ -8,8 +8,10 @@ import { animateProperty } from '../../../../animations'
 
 function isMenuOpened({
   isMenuOpened,
+  navigation,
 } : {
   isMenuOpened: boolean;
+  navigation: any;
 }) {
 
   const getLink = (text: string, onPress: () => void = () => {}) => (
@@ -33,6 +35,12 @@ function isMenuOpened({
     </TouchableNativeFeedback>
   )
 
+  const changeEmail = () => {
+    navigation.navigate('SignIn', {
+      redirect: 'ChangeEmail',
+    })
+  }
+
   return (
     <Animated.View
       style={[
@@ -43,7 +51,7 @@ function isMenuOpened({
       ]}
     >
       {getLink('Resetar senha')}
-      {getLink('Mudar e-mail')}
+      {getLink('Mudar e-mail', changeEmail)}
       {getLink('Mudar nome de usuário')}
       {getLink('Sair')}
     </Animated.View>

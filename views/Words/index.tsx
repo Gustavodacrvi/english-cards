@@ -11,7 +11,7 @@ import AddWord from './AddWord'
 import { WordInterface } from '../../interfaces'
 
 import mom from 'moment-timezone'
-import { getWordName, getNextReviewDate, forgotWord } from '../../utils'
+import { getWordName, getNextReviewDate, forgotWord, filterList, sortList } from '../../utils'
 import Intercept from './Intercept'
 import { PopupContext } from '../../contexts/popup'
 import { backgroundColor } from '../../styles/colors'
@@ -99,58 +99,9 @@ class WordsPage extends React.Component {
 
   sortList(sort: 'alphabetical' | 'creation' | 'reviews', currentTab: 'saved' | 'forgotten' | 'learned', list: WordInterface[], search: string, forceTabChange?: boolean) {
 
-    let arr = list.slice()
-
-    if (forceTabChange || search !== this.state.search)
-      arr = !search ? list : list.filter(w => getWordName(w).toLowerCase().includes(search))
-
-    if (forceTabChange || currentTab !== this.state.currentTab)
-      switch (currentTab) {
-        case 'saved': {
-          arr = arr.filter(w => !w.lastReview)
-          break
-        }
-        case 'learned': {
-          arr = arr.filter(w => w.lastReview && !forgotWord(w))
-          break
-        }
-        case 'forgotten': {
-          arr = arr.filter(w => w.lastReview && forgotWord(w))
-          break
-        }
-      }
-
-    if (forceTabChange || sort !== this.state.sort)
-      switch (sort) {
-        case 'alphabetical': {
-          arr.sort((a, b) => getWordName(a).toLowerCase().localeCompare(getWordName(b).toLowerCase()))
-          break
-        }
-        case 'creation': {
-          arr.sort((word1, word2) => {
-            const a = mom(word1.creationDate, 'Y-M-D mm')
-            const b = mom(word2.creationDate, 'Y-M-D mm')
-    
-            if (a.isSame(b, 'day')) return 0
-            if (a.isAfter(b, 'day')) return -1
-            if (b.isAfter(a, 'day')) return 1
-          })
-          break
-        }
-        default: {
-          arr.sort((word1, word2) => {
-            const a = mom(getNextReviewDate(word1), 'Y-M-D mm')
-            const b = mom(getNextReviewDate(word2), 'Y-M-D mm')
-    
-            if (a.isSame(b, 'day')) return 0
-            if (a.isAfter(b, 'day')) return -1
-            if (b.isAfter(a, 'day')) return 1
-          })
-          break
-        }
-      }
-
-    return arr
+    return sortList(this.state.sort, sort,
+      filterList(this.state.search, search, this.state.currentTab, currentTab, list, forceTabChange),
+      forceTabChange)
   }
 
   selectWord = name => {

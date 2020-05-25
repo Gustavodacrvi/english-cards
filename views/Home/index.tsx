@@ -7,7 +7,7 @@ import Header from './Header'
 import { darkBackgroundColor } from '../../styles/colors'
 import HomeCard from './HomeCard'
 
-function Home() {
+function Home({navigation}) {
 
   const [isMenuOpened, setMenu] = useState(false)
   const [tab, setTab] = useState('saved' as 'saved' | 'review' | 'forgotten')
@@ -27,6 +27,7 @@ function Home() {
         isMenuOpened={isMenuOpened}
         tab={tab}
         setTab={setTab}
+        navigation={navigation}
       />
 
       <HomeCard tab={tab}/>

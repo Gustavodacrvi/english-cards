@@ -12,10 +12,10 @@ export interface ListRenderingProps {
   showNextReviewDate: boolean;
   showLastReviewDate: boolean;
   height: number;
-  selected: string[];
-  leftAction: (id: string) => void;
-  rightAction: (id: string) => void;
-  onPress: (id: string) => void;
+  selected?: string[];
+  leftAction?: (id: string) => void;
+  rightAction?: (id: string) => void;
+  onPress?: (id: string) => void;
 }
 
 function List({list, height, showCreationDate, showNextReviewDate, showLastReviewDate, leftAction, rightAction, onPress, selected = []}: ListRenderingProps) {

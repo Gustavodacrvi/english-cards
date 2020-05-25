@@ -13,10 +13,12 @@ function Header({
   tab,
   setTab,
   isMenuOpened,
+  navigation,
 } : {
   tab: 'saved' | 'review' | 'forgotten';
   setTab: (tab: 'saved' | 'review' | 'forgotten') => void;
   toggleMenu: () => void;
+  navigation: any;
   isMenuOpened: boolean;
 }) {
 
@@ -33,6 +35,7 @@ function Header({
         isMenuOpened={isMenuOpened}
         tab={tab}
         setTab={setTab}
+        navigation={navigation}
       />
 
     </View>

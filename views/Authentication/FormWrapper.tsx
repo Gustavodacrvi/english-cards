@@ -29,19 +29,19 @@ function FormWrapper({ children, margin = -128 }: Props) {
         Keyboard.dismiss()
       }}
     >
-    <View style={s.Auth}>
-      <Animated.View style={[
-        s.Wrapper,
-        {
-          transform: [
-            {
-              translateY: animateProperty(isFormUp ? margin : 0, true),
-            }
-          ],
-        },
-      ]}>
-        {children({isFormUp, moveFormUp})}
-      </Animated.View>
+      <View style={s.Auth}>
+        <Animated.View style={[
+          s.Wrapper,
+          {
+            transform: [
+              {
+                translateY: animateProperty(isFormUp ? margin : 0, true),
+              }
+            ],
+          },
+        ]}>
+          {children({isFormUp, moveFormUp})}
+        </Animated.View>
       </View>
     </TouchableWithoutFeedback>
   )

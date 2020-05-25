@@ -30,7 +30,7 @@ function InterceptEmptyList({
             saved: "saved",
             learned: "book",
             forgotten: "notification-dash",
-          }[tab]}
+          }[tab] || tab}
           width={140}
           primaryColor={darkBackgroundColor}
           secondaryColor={darkBackgroundColor}
@@ -45,6 +45,7 @@ function InterceptEmptyList({
               saved: "Você pode adicionar palavras pela extensão do Google Chrome ou manualmente pelo botão.",
               learned: "As suas palavras aprendidas estarão aqui.",
               forgotten: "As palavras que não foram feitas revisões aparecerão aqui.",
+              archive: "Após revisar alguma palavra 12 vezes, suas notificações serão desativadas e irá aparecer aqui."
             }[tab]}
           </Text>
         </View>

@@ -22,6 +22,7 @@ interface Props {
   signUp: (email: string, password: string, username: string) => void;
   signOut: () => void;
   sendResetEmail: (email: string) => void;
+  changeEmail: (email: string) => void;
 }
 
 let debounceTimeout = null
@@ -164,6 +165,27 @@ class AuthContextProvider extends Component {
         return;
   
       await auth().sendPasswordResetEmail(email)
+      debounceTimeout = setTimeout(() => {
+        clearTimeout(debounceTimeout)
+        debounceTimeout = null
+      }, 5000)
+    } catch (err) {
+      throw "Houve algum erro ao tentar mandar uma e-mail de mudança de senha."
+    }
+  }
+  async changeEmail(email: string) {
+    try {
+      if (debounceTimeout)
+        return;
+  
+      await auth().currentUser.updateEmail(email)
+      const user = fire().collection('users').doc(auth().currentUser.uid)
+
+      await user.set({email}, {merge: true})
+      await user.collection('short').doc('short').set({
+        user: {email},
+      }, {merge: true})
+
       debounceTimeout = setTimeout(() => {
         clearTimeout(debounceTimeout)
         debounceTimeout = null

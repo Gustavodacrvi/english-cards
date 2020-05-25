@@ -159,3 +159,63 @@ export const forgotWord = memoize(({
 
 export const uid = (): string => fire().collection('random').doc().id
 
+export const filterList = (oldSearch: string, newSearch: string, oldTab: 'saved' | 'forgotten' | 'learned', newTab: 'saved' | 'forgotten' | 'learned', list: WordInterface[], force: boolean) => {
+  let arr = list.slice()
+  
+  if (force || newSearch !== oldSearch)
+    arr = !newSearch ? list : list.filter(w => getWordName(w).toLowerCase().includes(newSearch))
+
+  if (newTab !== null && (force || newTab !== oldTab))
+    switch (newTab) {
+      case 'saved': {
+        arr = arr.filter(w => !w.lastReview)
+        break
+      }
+      case 'learned': {
+        arr = arr.filter(w => w.lastReview && !forgotWord(w))
+        break
+      }
+      case 'forgotten': {
+        arr = arr.filter(w => w.lastReview && forgotWord(w))
+        break
+      }
+    }
+
+  return arr
+
+}
+
+export const sortList = (oldSort: 'alphabetical' | 'creation' | 'reviews', newSort: 'alphabetical' | 'creation' | 'reviews', list: WordInterface[], force: boolean) => {
+
+  if (force || newSort !== oldSort)
+  switch (newSort) {
+    case 'alphabetical': {
+      list.sort((a, b) => getWordName(a).toLowerCase().localeCompare(getWordName(b).toLowerCase()))
+      break
+    }
+    case 'creation': {
+      list.sort((word1, word2) => {
+        const a = mom(word1.creationDate, 'Y-M-D mm')
+        const b = mom(word2.creationDate, 'Y-M-D mm')
+
+        if (a.isSame(b, 'day')) return 0
+        if (a.isAfter(b, 'day')) return -1
+        if (b.isAfter(a, 'day')) return 1
+      })
+      break
+    }
+    default: {
+      list.sort((word1, word2) => {
+        const a = mom(getNextReviewDate(word1), 'Y-M-D mm')
+        const b = mom(getNextReviewDate(word2), 'Y-M-D mm')
+
+        if (a.isSame(b, 'day')) return 0
+        if (a.isAfter(b, 'day')) return -1
+        if (b.isAfter(a, 'day')) return 1
+      })
+      break
+    }
+  }
+
+  return list
+}

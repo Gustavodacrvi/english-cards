@@ -1,9 +1,9 @@
 
 
 import React, { useState, useEffect, useContext } from 'react'
-import { View, StyleSheet, TouchableWithoutFeedback, Keyboard, Animated, Text } from "react-native"
+import { View, StyleSheet, TouchableWithoutFeedback, Keyboard, Animated, Text, StatusBar } from "react-native"
 
-import { backgroundColor, primary } from '../../styles/colors'
+import { primary, backgroundColor } from '../../styles/colors'
 import InputComponent from '../../components/Input'
 import { animateProperty } from '../../animations'
 import Button from '../../components/Button'
@@ -14,7 +14,9 @@ import { AuthContext } from '../../contexts/auth'
 import { ToastContext } from '../../contexts/toast'
 import FormWrapper from './FormWrapper'
 
-function Authentication({navigation}) {
+function Authentication({navigation, route}) {
+
+  const redirect = route.params && route.params.redirect
 
   const [isLoading, setLoading] = useState(false)
 
@@ -67,7 +69,9 @@ function Authentication({navigation}) {
           await signIn(email, password)
           success("Você entrou na sua conta com sucesso.")
           setLoading(false)
-          navigation.navigate('Home')
+          if (!redirect)
+            navigation.navigate('Home')
+          navigation.replace(redirect)
         } catch (err) {
           error(err)
           setLoading(false)
@@ -93,11 +97,30 @@ function Authentication({navigation}) {
       {({moveFormUp, isFormUp}) => {
 
         return (
-          <View>
-            <AuthHeader
+          <View
+            style={{
+              marginTop: redirect && -85,
+            }}
+          >
+            <StatusBar barStyle="light-content" backgroundColor={backgroundColor} />
+            
+            {!redirect && <AuthHeader
               isLogin={isLogin}
               setLogin={!isFormUp ? setLogin : () => {}}
-            />
+            /> || (
+              <View
+                style={{
+                  height: 60,
+                  transform: [
+                    {
+                      translateY: 10,
+                    }
+                  ],
+                  backgroundColor,
+                }}
+              >
+              </View>
+            )}
 
             <Animated.View
               style={
