@@ -21,8 +21,13 @@ interface Props {
   signIn: (email: string, password: string) => void;
   signUp: (email: string, password: string, username: string) => void;
   signOut: () => void;
+  studyWord: (uid: string) => void;
+  deleteWord: (uid: string) => void;
+  addWord: (word: string, api: 'linguee', data: LingueTranslationInterface, lang: string, target: string) => void;
+  sendResetPasswordEmail: () => void;
   sendResetEmail: (email: string) => void;
   changeEmail: (email: string) => void;
+  changeDisplayName: (displayName: string) => void;
 }
 
 let debounceTimeout = null
@@ -89,7 +94,7 @@ class AuthContextProvider extends Component {
     })
   }
 
-  mergeData(target: object, ...sources: object[]): object {
+  mergeData = (target: object, ...sources: object[]): object => {
     if (!sources.length) return target
     const source = sources.shift()
   
@@ -106,7 +111,7 @@ class AuthContextProvider extends Component {
   
     return this.mergeData(target, ...sources)
   }
-  convertSavedWords(obj: SavedShortTerm): ShortTerm {
+  convertSavedWords = (obj: SavedShortTerm): ShortTerm => {
     const data = obj as any
 
     const output = data.output
@@ -121,7 +126,7 @@ class AuthContextProvider extends Component {
 
     return data as ShortTerm
   }
-  async signIn(email: string, password: string) {
+  signIn = async (email: string, password: string) => {
     try {
       await auth().signInWithEmailAndPassword(email, password)
       AsyncStorage.setItem('FlashTranslator.isLoggedIn', 'true')
@@ -129,7 +134,7 @@ class AuthContextProvider extends Component {
       throw errors[err.code] || "Houve um erro ao tentar entrar, tente de novo."
     }
   }
-  async signUp(email: string, password: string, username: string) {
+  signUp = async(email: string, password: string, username: string) => {
     try {
       const res = await auth().createUserWithEmailAndPassword(email, password)
       const user = fire().collection('users').doc(res.user.uid)
@@ -155,11 +160,11 @@ class AuthContextProvider extends Component {
       throw errors[err.code] || "Houve algum erro ao tentar criar conta, tente de novo."
     }
   }
-  async signOut() {
+  signOut = async () => {
     await auth().signOut()
     AsyncStorage.setItem('FlashTranslator.isLoggedIn', 'false')
   }
-  async sendResetEmail(email: string) {
+  sendResetEmail = async (email: string) => {
     try {
       if (debounceTimeout)
         return;
@@ -173,7 +178,10 @@ class AuthContextProvider extends Component {
       throw "Houve algum erro ao tentar mandar uma e-mail de mudança de senha."
     }
   }
-  async changeEmail(email: string) {
+  sendResetPasswordEmail = async () => {
+    this.sendResetEmail(auth().currentUser.email)
+  }
+  changeEmail = async (email: string) => {
     if (debounceTimeout)
       return;
 
@@ -190,7 +198,7 @@ class AuthContextProvider extends Component {
       debounceTimeout = null
     }, 5000)
   }
-  async changeDisplayName(displayName: string) {
+  changeDisplayName = async (displayName: string) => {
     if (debounceTimeout)
       return;
 
@@ -210,7 +218,7 @@ class AuthContextProvider extends Component {
     }, 5000)
   }
 
-  async getTranslation(term: string, api: 'linguee') {
+  getTranslation = async (term: string, api: 'linguee') => {
 /*     try {
       switch (api) {
         case 'linguee': {
@@ -222,7 +230,7 @@ class AuthContextProvider extends Component {
       throw "Essa tradução não existe ou você está com erros na conexão.";
     } */
   }
-  async removeWord(wordName: string, lang: string, targetLang: string) {
+  removeWord = async (wordName: string, lang: string, targetLang: string) => {
     fire().collection('short').doc('short').set({
       input: {
         [lang]: {
@@ -238,7 +246,7 @@ class AuthContextProvider extends Component {
       },
     }, {merge: true})
   }
-  async setWord(wordName: string, lang: string, targetLang: string, word: SavedWordInterface) {
+  setWord = async (wordName: string, lang: string, targetLang: string, word: SavedWordInterface) => {
     fire().collection('short').doc('short').set({
       output: {
         [lang]: {
@@ -249,7 +257,7 @@ class AuthContextProvider extends Component {
       },
     }, {merge: true})
   }
-  convertSavedWordToLocal(word: SavedWordInterface): WordInterface {
+  convertSavedWordToLocal = (word: SavedWordInterface): WordInterface => {
     const obj: WordInterface = {
       ...word,
       creationDate: mom.utc(word.creationDate).format('Y-M-D mm'),
@@ -260,7 +268,7 @@ class AuthContextProvider extends Component {
     return obj
   }
 
-  findWord(condition: (wordName: string, word: WordInterface) => boolean): {word: WordInterface, wordName: string, lang: string, target: string} | undefined {
+  findWord = (condition: (wordName: string, word: WordInterface) => boolean): {word: WordInterface, wordName: string, lang: string, target: string} | undefined => {
     const output = this.state.data.output
     const langKeys = Object.keys(output)
 
@@ -284,11 +292,11 @@ class AuthContextProvider extends Component {
 
     }
   }
-  getWordByUid(uid: string): {word: WordInterface, wordName: string, lang: string, target: string} | undefined {
+  getWordByUid = (uid: string): {word: WordInterface, wordName: string, lang: string, target: string} | undefined => {
     return this.findWord((w, word) => word.uid === uid)
   }
 
-  async addWord(word: string, api: 'linguee', data: LingueTranslationInterface, lang: string, target: string) {
+  addWord = async (word: string, api: 'linguee', data: LingueTranslationInterface, lang: string, target: string) => {
     fire().collection('short').doc('short').set({
       input: {
         [lang]: {
@@ -311,21 +319,21 @@ class AuthContextProvider extends Component {
       },
     } as any, {merge: true})
   }
-  async deleteWord(uid: string) {
+  deleteWord = async (uid: string) => {
     const target = this.getWordByUid(uid)
     if (!target)
       throw `Target word not found, the word does not exist on output or the logic is flawed.`
     
     this.removeWord(target.wordName, target.lang, target.target)
   }
-  async saveWord(uid: string, word: SavedWordInterface) {
+  saveWord = async (uid: string, word: SavedWordInterface) => {
     const target = this.findWord((w, wordCompare) => wordCompare.uid === uid)
     if (!target)
       throw `Target word not found, the word does not exist on output or the logic is flawed.`
     
     this.setWord(target.wordName, target.lang, target.target, word)
   }
-  async studyWord(uid: string) {
+  studyWord = async (uid: string) => {
     const res = this.getWordByUid(uid)
     if (!res)
       throw `Target word not found, the word does not exist on output or the logic is flawed.`
@@ -344,6 +352,11 @@ class AuthContextProvider extends Component {
         signUp: this.signUp,
         signOut: this.signOut,
         sendResetEmail: this.sendResetEmail,
+        sendResetPasswordEmail: this.sendResetPasswordEmail,
+
+        studyWord: this.studyWord,
+        deleteWord: this.deleteWord,
+        addWord: this.addWord,
       }}>
         {this.props.children}
       </AuthContext.Provider>

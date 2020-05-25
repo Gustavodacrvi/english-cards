@@ -6,6 +6,7 @@ import { primary, darkBackgroundColor } from '../../../../styles/colors'
 import { TouchableNativeFeedback } from 'react-native-gesture-handler'
 import { animateProperty } from '../../../../animations'
 import { AuthContext } from '../../../../contexts/auth'
+import { ToastContext } from '../../../../contexts/toast'
 
 function isMenuOpened({
   isMenuOpened,
@@ -15,7 +16,8 @@ function isMenuOpened({
   navigation: any;
 }) {
 
-  const {signOut} = useContext(AuthContext)
+  const {sendResetPasswordEmail, signOut} = useContext(AuthContext)
+  const {success, error} = useContext(ToastContext)
 
   const getLink = (text: string, onPress: () => void = () => {}) => (
     <TouchableNativeFeedback
@@ -38,6 +40,14 @@ function isMenuOpened({
     </TouchableNativeFeedback>
   )
 
+  const sendPasswordReset = async () => {
+    try {
+      await sendResetPasswordEmail()
+      success('E-mail mandado com sucesso')
+    } catch (err) {
+      error('Houve algum erro ao tentar mandar o e-mail.')
+    }
+  }
   const changeEmail = () => {
     navigation.navigate('SignIn', {
       redirect: 'ChangeEmail',
@@ -62,9 +72,9 @@ function isMenuOpened({
         },
       ]}
     >
-      {getLink('Resetar senha')}
+      {getLink('Resetar senha', sendPasswordReset)}
       {getLink('Mudar e-mail', changeEmail)}
-      {getLink('Mudar nome de usuário')}
+      {getLink('Mudar nome de usuário', changeDisplayName)}
       {getLink('Sair', logOut)}
     </Animated.View>
   )
