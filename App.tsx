@@ -24,6 +24,7 @@ import PopupContextProvider from './contexts/popup'
 import Home from './views/Home'
 import Archived from './views/Archived'
 import ChangeEmail from './views/ChangeEmail'
+import ChangeDisplayName from './views/ChangeDisplayName'
 
 const Stack = createStackNavigator()
 
@@ -143,6 +144,11 @@ function App() {
       <Stack.Screen
         name='ChangeEmail'
         component={ChangeEmail}
+        options={fullScreenModal}
+      />
+      <Stack.Screen
+        name='ChangeDisplayName'
+        component={ChangeDisplayName}
         options={fullScreenModal}
       />
     </>

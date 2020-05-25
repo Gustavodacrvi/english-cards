@@ -174,25 +174,40 @@ class AuthContextProvider extends Component {
     }
   }
   async changeEmail(email: string) {
-    try {
-      if (debounceTimeout)
-        return;
-  
-      await auth().currentUser.updateEmail(email)
-      const user = fire().collection('users').doc(auth().currentUser.uid)
+    if (debounceTimeout)
+      return;
 
-      await user.set({email}, {merge: true})
-      await user.collection('short').doc('short').set({
-        user: {email},
-      }, {merge: true})
+    await auth().currentUser.updateEmail(email)
+    const user = fire().collection('users').doc(auth().currentUser.uid)
 
-      debounceTimeout = setTimeout(() => {
-        clearTimeout(debounceTimeout)
-        debounceTimeout = null
-      }, 5000)
-    } catch (err) {
-      throw "Houve algum erro ao tentar mandar uma e-mail de mudança de senha."
-    }
+    await user.set({email}, {merge: true})
+    await user.collection('short').doc('short').set({
+      user: {email},
+    }, {merge: true})
+
+    debounceTimeout = setTimeout(() => {
+      clearTimeout(debounceTimeout)
+      debounceTimeout = null
+    }, 5000)
+  }
+  async changeDisplayName(displayName: string) {
+    if (debounceTimeout)
+      return;
+
+    await auth().currentUser.updateProfile({
+      displayName,
+    })
+    const user = fire().collection('users').doc(auth().currentUser.uid)
+
+    await user.set({username: displayName}, {merge: true})
+    await user.collection('short').doc('short').set({
+      user: {username: displayName},
+    }, {merge: true})
+
+    debounceTimeout = setTimeout(() => {
+      clearTimeout(debounceTimeout)
+      debounceTimeout = null
+    }, 5000)
   }
 
   async getTranslation(term: string, api: 'linguee') {

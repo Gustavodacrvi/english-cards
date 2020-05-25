@@ -12,15 +12,15 @@ import Input from '../components/Input'
 import { ToastContext } from '../contexts/toast'
 import { AuthContext } from '../contexts/auth'
 
-function ChangeEmail() {
+function ChangeDisplayName() {
 
   const {success, error} = useContext(ToastContext)
-  const {changeEmail} = useContext(AuthContext)
+  const {changeDisplayName} = useContext(AuthContext)
 
-  const [email, setEmail] = useState("")
+  const [displayName, setEmail] = useState("")
   const [isLoading, setLoading] = useState(false)
   
-  const disable = !email.length
+  const disable = !displayName.length
 
   const click = async () => {
     if (disable)
@@ -29,12 +29,12 @@ function ChangeEmail() {
     setLoading(true)
 
     try {
-      await changeEmail(email)
-      success('E-mail atualizado com sucesso!')
+      await changeDisplayName(displayName)
+      success('Nome de usuário atualizado com sucesso!')
       setEmail("")
       setLoading(false)
     } catch (err) {
-      error("Houve algum erro ao tentar atualizar o e-mail.")
+      error("Houve algum erro ao tentar atualizar o nome de usuário.")
       setLoading(false)
     }
   }
@@ -47,16 +47,16 @@ function ChangeEmail() {
       <View>
 
         <Input
-          placeholder="E-mail:"
+          placeholder="Nome de usuário:"
           onFocus={() => moveFormUp(true)}
-          value={email}
+          value={displayName}
           onChangeText={setEmail}
         />
         <View style={{
           marginTop: 12,
         }}>
           <Button
-            name="Mudar e-mail"
+            name="Atualizar username"
             type={disable ? "slides" : "white"}
             click={click}
             icon={isLoading ? {
@@ -72,4 +72,4 @@ function ChangeEmail() {
   )
 }
 
-export default ChangeEmail
+export default ChangeDisplayName

@@ -1,10 +1,11 @@
 
 
-import React from 'react'
+import React, { useContext } from 'react'
 import { View, Text, StyleSheet, Animated } from 'react-native'
 import { primary, darkBackgroundColor } from '../../../../styles/colors'
 import { TouchableNativeFeedback } from 'react-native-gesture-handler'
 import { animateProperty } from '../../../../animations'
+import { AuthContext } from '../../../../contexts/auth'
 
 function isMenuOpened({
   isMenuOpened,
@@ -13,6 +14,8 @@ function isMenuOpened({
   isMenuOpened: boolean;
   navigation: any;
 }) {
+
+  const {signOut} = useContext(AuthContext)
 
   const getLink = (text: string, onPress: () => void = () => {}) => (
     <TouchableNativeFeedback
@@ -40,6 +43,15 @@ function isMenuOpened({
       redirect: 'ChangeEmail',
     })
   }
+  const changeDisplayName = () => {
+    navigation.navigate('SignIn', {
+      redirect: 'ChangeDisplayName',
+    })
+  }
+  const logOut = () => {
+    navigation.navigate('Authentication')
+    signOut()
+  }
 
   return (
     <Animated.View
@@ -53,7 +65,7 @@ function isMenuOpened({
       {getLink('Resetar senha')}
       {getLink('Mudar e-mail', changeEmail)}
       {getLink('Mudar nome de usuário')}
-      {getLink('Sair')}
+      {getLink('Sair', logOut)}
     </Animated.View>
   )
 }
